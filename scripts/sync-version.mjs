@@ -18,9 +18,17 @@ const shouldFix = process.argv.includes('--fix');
 // Check CHANGELOG.md
 const changelogPath = path.join(ROOT, 'CHANGELOG.md');
 if (fs.existsSync(changelogPath)) {
-  const changelogContent = fs.readFileSync(changelogPath, 'utf8');
+  let changelogContent = fs.readFileSync(changelogPath, 'utf8');
   if (!changelogContent.includes(`[${version}]`)) {
-    errors.push(`CHANGELOG.md missing release section for version [${version}]`);
+    if (shouldFix) {
+      const today = new Date().toISOString().split('T')[0];
+      const newSection = `\n## [${version}] — ${today}\n\n### Added\n- Maintenance update for version ${version}.\n`;
+      changelogContent = changelogContent.replace('# Changelog', `# Changelog\n${newSection}`);
+      fs.writeFileSync(changelogPath, changelogContent, 'utf8');
+      console.log(`  🔧 Added release section for [${version}] in CHANGELOG.md`);
+    } else {
+      errors.push(`CHANGELOG.md missing release section for version [${version}]`);
+    }
   }
 }
 

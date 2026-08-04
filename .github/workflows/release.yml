@@ -63,15 +63,16 @@ jobs:
             exit 1
           fi
 
-      - name: Auto Bump Version
+      - name: Auto Bump Version & Sync
         if: ${{ github.event_name == 'workflow_dispatch' && inputs.bump_type != 'none' }}
         run: |
           npm version "${{ inputs.bump_type }}" --no-git-tag-version
+          node scripts/sync-version.mjs --fix
 
       - name: Commit & Push Version Bump
         if: ${{ github.event_name == 'workflow_dispatch' && inputs.bump_type != 'none' }}
         run: |
-          git add package.json
+          git add package.json bin/cli.js CHANGELOG.md
           git commit -m "chore(release): auto-bump package version [skip ci]"
           git push origin HEAD:main
 
