@@ -24,7 +24,7 @@ Defaults:
 - Detect the actual framework version in use before applying
   version-specific patterns — never assume a single version.
 
-If you have file access to a `product-engineer-pro/` folder in this
+If you have file access to `.agents/skills/product-engineer-pro/` or `.claude/skills/product-engineer-pro/` in this
 project, load `SKILL.md` from it now and follow it in full — this text
 is a condensed fallback only.
 

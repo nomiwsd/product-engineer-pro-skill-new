@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-import { cpSync, existsSync, mkdirSync, readFileSync } from "node:fs";
+import { cpSync, existsSync, mkdirSync, readFileSync, rmSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 import { dirname, join, resolve } from "node:path";
 
@@ -18,8 +18,13 @@ function getVersion() {
   }
 }
 
+const SKILL_DEST_PATHS = [
+  ".agents/skills/product-engineer-pro",
+  ".claude/skills/product-engineer-pro",
+];
+
 const ADAPTER_TARGETS = {
-  claude: { src: null, dest: ".claude/skills/product-engineer-pro" },
+  claude: { src: "adapters/claude-code/CLAUDE.md", dest: "CLAUDE.md" },
   cursor: { src: "adapters/cursor/product-engineer-pro.mdc", dest: ".cursor/rules/product-engineer-pro.mdc" },
   windsurf: { src: "adapters/windsurf/.windsurfrules", dest: ".windsurfrules" },
   copilot: { src: "adapters/copilot/copilot-instructions.md", dest: ".github/copilot-instructions.md" },
@@ -35,35 +40,64 @@ const ADAPTER_TARGETS = {
 const args = process.argv.slice(2);
 const command = args[0] || "help";
 
+const isAll = args.includes("--all") || args.includes("-a") || args.includes("all");
 const toolFlagIndex = Math.max(args.indexOf("--tool"), args.indexOf("--adapter"));
-const tool = toolFlagIndex >= 0 ? args[toolFlagIndex + 1] : "claude";
+const tool = toolFlagIndex >= 0 ? args[toolFlagIndex + 1] : (isAll ? "all" : "claude");
 
-function copySkillFolder(destRoot) {
-  mkdirSync(destRoot, { recursive: true });
-  cpSync(SKILL_SRC, destRoot, { recursive: true });
+function copySkillFolders() {
+  // Clean up legacy unhidden root folder if present to keep project root clean
+  const legacyPath = join(process.cwd(), "product-engineer-pro");
+  if (existsSync(legacyPath)) {
+    try {
+      rmSync(legacyPath, { recursive: true, force: true });
+    } catch {
+      // Ignore if fail to remove
+    }
+  }
+
+  for (const destRel of SKILL_DEST_PATHS) {
+    const destRoot = join(process.cwd(), destRel);
+    mkdirSync(destRoot, { recursive: true });
+    cpSync(SKILL_SRC, destRoot, { recursive: true });
+  }
+}
+
+function installAdapter(toolName) {
+  const config = ADAPTER_TARGETS[toolName];
+  if (!config || !config.src) return false;
+  const adapterSrc = join(SKILL_SRC, config.src);
+  const adapterDest = join(process.cwd(), config.dest);
+  mkdirSync(dirname(adapterDest), { recursive: true });
+  cpSync(adapterSrc, adapterDest);
+  return true;
 }
 
 function installFor(toolName) {
+  copySkillFolders();
+
+  if (toolName === "all" || isAll) {
+    for (const t of Object.keys(ADAPTER_TARGETS)) {
+      installAdapter(t);
+    }
+    console.log(`✔ @nomiwsd/product-engineer-pro v${getVersion()} installed for ALL tools & IDEs.`);
+    console.log(`  Skills:   ./.agents/skills/product-engineer-pro/`);
+    console.log(`            ./.claude/skills/product-engineer-pro/`);
+    console.log(`  Adapters: Configured for Cursor, Windsurf, Copilot, Gemini, Codex, Claude Code, Roo Code, Aider, Generic.`);
+    return;
+  }
+
   const config = ADAPTER_TARGETS[toolName];
   if (!config) {
-    console.error(`❌ Unknown tool "${toolName}". Supported: ${Object.keys(ADAPTER_TARGETS).join(", ")}`);
+    console.error(`❌ Unknown tool "${toolName}". Supported: ${Object.keys(ADAPTER_TARGETS).join(", ")}, all`);
     process.exit(1);
   }
 
-  // Always place full skill folder in target project
-  copySkillFolder(join(process.cwd(), "product-engineer-pro"));
-
-  // Place thin adapter pointer if applicable
-  if (config.src) {
-    const adapterSrc = join(SKILL_SRC, config.src);
-    const adapterDest = join(process.cwd(), config.dest);
-    mkdirSync(dirname(adapterDest), { recursive: true });
-    cpSync(adapterSrc, adapterDest);
-  }
+  installAdapter(toolName);
 
   console.log(`✔ @nomiwsd/product-engineer-pro v${getVersion()} installed for "${toolName}".`);
-  console.log(`  Full skill: ./product-engineer-pro/`);
-  if (config.src) console.log(`  Adapter:    ./${config.dest}`);
+  console.log(`  Skills:   ./.agents/skills/product-engineer-pro/`);
+  console.log(`            ./.claude/skills/product-engineer-pro/`);
+  if (config.dest) console.log(`  Adapter:  ./${config.dest}`);
 }
 
 switch (command) {
@@ -72,15 +106,16 @@ switch (command) {
     installFor(tool);
     break;
   case "update":
-    if (!existsSync(join(process.cwd(), "product-engineer-pro"))) {
+    const hasExisting = SKILL_DEST_PATHS.some((p) => existsSync(join(process.cwd(), p))) || existsSync(join(process.cwd(), "product-engineer-pro"));
+    if (!hasExisting) {
       console.error("❌ No existing install found. Run `npx @nomiwsd/product-engineer-pro init` first.");
       process.exit(1);
     }
-    copySkillFolder(join(process.cwd(), "product-engineer-pro"));
+    copySkillFolders();
     console.log(`✔ product-engineer-pro updated to v${getVersion()}.`);
     break;
   case "list-tools":
-    console.log(Object.keys(ADAPTER_TARGETS).join("\n"));
+    console.log([...Object.keys(ADAPTER_TARGETS), "all"].join("\n"));
     break;
   case "version":
   case "-v":
@@ -99,16 +134,18 @@ USAGE
 
 COMMANDS
   init [--tool <name>]    Install skill and adapter for target tool (default: claude)
+  init --all              Install skill and adapters for ALL supported IDEs & agents
   update                  Update existing skill installation to latest version
   list-tools              List all supported tool adapters
   version                 Show package version
   help                    Show help message
 
 SUPPORTED TOOLS
-  ${Object.keys(ADAPTER_TARGETS).join(", ")}
+  ${Object.keys(ADAPTER_TARGETS).join(", ")}, all
 
 EXAMPLES
   $ npx @nomiwsd/product-engineer-pro init
+  $ npx @nomiwsd/product-engineer-pro init --all
   $ npx @nomiwsd/product-engineer-pro init --tool gemini
   $ npx @nomiwsd/product-engineer-pro init --tool codex
   $ npx @nomiwsd/product-engineer-pro init --tool cursor

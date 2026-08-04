@@ -26,8 +26,11 @@ suggestion instead of asserting opinions.
 Run via `npx` in your project root to auto-install or update the skill:
 
 ```bash
-# Default install (places skill in .claude/skills/product-engineer-pro)
+# Default install (places skill in .agents/skills/ and .claude/skills/)
 npx @nomiwsd/product-engineer-pro init
+
+# Install for ALL supported agents and IDEs at once:
+npx @nomiwsd/product-engineer-pro init --all
 
 # Target specific IDE or CLI tool environment:
 npx @nomiwsd/product-engineer-pro init --tool gemini      # -> GEMINI.md (Gemini CLI / Google Antigravity)

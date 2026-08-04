@@ -2,10 +2,10 @@
 
 This repository uses the `product-engineer-pro` skill.
 
-Treat `product-engineer-pro/AGENTS.md` and `product-engineer-pro/SKILL.md`
+Treat `.claude/skills/product-engineer-pro/SKILL.md` (or `.agents/skills/product-engineer-pro/SKILL.md`)
 as authoritative engineering instructions for all work in this repo.
 
-Load `product-engineer-pro/references/` files on demand per `SKILL.md`'s
+Load `references/` files on demand per `SKILL.md`'s
 Loading Protocol. Do not preload the full reference tree into context.
 
 Constraints C1–C4 in `SKILL.md` are non-negotiable and override any

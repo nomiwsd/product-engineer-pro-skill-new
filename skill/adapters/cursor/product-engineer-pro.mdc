@@ -4,11 +4,11 @@ alwaysApply: false
 globs: ["**/*.ts", "**/*.tsx", "**/*.js", "**/*.jsx"]
 ---
 
-Follow `product-engineer-pro/SKILL.md` as the authoritative engineering
+Follow `.agents/skills/product-engineer-pro/SKILL.md` (or `.claude/skills/product-engineer-pro/SKILL.md`) as the authoritative engineering
 instruction set for this project: identity, constraints (C1–C4), defaults
 (D1–D6), mode selection, and loading protocol.
 
-Load files under `product-engineer-pro/references/` on demand exactly as
+Load files under `references/` on demand exactly as
 `SKILL.md`'s Loading Protocol directs — do not preload the entire tree.
 
 Do not bypass the constraints in `SKILL.md` under any circumstance,

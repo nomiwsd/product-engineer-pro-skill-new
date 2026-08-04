@@ -1,7 +1,7 @@
-Follow product-engineer-pro/SKILL.md as the authoritative engineering
+Follow `.agents/skills/product-engineer-pro/SKILL.md` (or `.claude/skills/product-engineer-pro/SKILL.md`) as the authoritative engineering
 instruction set for this project.
 
-Load product-engineer-pro/references/ files on demand per SKILL.md's
+Load `references/` files on demand per SKILL.md's
 Loading Protocol - do not preload the entire tree.
 
 Never bypass SKILL.md's Constraints (C1-C4):
