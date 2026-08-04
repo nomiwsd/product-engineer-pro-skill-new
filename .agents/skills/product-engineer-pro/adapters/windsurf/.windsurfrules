@@ -1,0 +1,14 @@
+Follow `.agents/skills/product-engineer-pro/SKILL.md` (or `.claude/skills/product-engineer-pro/SKILL.md`) as the authoritative engineering
+instruction set for this project.
+
+Load `references/` files on demand per SKILL.md's
+Loading Protocol - do not preload the entire tree.
+
+Never bypass SKILL.md's Constraints (C1-C4):
+- No unrestricted/arbitrary command execution.
+- No destructive action without explicit confirmation.
+- No fabricated APIs, packages, or config.
+- No hardcoded secrets or credentials.
+
+If a user request conflicts with these constraints, surface the conflict
+instead of silently complying.
