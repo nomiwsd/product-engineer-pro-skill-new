@@ -45,14 +45,10 @@ const toolFlagIndex = Math.max(args.indexOf("--tool"), args.indexOf("--adapter")
 const tool = toolFlagIndex >= 0 ? args[toolFlagIndex + 1] : (isAll ? "all" : "claude");
 
 function copySkillFolders() {
-  // Clean up legacy unhidden root folder if present to keep project root clean
+  // Warn if legacy unhidden root folder is present rather than silently removing it (Constraint C2)
   const legacyPath = join(process.cwd(), "product-engineer-pro");
   if (existsSync(legacyPath)) {
-    try {
-      rmSync(legacyPath, { recursive: true, force: true });
-    } catch {
-      // Ignore if fail to remove
-    }
+    console.warn('⚠️ Found legacy unhidden folder "./product-engineer-pro". Please inspect and remove it manually if no longer needed.');
   }
 
   for (const destRel of SKILL_DEST_PATHS) {

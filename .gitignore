@@ -1,4 +1,5 @@
 node_modules/
-website/
 .DS_Store
 *.log
+/website/.agents
+/website/.claude

@@ -1,0 +1,4 @@
+# .aider.conf.yml — product-engineer-pro configuration
+read:
+  - CONVENTIONS.md
+  - product-engineer-pro/AGENTS.md
