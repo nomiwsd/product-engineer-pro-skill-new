@@ -54,8 +54,8 @@ export function Navbar() {
   const [activeSection, setActiveSection] = React.useState("");
 
   const navLinks = [
-    { name: "Features",  href: "#features" },
-    { name: "Stack",     href: "#stack" },
+    { name: "Stack", href: "#stack" },
+    { name: "Features", href: "#features" },
     { name: "Modes",     href: "#modes" },
     { name: "Install",   href: "#install" },
     { name: "FAQ",       href: "#faq" },
