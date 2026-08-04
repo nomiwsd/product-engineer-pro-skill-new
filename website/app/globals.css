@@ -1,0 +1,432 @@
+@import "tailwindcss";
+
+/* ─── TAILWIND V4: CLASS-BASED DARK MODE ─────────────────────────────────────
+   Overrides the default media-query dark variant with a .dark class strategy.
+   next-themes will add/remove `.dark` on <html> via a blocking inline script.
+────────────────────────────────────────────────────────────────────────────── */
+@custom-variant dark (&:where(.dark, .dark *));
+
+/* ─── PRIMITIVE TOKENS ───────────────────────────────────────────────────────
+   These are never referenced directly in components.
+   All components use semantic tokens below.
+────────────────────────────────────────────────────────────────────────────── */
+:root {
+  /* Violet Brand Scale — cool-indigo, hue 268° */
+  --violet-300: oklch(0.80 0.14 268);
+  --violet-400: oklch(0.68 0.18 268);
+  --violet-500: oklch(0.56 0.22 268);
+  --violet-600: oklch(0.46 0.22 268);
+  --violet-700: oklch(0.36 0.18 268);
+  --violet-900: oklch(0.18 0.08 268);
+
+  /* Amber Accent Scale — warm orange, hue 38° */
+  --amber-400: oklch(0.80 0.17 38);
+  --amber-500: oklch(0.70 0.19 38);
+  --amber-600: oklch(0.60 0.20 38);
+
+  /* Cool-Indigo Neutrals — hue 270°, very low chroma */
+  --neutral-50:  oklch(0.985 0.003 270);
+  --neutral-100: oklch(0.965 0.005 270);
+  --neutral-200: oklch(0.920 0.007 270);
+  --neutral-300: oklch(0.820 0.008 270);
+  --neutral-400: oklch(0.640 0.010 270);
+  --neutral-500: oklch(0.520 0.010 270);
+  --neutral-700: oklch(0.340 0.010 270);
+  --neutral-800: oklch(0.220 0.010 270);
+  --neutral-900: oklch(0.140 0.010 270);
+  --neutral-950: oklch(0.090 0.010 270);
+
+  /* Status */
+  --red-500:   oklch(0.60 0.22 25);
+  --green-500: oklch(0.66 0.18 148);
+}
+
+/* ─── SEMANTIC TOKENS: LIGHT MODE (default :root) ───────────────────────────
+   next-themes adds `.dark` on <html> for dark mode.
+   :root = light mode values.
+   .dark overrides below = dark mode values.
+────────────────────────────────────────────────────────────────────────────── */
+:root {
+  --background:        var(--neutral-50);
+  --background-subtle: var(--neutral-100);
+  --foreground:        var(--neutral-950);
+
+  --primary:            var(--violet-600);
+  --primary-foreground: var(--neutral-50);
+  --primary-hover:      var(--violet-700);
+
+  --accent:            var(--amber-500);
+  --accent-foreground: var(--neutral-50);
+  --accent-hover:      var(--amber-600);
+
+  --muted:            var(--neutral-100);
+  --muted-foreground: var(--neutral-500);
+
+  --card:            var(--neutral-100);
+  --card-foreground: var(--neutral-950);
+
+  --border:       var(--neutral-200);
+  --border-strong: var(--neutral-300);
+
+  --destructive:            var(--red-500);
+  --destructive-foreground: var(--neutral-50);
+  --success:                var(--green-500);
+  --success-foreground:     var(--neutral-950);
+
+  --ring: var(--violet-600);
+
+  /* Glow: very subtle in light mode — tinted lavender at low opacity */
+  --glow-color:  oklch(0.80 0.14 268 / 0.12);
+  --glow-spread: 60px;
+
+  /* Radius scale */
+  --radius-xs: 0.25rem;
+  --radius-sm: 0.375rem;
+  --radius-md: 0.5rem;
+  --radius-lg: 0.75rem;
+  --radius-xl: 1rem;
+  --radius-2xl: 1.5rem;
+
+  /* Shadow tokens */
+  --shadow-card: 0 1px 3px oklch(0 0 0 / 0.08), 0 1px 2px oklch(0 0 0 / 0.06);
+  --shadow-card-hover: 0 4px 16px oklch(0 0 0 / 0.10), 0 2px 4px oklch(0 0 0 / 0.06);
+  --shadow-glow: 0 0 60px -10px var(--glow-color);
+  --shadow-glow-strong: 0 0 100px -20px var(--glow-color);
+
+  /* Grid/dot pattern colors for section textures */
+  --grid-line: oklch(0.820 0.008 270 / 0.6);
+  --dot-color:  oklch(0.820 0.008 270 / 0.8);
+}
+
+/* ─── SEMANTIC TOKENS: DARK MODE OVERRIDES ──────────────────────────────────
+   next-themes adds `.dark` to <html>; this block activates.
+────────────────────────────────────────────────────────────────────────────── */
+.dark {
+  --background:        var(--neutral-950);
+  --background-subtle: var(--neutral-900);
+  --foreground:        var(--neutral-50);
+
+  --primary:            var(--violet-500);
+  --primary-foreground: var(--neutral-50);
+  --primary-hover:      var(--violet-400);
+
+  --accent:            var(--amber-400);
+  --accent-foreground: var(--neutral-950);
+  --accent-hover:      var(--amber-500);
+
+  --muted:            var(--neutral-800);
+  --muted-foreground: var(--neutral-400);
+
+  --card:            var(--neutral-900);
+  --card-foreground: var(--neutral-50);
+
+  --border:        var(--neutral-800);
+  --border-strong: var(--neutral-700);
+
+  --destructive:            var(--red-500);
+  --destructive-foreground: var(--neutral-50);
+  --success:                var(--green-500);
+  --success-foreground:     var(--neutral-950);
+
+  --ring: var(--violet-400);
+
+  /* Glow: vivid in dark mode — deep violet bloom */
+  --glow-color:  oklch(0.56 0.22 268 / 0.40);
+  --glow-spread: 120px;
+
+  /* Shadow tokens */
+  --shadow-card: 0 1px 3px oklch(0 0 0 / 0.40), 0 1px 2px oklch(0 0 0 / 0.30);
+  --shadow-card-hover: 0 4px 24px oklch(0 0 0 / 0.50), 0 0 0 1px var(--border-strong);
+  --shadow-glow: 0 0 80px -15px var(--glow-color);
+  --shadow-glow-strong: 0 0 160px -30px var(--glow-color);
+
+  /* Grid/dot pattern colors */
+  --grid-line: oklch(0.340 0.010 270 / 0.5);
+  --dot-color:  oklch(0.340 0.010 270 / 0.7);
+}
+
+/* ─── TAILWIND v4 THEME REGISTRATION ────────────────────────────────────────
+   Maps semantic CSS variables → Tailwind utility classes.
+   Use `bg-background`, `text-foreground`, `border-border`, etc.
+────────────────────────────────────────────────────────────────────────────── */
+@theme inline {
+  /* Semantic color utilities */
+  --color-background:         var(--background);
+  --color-background-subtle:  var(--background-subtle);
+  --color-foreground:         var(--foreground);
+
+  --color-primary:            var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-primary-hover:      var(--primary-hover);
+
+  --color-accent:             var(--accent);
+  --color-accent-foreground:  var(--accent-foreground);
+  --color-accent-hover:       var(--accent-hover);
+
+  --color-muted:              var(--muted);
+  --color-muted-foreground:   var(--muted-foreground);
+
+  --color-card:               var(--card);
+  --color-card-foreground:    var(--card-foreground);
+
+  --color-border:             var(--border);
+  --color-border-strong:      var(--border-strong);
+
+  --color-destructive:            var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-success:                var(--success);
+  --color-success-foreground:     var(--success-foreground);
+
+  --color-ring:               var(--ring);
+
+  /* Font families */
+  --font-sans: var(--font-geist-sans), "Inter", system-ui, -apple-system, sans-serif;
+  --font-mono: var(--font-geist-mono), "Fira Code", "Cascadia Code", monospace;
+
+  /* Radius utilities */
+  --radius-xs:  var(--radius-xs);
+  --radius-sm:  var(--radius-sm);
+  --radius-md:  var(--radius-md);
+  --radius-lg:  var(--radius-lg);
+  --radius-xl:  var(--radius-xl);
+  --radius-2xl: var(--radius-2xl);
+
+  /* Shadow utilities */
+  --shadow-card:        var(--shadow-card);
+  --shadow-card-hover:  var(--shadow-card-hover);
+  --shadow-glow:        var(--shadow-glow);
+  --shadow-glow-strong: var(--shadow-glow-strong);
+}
+
+/* ─── BASE STYLES ────────────────────────────────────────────────────────── */
+html {
+  scroll-behavior: smooth;
+  text-size-adjust: 100%;
+}
+
+body {
+  background-color: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-sans);
+  min-height: 100vh;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  font-feature-settings: "rlig" 1, "calt" 1;
+}
+
+/* Smooth color transitions when switching themes (not on initial load) */
+/* next-themes sets .dark class synchronously via its blocking script before paint */
+/* No visibility trick needed — the blocking script handles first-load. */
+/* Only animate theme SWITCHES triggered by user (after mount). */
+.theme-transition,
+.theme-transition *,
+.theme-transition *::before,
+.theme-transition *::after {
+  transition-duration: 200ms !important;
+  transition-property: background-color, border-color, color, fill, stroke, box-shadow !important;
+}
+
+/* ─── TYPOGRAPHY SCALE ───────────────────────────────────────────────────── */
+.text-display {
+  font-size: clamp(2.75rem, 5.5vw, 5rem);
+  line-height: 1.06;
+  letter-spacing: -0.035em;
+  font-weight: 800;
+}
+
+.text-heading-xl {
+  font-size: clamp(1.875rem, 3vw, 2.75rem);
+  line-height: 1.15;
+  letter-spacing: -0.025em;
+  font-weight: 700;
+}
+
+.text-heading-lg {
+  font-size: clamp(1.5rem, 2.5vw, 2rem);
+  line-height: 1.2;
+  letter-spacing: -0.02em;
+  font-weight: 650;
+}
+
+.text-heading-md {
+  font-size: 1.25rem;
+  line-height: 1.4;
+  letter-spacing: -0.015em;
+  font-weight: 600;
+}
+
+.text-body-lg {
+  font-size: 1.125rem;
+  line-height: 1.65;
+  font-weight: 400;
+}
+
+.text-body {
+  font-size: 1rem;
+  line-height: 1.6;
+  font-weight: 400;
+}
+
+.text-body-sm {
+  font-size: 0.875rem;
+  line-height: 1.55;
+  font-weight: 400;
+}
+
+/* Eyebrow / label utility */
+.text-eyebrow {
+  font-size: 0.6875rem;
+  line-height: 1;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  font-weight: 600;
+  font-family: var(--font-mono);
+}
+
+/* ─── MARQUEE ANIMATION ──────────────────────────────────────────────────── */
+@keyframes marquee {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-50%); }
+}
+
+.animate-marquee {
+  animation: marquee 32s linear infinite;
+  display: flex;
+  width: max-content;
+  will-change: transform;
+}
+
+/* Accessibility: pause marquee when user hovers (reduces distraction) */
+@media (hover: hover) {
+  .animate-marquee:hover {
+    animation-play-state: paused;
+  }
+}
+
+/* ─── GRADIENT TEXT UTILITY ──────────────────────────────────────────────── */
+.text-gradient-brand {
+  background: linear-gradient(
+    135deg,
+    var(--violet-300) 0%,
+    var(--violet-500) 40%,
+    var(--amber-400) 100%
+  );
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+}
+
+.dark .text-gradient-brand {
+  background: linear-gradient(
+    135deg,
+    var(--violet-300) 0%,
+    var(--violet-400) 50%,
+    var(--amber-400) 100%
+  );
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* ─── CARD INNER HIGHLIGHT ───────────────────────────────────────────────── */
+/* Subtle top-edge inner glow for premium card feel */
+.card-highlight {
+  position: relative;
+}
+
+.card-highlight::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: linear-gradient(
+    180deg,
+    oklch(1 0 0 / 0.06) 0%,
+    transparent 50%
+  );
+  pointer-events: none;
+  z-index: 0;
+}
+
+.dark .card-highlight::before {
+  background: linear-gradient(
+    180deg,
+    oklch(1 0 0 / 0.04) 0%,
+    transparent 40%
+  );
+}
+
+/* ─── SECTION BACKGROUNDS ────────────────────────────────────────────────── */
+/* Dot grid overlay pattern */
+.bg-dot-grid {
+  background-image: radial-gradient(
+    circle,
+    var(--dot-color) 1px,
+    transparent 1px
+  );
+  background-size: 24px 24px;
+}
+
+/* Fine line grid overlay */
+.bg-line-grid {
+  background-image:
+    linear-gradient(to right, var(--grid-line) 1px, transparent 1px),
+    linear-gradient(to bottom, var(--grid-line) 1px, transparent 1px);
+  background-size: 48px 48px;
+}
+
+/* Noise texture via SVG data URI — very subtle grain */
+.bg-noise {
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+  background-repeat: repeat;
+  background-size: 256px 256px;
+}
+
+/* ─── FOCUS RING GLOBAL ──────────────────────────────────────────────────── */
+:focus-visible {
+  outline: 2px solid var(--ring);
+  outline-offset: 2px;
+  border-radius: var(--radius-sm);
+}
+
+/* ─── ACCESSIBILITY: REDUCED MOTION ─────────────────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  ::before,
+  ::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* ─── SELECTION STYLING ──────────────────────────────────────────────────── */
+::selection {
+  background-color: oklch(0.56 0.22 268 / 0.30);
+  color: var(--foreground);
+}
+
+/* ─── SCROLLBAR UTILITIES ────────────────────────────────────────────────── */
+/* Horizontal-scroll containers (mobile tab bars) */
+.scrollbar-none {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+.scrollbar-none::-webkit-scrollbar {
+  display: none;
+}
+
+/* ─── MOBILE TOUCH IMPROVEMENTS ──────────────────────────────────────────── */
+/* Prevent double-tap zoom on interactive elements */
+button, a, [role="button"] {
+  touch-action: manipulation;
+}
+
+/* Prevent horizontal page overflow */
+html, body {
+  overflow-x: hidden;
+  max-width: 100vw;
+}
