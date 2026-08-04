@@ -290,8 +290,20 @@ body {
   to   { transform: translateX(-50%); }
 }
 
+@keyframes marquee-reverse {
+  from { transform: translateX(-50%); }
+  to   { transform: translateX(0); }
+}
+
 .animate-marquee {
-  animation: marquee 32s linear infinite;
+  animation: marquee 35s linear infinite;
+  display: flex;
+  width: max-content;
+  will-change: transform;
+}
+
+.animate-marquee-reverse {
+  animation: marquee-reverse 35s linear infinite;
   display: flex;
   width: max-content;
   will-change: transform;
@@ -299,7 +311,8 @@ body {
 
 /* Accessibility: pause marquee when user hovers (reduces distraction) */
 @media (hover: hover) {
-  .animate-marquee:hover {
+  .animate-marquee:hover,
+  .animate-marquee-reverse:hover {
     animation-play-state: paused;
   }
 }
