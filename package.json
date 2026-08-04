@@ -1,0 +1,54 @@
+{
+  "name": "product-engineer-pro",
+  "version": "1.0.0",
+  "description": "Portable AI coding skill: production-grade full-stack engineering standards for Next.js, React, TypeScript, Tailwind, shadcn/ui, Node.js, Express, NestJS, PostgreSQL, and MongoDB.",
+  "license": "MIT",
+  "type": "module",
+  "bin": {
+    "product-engineer-pro": "./bin/cli.js"
+  },
+  "files": [
+    "skill",
+    "bin",
+    "README.md",
+    "LICENSE",
+    "CHANGELOG.md"
+  ],
+  "keywords": [
+    "ai-skill",
+    "claude-skill",
+    "gemini-cli",
+    "codex",
+    "agents-md",
+    "cursor-rules",
+    "windsurf",
+    "copilot",
+    "roo-code",
+    "aider",
+    "coding-standards",
+    "nextjs",
+    "typescript",
+    "tailwindcss",
+    "shadcn-ui",
+    "nestjs",
+    "postgresql",
+    "mongodb"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/nomiwsd/product-engineer-pro-skill-new.git"
+  },
+  "bugs": {
+    "url": "https://github.com/nomiwsd/product-engineer-pro-skill-new/issues"
+  },
+  "homepage": "https://github.com/nomiwsd/product-engineer-pro-skill-new#readme",
+  "scripts": {
+    "validate": "node scripts/validate-structure.mjs",
+    "check-links": "node scripts/check-links.mjs",
+    "sync-version": "node scripts/sync-version.mjs",
+    "test": "node scripts/validate-structure.mjs && node scripts/check-links.mjs && node scripts/sync-version.mjs"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}
