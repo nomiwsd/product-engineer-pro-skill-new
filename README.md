@@ -58,12 +58,29 @@ npx @nomiwsd/product-engineer-pro init --tool generic     # -> AGENTS.md in proj
 | **Aider CLI** | Terminal CLI | `CONVENTIONS.md` (`.aider.conf.yml`) | Yes |
 | **Replit / v0 / Bolt.new / OpenHands** | Web / Cloud IDE | `AGENTS.md` | Yes |
 
-## Supported Modes
+## Supported Modes & Chat Slash Commands
 
-`audit` · `implement` · `debug` · `refactor` · `design-system` ·
-`performance` · `seo` · `security` · `database` · `test` · `review`
+Workflows can be triggered directly in chat via **Slash Commands** or selectable mode names:
 
-See [`skill/SKILL.md`](skill/SKILL.md) for full mode definitions and selection logic.
+| Chat Slash Command | Mode | Workflow Description |
+|---|---|---|
+| `/frontend` or `/ui` | `frontend` | Frontend Principal Agent: Next.js 16, React 19, Tailwind v4, WCAG AA & Web Vitals |
+| `/backend` or `/api` | `backend` | Backend Principal Agent: Node.js ESM, Express, NestJS, Zod validation & OWASP APIs |
+| `/seo-check` or `/seo` | `seo` | Technical SEO check, meta tags, sitemap & structured data |
+| `/audit` | `audit` | Full-stack codebase health, security & performance audit |
+| `/security` | `security` | OWASP Top 10 threat modeling & auth hardening |
+| `/implement` | `implement` | Surgical feature, API route, or component implementation |
+| `/database` | `database` | Schema design, Prisma/Mongoose migrations & indexing |
+| `/debug` | `debug` | Bug diagnosis & root-cause investigation |
+| `/refactor` | `refactor` | Clean structural refactoring without breaking contracts |
+| `/design-system` | `design-system` | Design tokens, component library & theme extension |
+| `/performance` | `performance` | Core Web Vitals, bundle optimization & INP/LCP/CLS fixes |
+| `/test` | `test` | Unit, integration & e2e test assertion generation |
+| `/review` | `review` | PR/diff review enforcing WCAG AA & zero hardcoded colors |
+
+> **Selective Activation Protocol:** Heavy workflow scans activate **only** when explicitly invoked via a Slash Command (e.g. `/seo-check`, `/audit`, `/security`, `/implement`) or explicit user request. The skill will not run unprompted multi-file scans on routine chat messages.
+
+See [`skill/SKILL.md`](skill/SKILL.md) for full mode definitions and workflow references.
 
 ## Supported Stack
 

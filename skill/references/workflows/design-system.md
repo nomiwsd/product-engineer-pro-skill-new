@@ -90,208 +90,35 @@ silently merging or picking one.
 
 ### 5. Build Primitive Tokens in OKLCH
 
-For the selected direction, define primitive color tokens using
-`oklch()`. OKLCH is required (not hex/HSL) because its lightness
-channel is perceptually uniform — shade/tint generation and cross-theme
-contrast prediction are reliable in a way hex and HSL are not.
-
-```css
---primitive-blue-50:  oklch(0.97 0.02 250);
---primitive-blue-500: oklch(0.58 0.19 250);
---primitive-blue-900: oklch(0.28 0.12 250);
---primitive-gray-50:  oklch(0.98 0 0);
---primitive-gray-500: oklch(0.55 0 0);
---primitive-gray-900: oklch(0.20 0 0);
---primitive-red-600:  oklch(0.55 0.22 25);
---primitive-green-600: oklch(0.60 0.17 145);
---primitive-amber-600: oklch(0.72 0.16 75);
-```
-
-Generate a full 50–950 step scale per hue used (brand, neutral, and each
-semantic status color) using consistent lightness steps — don't define
-only the two or three shades immediately needed.
+For the selected direction, define primitive color tokens using `oklch()`. OKLCH is required (not hex/HSL) because its lightness channel is perceptually uniform. Generate a full 50–950 step scale per hue used.
 
 ### 6. Derive Semantic Tokens
 
-Map primitives to meaning-based roles. Components must reference these,
-never primitives directly (per `design-system-theming.md`'s three-layer
-architecture).
-
-```css
---color-primary: var(--primitive-blue-500);
---color-primary-foreground: var(--primitive-gray-50);
---color-destructive: var(--primitive-red-600);
---color-success: var(--primitive-green-600);
---color-warning: var(--primitive-amber-600);
---color-background: var(--primitive-gray-50);
---color-foreground: var(--primitive-gray-900);
---color-muted: var(--primitive-gray-500);
---color-border: oklch(from var(--primitive-gray-500) l c h / 0.2);
-```
+Map primitives to meaning-based roles (`--color-primary`, `--color-background`, `--color-destructive`, etc.). Components must reference these semantic tokens, never primitives directly (per `frontend/design-system-theming.md`).
 
 ### 7. Produce Light AND Dark Theme Pairs
 
-Both are required outputs, not an optional extra. Dark mode is not
-inverted lightness on the same hues — redefine each semantic token for
-the dark context, and re-verify contrast independently in Step 12.
-
-```css
-:root {
-  --color-background: var(--primitive-gray-50);
-  --color-foreground: var(--primitive-gray-900);
-  --color-primary: var(--primitive-blue-500);
-  --color-primary-foreground: var(--primitive-gray-50);
-}
-
-.dark {
-  --color-background: oklch(0.16 0 0);
-  --color-foreground: oklch(0.95 0 0);
-  --color-primary: oklch(0.70 0.16 250);
-  --color-primary-foreground: oklch(0.16 0 0);
-}
-```
+Both light and dark theme pairs are required outputs. Redefine semantic tokens for dark mode context and verify contrast independently per theme.
 
 ### 8. Define Typography, Spacing, Radius, and Shadow Scales
 
-All four are required, not optional additions:
-
-```css
-@theme {
-  /* Typography — modular scale, ~1.2 ratio */
-  --font-size-xs: 0.75rem;
-  --font-size-sm: 0.875rem;
-  --font-size-body: 1rem;
-  --font-size-lg: 1.125rem;
-  --font-size-heading-sm: 1.5rem;
-  --font-size-heading-lg: 1.875rem;
-  --line-height-body: 1.5;
-  --line-height-heading: 1.2;
-
-  /* Spacing — 4px base unit */
-  --spacing-1: 0.25rem;
-  --spacing-2: 0.5rem;
-  --spacing-4: 1rem;
-  --spacing-8: 2rem;
-
-  /* Radius — consistent with chosen direction's personality */
-  --radius-sm: 0.25rem;
-  --radius-md: 0.5rem;
-  --radius-lg: 1rem;
-  --radius-full: 9999px;
-
-  /* Shadows — elevation scale, not per-component ad hoc values */
-  --shadow-sm: 0 1px 2px oklch(0 0 0 / 0.05);
-  --shadow-md: 0 4px 6px oklch(0 0 0 / 0.10);
-  --shadow-lg: 0 10px 15px oklch(0 0 0 / 0.15);
-}
-```
-
-Radius and shadow steps must reflect the personality chosen in Step 3
-(e.g., a "sharp/technical" direction uses `--radius-sm` as its default;
-a "soft/approachable" direction uses `--radius-lg`) — don't default to
-generic values disconnected from the chosen direction.
+Define modular typography scales, 4px/8px grid spacing, personality-matched radius steps, and elevation shadows. Consult `templates/frontend/tailwind-theme-tokens.css.md` for complete token scaffolds.
 
 ### 9. Define Interactive & Validation States
 
-Focus, hover, active, disabled, and error states must be token-driven —
-defined once, consumed everywhere — never hardcoded per component.
+Token-drive focus (`focus-visible`), hover, active, disabled (`opacity: 0.5`), and validation error states. Never use color alone to convey error states per `core/accessibility-a11y.md`.
 
-```css
-@theme {
-  --color-ring: var(--color-primary);
-  --state-hover-opacity: 0.9;
-  --state-active-opacity: 0.8;
-  --state-disabled-opacity: 0.5;
-}
-```
+### 10. Integrate with Tailwind CSS (v4 `@theme` or v3 config)
 
-```css
-.interactive {
-  &:hover   { background-color: color-mix(in oklch, var(--color-primary) 90%, black); }
-  &:active  { background-color: color-mix(in oklch, var(--color-primary) 80%, black); }
-  &:disabled { opacity: var(--state-disabled-opacity); cursor: not-allowed; }
-  &:focus-visible { outline: 2px solid var(--color-ring); outline-offset: 2px; }
-}
-.field-error {
-  border-color: var(--color-destructive);
-  /* Never color alone — pair with icon/text per accessibility-a11y.md */
-}
-```
-
-Per `core/accessibility-a11y.md`: a visible focus indicator is required
-for keyboard users (`focus-visible`, not bare `focus`, to avoid a ring on
-every mouse click); error state must never be color-only.
-
-### 10. Integrate with Tailwind CSS v4 via `@theme`
-
-Detect Tailwind version per `frontend/tailwind-css.md`. For v4, all
-tokens from Steps 5–9 are declared inside a single `@theme` block in the
-CSS entry point (no `tailwind.config.js` required):
-
-```css
-@import "tailwindcss";
-
-@theme {
-  --color-primary: oklch(0.58 0.19 250);
-  --color-primary-foreground: oklch(0.98 0 0);
-  --color-destructive: oklch(0.55 0.22 25);
-  --radius-md: 0.5rem;
-  --shadow-md: 0 4px 6px oklch(0 0 0 / 0.10);
-  --font-size-heading-lg: 1.875rem;
-}
-
-.dark {
-  --color-primary: oklch(0.70 0.16 250);
-  --color-primary-foreground: oklch(0.16 0 0);
-}
-```
-
-For a confirmed Tailwind v3 project, translate the same token set into
-`tailwind.config.js`'s `theme.extend` per `tailwind-css.md`'s v3
-standards — never mix both configuration mechanisms in one project.
+Detect Tailwind version per `frontend/tailwind-css.md`. For v4, declare tokens inside `@theme` in the CSS entry point. For v3, extend `tailwind.config.js`.
 
 ### 11. Map to shadcn/ui CSS Variables
 
-If `components.json` is detected (per `repo-analysis.md`), map semantic
-tokens onto shadcn/ui's expected variable set so installed/generated
-primitives pick up the theme automatically with zero component edits:
-
-```css
-:root {
-  --background: var(--color-background);
-  --foreground: var(--color-foreground);
-  --card: var(--color-background);
-  --card-foreground: var(--color-foreground);
-  --popover: var(--color-background);
-  --popover-foreground: var(--color-foreground);
-  --primary: var(--color-primary);
-  --primary-foreground: var(--color-primary-foreground);
-  --secondary: var(--primitive-gray-100);
-  --secondary-foreground: var(--color-foreground);
-  --muted: var(--primitive-gray-100);
-  --muted-foreground: var(--color-muted);
-  --accent: var(--primitive-gray-100);
-  --accent-foreground: var(--color-foreground);
-  --destructive: var(--color-destructive);
-  --destructive-foreground: oklch(0.98 0 0);
-  --border: var(--color-border);
-  --input: var(--color-border);
-  --ring: var(--color-ring);
-  --radius: var(--radius-md);
-}
-```
-
-Do not rename shadcn's expected variable names — components generated
-by the CLI reference these exact names (`shadcn-ui.md`).
+If `components.json` is detected (per `core/repo-analysis.md`), map semantic tokens onto shadcn/ui's expected CSS variables (`--background`, `--foreground`, `--primary`, `--radius`, etc.).
 
 ### 12. Validate Accessible Contrast
 
-For every semantic text/background pairing, in **both** light and dark
-themes independently, verify against `core/accessibility-a11y.md`:
-≥4.5:1 for normal text, ≥3:1 for large text/UI components. Do not assume
-a pairing that passes in light mode automatically passes in dark mode.
-
-Report contrast results explicitly:
+Verify text/background contrast pairings in **both** light and dark themes against `core/accessibility-a11y.md` (≥4.5:1 normal, ≥3:1 large). Report contrast results explicitly:
 
 | Pairing | Light Ratio | Dark Ratio | Pass? |
 |---|---|---|---|
@@ -299,29 +126,9 @@ Report contrast results explicitly:
 | primary-foreground / primary | 5.1:1 | 4.9:1 | ✅ |
 | muted-foreground / background | 4.6:1 | 4.5:1 | ✅ (borderline — flag) |
 
-Flag any borderline (4.5–5:1) pairing explicitly rather than silently
-passing it.
-
 ### 13. Implement Reduced-Motion Behaviour
 
-Per `core/accessibility-a11y.md`, any transition/animation introduced by
-this theme must be disabled or reduced for users who've set
-`prefers-reduced-motion: reduce`:
-
-```css
-@media (prefers-reduced-motion: reduce) {
-  *, *::before, *::after {
-    animation-duration: 0.01ms !important;
-    animation-iteration-count: 1 !important;
-    transition-duration: 0.01ms !important;
-    scroll-behavior: auto !important;
-  }
-}
-```
-
-This is a required output whenever the design system introduces any
-hover/active transition, page transition, or decorative animation — not
-an optional accessibility add-on.
+Per `core/accessibility-a11y.md`, disable or reduce non-essential transitions for users with `prefers-reduced-motion: reduce`.
 
 ### 14. Enforce No Hardcoded Component Colors
 
