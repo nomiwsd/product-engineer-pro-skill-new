@@ -7,7 +7,7 @@ const __dirname = dirname(fileURLToPath(import.meta.url));
 const PACKAGE_ROOT = resolve(__dirname, "..");
 const SKILL_SRC = join(PACKAGE_ROOT, "skill");
 
-const DEFAULT_VERSION = "1.0.2";
+const DEFAULT_VERSION = "1.1.0";
 
 function getVersion() {
   try {
