@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.0.1] — 2026-08-04
+
+### Added
+- Maintenance update for version 1.0.1.
+
+
 All notable changes to this skill are documented here. Framework version
 support additions are logged explicitly so users can confirm coverage.
 
