@@ -1,6 +1,6 @@
-# product-engineer-pro
+# @nomiwsd/product-engineer-pro
 
-[![npm version](https://img.shields.io/npm/v/product-engineer-pro.svg)](https://www.npmjs.com/package/product-engineer-pro)
+[![npm version](https://img.shields.io/npm/v/@nomiwsd/product-engineer-pro.svg)](https://www.npmjs.com/package/@nomiwsd/product-engineer-pro)
 [![CI](https://github.com/nomiwsd/product-engineer-pro-skill-new/actions/workflows/ci.yml/badge.svg)](https://github.com/nomiwsd/product-engineer-pro-skill-new/actions)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
@@ -16,7 +16,7 @@ Repository: [https://github.com/nomiwsd/product-engineer-pro-skill-new](https://
 
 Generic AI coding assistance produces tutorial-grade code: inconsistent
 security posture, no awareness of Core Web Vitals, no accessibility
-baseline, inconsistent database design. `product-engineer-pro` encodes
+baseline, inconsistent database design. `@nomiwsd/product-engineer-pro` encodes
 concrete, version-aware engineering standards so agents produce
 production-grade output by default — and cites the standard behind every
 suggestion instead of asserting opinions.
@@ -27,18 +27,18 @@ Run via `npx` in your project root to auto-install or update the skill:
 
 ```bash
 # Default install (places skill in .claude/skills/product-engineer-pro)
-npx product-engineer-pro init
+npx @nomiwsd/product-engineer-pro init
 
 # Target specific IDE or CLI tool environment:
-npx product-engineer-pro init --tool gemini      # -> GEMINI.md (Gemini CLI / Google Antigravity)
-npx product-engineer-pro init --tool codex       # -> .codex/instructions.md (OpenAI Codex CLI)
-npx product-engineer-pro init --tool cursor      # -> .cursor/rules/product-engineer-pro.mdc
-npx product-engineer-pro init --tool windsurf    # -> .windsurfrules
-npx product-engineer-pro init --tool copilot     # -> .github/copilot-instructions.md
-npx product-engineer-pro init --tool claude-code # -> CLAUDE.md
-npx product-engineer-pro init --tool roo-code    # -> .clinerules (Roo Code / Cline)
-npx product-engineer-pro init --tool aider       # -> CONVENTIONS.md (Aider CLI)
-npx product-engineer-pro init --tool generic     # -> AGENTS.md in project root
+npx @nomiwsd/product-engineer-pro init --tool gemini      # -> GEMINI.md (Gemini CLI / Google Antigravity)
+npx @nomiwsd/product-engineer-pro init --tool codex       # -> .codex/instructions.md (OpenAI Codex CLI)
+npx @nomiwsd/product-engineer-pro init --tool cursor      # -> .cursor/rules/product-engineer-pro.mdc
+npx @nomiwsd/product-engineer-pro init --tool windsurf    # -> .windsurfrules
+npx @nomiwsd/product-engineer-pro init --tool copilot     # -> .github/copilot-instructions.md
+npx @nomiwsd/product-engineer-pro init --tool claude-code # -> CLAUDE.md
+npx @nomiwsd/product-engineer-pro init --tool roo-code    # -> .clinerules (Roo Code / Cline)
+npx @nomiwsd/product-engineer-pro init --tool aider       # -> CONVENTIONS.md (Aider CLI)
+npx @nomiwsd/product-engineer-pro init --tool generic     # -> AGENTS.md in project root
 ```
 
 ## Online & Offline IDE / CLI Compatibility
@@ -72,16 +72,6 @@ See [`skill/SKILL.md`](skill/SKILL.md) for full mode definitions and selection l
 | Cross-cutting | Auth/authz, OWASP-aligned security, testing, accessibility, performance, technical SEO, deployment/observability |
 
 Framework versions are **detected, not assumed** — see [`skill/references/core/repo-analysis.md`](skill/references/core/repo-analysis.md).
-
-## How It Works
-
-1. `skill/SKILL.md` — entry point: identity, constraints, mode registry, routing logic.
-2. `skill/references/core/` — universal standards (security, testing, a11y, performance, SEO, repo/version detection, model calibration).
-3. `skill/references/{frontend,backend,database}/` — stack-specific standards, each with a Version Matrix so old and new projects are both supported correctly.
-4. `skill/references/workflows/` — one process file per mode, linking to only the standards relevant to the detected stack.
-5. `skill/templates/` — adaptable scaffolds. `skill/examples/` — worked examples and a self-evaluation rubric.
-
-Files are loaded progressively (SKILL.md → repo analysis → matched workflow → only the referenced standards) — not all at once.
 
 ## Package Structure
 
@@ -121,17 +111,7 @@ product-engineer-pro/                    ← repo root = npm package root
 
 ## Contributing
 
-See [`CONTRIBUTING.md`](CONTRIBUTING.md). Highlights:
-- New framework versions are added as Version Matrix rows — never as
-  rewrites that drop older support.
-- No standard may be duplicated across two files — link, don't repeat.
-- Every new mode requires a workflow file, a `SKILL.md` registry entry,
-  and at least one evaluation case.
-
-## Code of Conduct & Security
-
-- [`CODE_OF_CONDUCT.md`](CODE_OF_CONDUCT.md) — Contributor Covenant v2.1.
-- [`SECURITY.md`](SECURITY.md) — Security policy for reporting unsafe agent instructions.
+See [`CONTRIBUTING.md`](CONTRIBUTING.md).
 
 ## License
 

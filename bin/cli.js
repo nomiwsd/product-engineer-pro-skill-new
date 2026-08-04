@@ -61,7 +61,7 @@ function installFor(toolName) {
     cpSync(adapterSrc, adapterDest);
   }
 
-  console.log(`✔ product-engineer-pro v${getVersion()} installed for "${toolName}".`);
+  console.log(`✔ @nomiwsd/product-engineer-pro v${getVersion()} installed for "${toolName}".`);
   console.log(`  Full skill: ./product-engineer-pro/`);
   if (config.src) console.log(`  Adapter:    ./${config.dest}`);
 }
@@ -73,7 +73,7 @@ switch (command) {
     break;
   case "update":
     if (!existsSync(join(process.cwd(), "product-engineer-pro"))) {
-      console.error("❌ No existing install found. Run `npx product-engineer-pro init` first.");
+      console.error("❌ No existing install found. Run `npx @nomiwsd/product-engineer-pro init` first.");
       process.exit(1);
     }
     copySkillFolder(join(process.cwd(), "product-engineer-pro"));
@@ -91,11 +91,11 @@ switch (command) {
   case "-h":
   case "--help":
   default:
-    console.log(`product-engineer-pro v${getVersion()}
+    console.log(`@nomiwsd/product-engineer-pro v${getVersion()}
 Senior/principal full-stack engineering AI skill CLI
 
 USAGE
-  $ npx product-engineer-pro [command] [options]
+  $ npx @nomiwsd/product-engineer-pro [command] [options]
 
 COMMANDS
   init [--tool <name>]    Install skill and adapter for target tool (default: claude)
@@ -108,13 +108,13 @@ SUPPORTED TOOLS
   ${Object.keys(ADAPTER_TARGETS).join(", ")}
 
 EXAMPLES
-  $ npx product-engineer-pro init
-  $ npx product-engineer-pro init --tool gemini
-  $ npx product-engineer-pro init --tool codex
-  $ npx product-engineer-pro init --tool cursor
-  $ npx product-engineer-pro init --tool windsurf
-  $ npx product-engineer-pro init --tool roo-code
-  $ npx product-engineer-pro init --tool aider
-  $ npx product-engineer-pro update`);
+  $ npx @nomiwsd/product-engineer-pro init
+  $ npx @nomiwsd/product-engineer-pro init --tool gemini
+  $ npx @nomiwsd/product-engineer-pro init --tool codex
+  $ npx @nomiwsd/product-engineer-pro init --tool cursor
+  $ npx @nomiwsd/product-engineer-pro init --tool windsurf
+  $ npx @nomiwsd/product-engineer-pro init --tool roo-code
+  $ npx @nomiwsd/product-engineer-pro init --tool aider
+  $ npx @nomiwsd/product-engineer-pro update`);
     break;
 }
