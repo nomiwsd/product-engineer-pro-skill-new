@@ -44,7 +44,6 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 22.x
-          registry-url: 'https://registry.npmjs.org'
 
       # npm Trusted Publishing requires npm >= 11.5.1 and Node.js >= 22.14.0.
       - name: Install OIDC-compatible npm
@@ -60,6 +59,16 @@ jobs:
 
           if [[ "${REGISTRY}" != "https://registry.npmjs.org/" ]]; then
             echo "::error::Unexpected npm registry: ${REGISTRY}"
+            exit 1
+          fi
+
+          if [[ -z "${ACTIONS_ID_TOKEN_REQUEST_URL:-}" ]]; then
+            echo "::error::GitHub OIDC request URL is unavailable. Check that this job has id-token: write permission."
+            exit 1
+          fi
+
+          if [[ -z "${ACTIONS_ID_TOKEN_REQUEST_TOKEN:-}" ]]; then
+            echo "::error::GitHub OIDC request token is unavailable. Check that this job has id-token: write permission."
             exit 1
           fi
 
@@ -82,7 +91,5 @@ jobs:
       - name: Verify package contents
         run: npm pack --dry-run
 
-      - name: Publish to NPM Registry
+      - name: Publish to NPM Registry via OIDC Trusted Publishing
         run: npm publish --access public
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
