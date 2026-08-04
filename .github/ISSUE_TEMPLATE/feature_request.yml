@@ -1,0 +1,31 @@
+name: 💡 Feature Request / Framework Extension
+description: Suggest a new framework version, stack addition, mode, or scaffold
+title: "[feature]: "
+labels: ["enhancement"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Suggest an extension or new framework version to support in `product-engineer-pro`.
+  - type: input
+    id: topic
+    attributes:
+      label: Target Framework / Topic
+      description: Which framework, library, or engineering domain is this for?
+      placeholder: e.g. Next.js App Router v15, Tailwind v4, Drizzle ORM
+    validations:
+      required: true
+  - type: textarea
+    id: rationale
+    attributes:
+      label: Rationale & Standards
+      description: Why should this be added and what engineering standards/best practices should it enforce?
+    validations:
+      required: true
+  - type: textarea
+    id: ProposedReferences
+    attributes:
+      label: Proposed Reference / Template Additions
+      description: Which reference files or Version Matrix rows should be added/updated?
+    validations:
+      required: false

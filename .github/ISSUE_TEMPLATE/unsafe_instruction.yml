@@ -1,0 +1,31 @@
+name: 🛡️ Unsafe Instruction Report (SECURITY)
+description: Report an instruction that causes agents to output insecure code or bypass C1-C4 constraints
+title: "[unsafe-instruction]: "
+labels: ["security", "unsafe-instruction"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Use this template to report instructions that produce insecure AI output (per SECURITY.md).
+  - type: input
+    id: file_location
+    attributes:
+      label: File and Section Location
+      description: Path and section in skill/ containing the problematic instruction
+      placeholder: e.g. skill/references/backend/auth-authz.md # JWT handling
+    validations:
+      required: true
+  - type: textarea
+    id: unsafe_behavior
+    attributes:
+      label: Unsafe AI Agent Behavior
+      description: What insecure code or action does this instruction cause?
+    validations:
+      required: true
+  - type: textarea
+    id: suggested_fix
+    attributes:
+      label: Suggested Correction
+      description: Proposed change or rule addition to prevent the vulnerability.
+    validations:
+      required: true

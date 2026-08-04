@@ -1,0 +1,38 @@
+name: 🐛 Bug Report
+description: Report a bug or issue with product-engineer-pro CLI or skill instructions
+title: "[bug]: "
+labels: ["bug", "triage"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thank you for reporting a bug! Please ensure you have checked existing issues.
+  - type: input
+    id: environment
+    attributes:
+      label: Environment & Agent Tool
+      description: What AI coding agent/IDE are you using? (e.g. Claude Code, Cursor, Windsurf, Copilot, VS Code)
+      placeholder: e.g., Cursor v0.42 / Claude Code
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected Behavior
+      description: What should have happened?
+    validations:
+      required: true
+  - type: textarea
+    id: actual
+    attributes:
+      label: Actual Behavior / Output
+      description: What actually happened or what incorrect code was produced?
+    validations:
+      required: true
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: Steps to Reproduce
+      description: Provide prompt or steps to reproduce the issue.
+    validations:
+      required: false
