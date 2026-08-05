@@ -9,23 +9,23 @@ import {
 import { MarqueeWall } from "@/components/ui/marquee-wall";
 
 const ROW_1_LOGOS = [
-  { name: "Next.js 16", icon: SiNextdotjs },
-  { name: "React 19", icon: SiReact },
-  { name: "TypeScript", icon: SiTypescript },
-  { name: "Tailwind v4", icon: SiTailwindcss },
-  { name: "Node.js ESM", icon: SiNodedotjs },
-  { name: "Express.js", icon: SiExpress },
-  { name: "NestJS", icon: SiNestjs },
+  { name: "Next.js 16",  icon: SiNextdotjs,  color: "#ffffff" },
+  { name: "React 19",    icon: SiReact,       color: "#61DAFB" },
+  { name: "TypeScript",  icon: SiTypescript,  color: "#3178C6" },
+  { name: "Tailwind v4", icon: SiTailwindcss, color: "#06B6D4" },
+  { name: "Node.js ESM", icon: SiNodedotjs,   color: "#339933" },
+  { name: "Express.js",  icon: SiExpress,     color: "#ffffff" },
+  { name: "NestJS",      icon: SiNestjs,      color: "#E0234E" },
 ];
 
 const ROW_2_LOGOS = [
-  { name: "PostgreSQL", icon: SiPostgresql },
-  { name: "MongoDB", icon: SiMongodb },
-  { name: "GitHub Copilot", icon: SiGithubcopilot },
-  { name: "Claude Code", icon: SiClaude },
-  { name: "Cursor AI", icon: SiCursor },
-  { name: "Windsurf", icon: SiWindsurf },
-  { name: "GitHub Actions", icon: SiGithub },
+  { name: "PostgreSQL",     icon: SiPostgresql,    color: "#4169E1" },
+  { name: "MongoDB",        icon: SiMongodb,       color: "#47A248" },
+  { name: "GitHub Copilot", icon: SiGithubcopilot, color: "#ffffff" },
+  { name: "Claude Code",    icon: SiClaude,        color: "#CC785C" },
+  { name: "Cursor AI",      icon: SiCursor,        color: "#ffffff" },
+  { name: "Windsurf",       icon: SiWindsurf,      color: "#00C7B7" },
+  { name: "GitHub Actions", icon: SiGithub,        color: "#ffffff" },
 ];
 
 export function StackMarquee() {

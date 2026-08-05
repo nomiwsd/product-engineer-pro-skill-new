@@ -230,11 +230,11 @@ export function Features() {
                 <TiltCard
                   tiltDegree={5}
                   className={cn(
-                    "h-full p-5 lg:p-6 flex flex-col min-w-0",
+                    "h-full p-0 flex flex-col min-w-0",
                     feature.id === "security" && "border-primary/40 shadow-glow"
                   )}
                 >
-                  <SpotlightGlow className="h-full flex flex-col min-w-0">
+                  <SpotlightGlow className="h-full flex flex-col min-w-0 p-5 lg:p-6 rounded-xl">
                     <div className="space-y-3 flex-1 min-w-0">
                       {/* Top Tile Row */}
                       <div className="flex items-start justify-between gap-2 min-w-0">
