@@ -1,6 +1,6 @@
 {
   "name": "@nomiwsd/product-engineer-pro",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "description": "Portable AI coding skill: production-grade full-stack engineering standards for Next.js, React, TypeScript, Tailwind, shadcn/ui, Node.js, Express, NestJS, PostgreSQL, and MongoDB.",
   "license": "MIT",
   "type": "module",
