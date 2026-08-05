@@ -446,12 +446,18 @@ export function ModesShowcase() {
   const [activeIndex, setActiveIndex] = React.useState(2); // Security default
   const prefersReduced = useReducedMotion();
   const tabsRef = React.useRef<HTMLDivElement>(null);
+  // Skip auto-scroll on initial mount — only scroll when user navigates
+  const isMounted = React.useRef(false);
 
   const handlePrev = () => setActiveIndex((prev) => (prev > 0 ? prev - 1 : MODES.length - 1));
   const handleNext = () => setActiveIndex((prev) => (prev < MODES.length - 1 ? prev + 1 : 0));
 
   // Auto-scroll the pill nav so the active button is always visible
   React.useEffect(() => {
+    if (!isMounted.current) {
+      isMounted.current = true;
+      return; // skip on first render — prevents page jump on load
+    }
     const container = tabsRef.current;
     if (!container) return;
     const activeBtn = container.querySelector<HTMLElement>(`[data-active="true"]`);
