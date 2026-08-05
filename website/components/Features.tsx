@@ -3,7 +3,7 @@
 import * as React from "react";
 import { motion, useReducedMotion } from "motion/react";
 import {
-  ShieldAlert, Zap, Layers, GitCompare, Database, Accessibility, CheckCircle2, AlertTriangle, Check,
+  ShieldAlert, Zap, Layers, GitCompare, Database, Accessibility, CheckCircle2, AlertTriangle, Check, Palette,
 } from "lucide-react";
 import { SiNextdotjs, SiTypescript, SiPostgresql, SiTailwindcss, SiMongodb } from "react-icons/si";
 import { TiltCard } from "@/components/ui/tilt-card";
@@ -120,6 +120,17 @@ const c = await cookies();`,
     proofContent: ["Contrast 4.5:1", "ARIA 1.2", "Keyboard Nav", "Reduced Motion"],
     metaLine: "Validated against: Screen Readers & Axe-core",
   },
+  {
+    id: "design",
+    icon: Palette,
+    badge: "Design System",
+    title: "OKLCH Tokens, Glassmorphism & Micro-Animations",
+    description: "Scaffolds a 3-layer semantic token system with OKLCH color scales, 4px/8px grid, spring-physics animations, and glassmorphism utilities — enforcing zero hardcoded hex values.",
+    gridAreaClass: "md:[grid-area:design]",
+    proofType: "tags",
+    proofContent: ["OKLCH Color Space", "4px Grid", "Glassmorphism", "Spring Physics", "prefers-reduced-motion", "Dark Mode Surfaces"],
+    metaLine: "Token layers: Primitive → Semantic → Component",
+  },
 ];
 
 function HeroCodeToggle({ badCode, goodCode }: { badCode: string; goodCode: string }) {
@@ -215,7 +226,7 @@ export function Features() {
           initial="hidden"
           whileInView="visible"
           viewport={{ once: true, margin: "-60px" }}
-          className="grid grid-cols-1 md:grid-cols-3 gap-5 md:[grid-template-areas:'security_security_version'_'security_security_vitals'_'diff_database_a11y']"
+          className="grid grid-cols-1 md:grid-cols-3 gap-5 md:[grid-template-areas:'security_security_version'_'security_security_vitals'_'diff_database_a11y'_'design_design_design']"
         >
           {FEATURES.map((feature) => {
             const Icon = feature.icon;

@@ -2,9 +2,9 @@
 
 import * as React from "react";
 import { motion, AnimatePresence, useReducedMotion } from "motion/react";
-import { Copy, Check, Sparkles, FolderGit2, CheckCircle2 } from "lucide-react";
+import { Copy, Check, Sparkles, FolderGit2, CheckCircle2, Bot, Terminal, Code2 } from "lucide-react";
 import {
-  SiClaude, SiCursor, SiWindsurf, SiGithubcopilot,
+  SiClaude, SiCursor, SiWindsurf, SiGithubcopilot, SiOpenid, SiGoogle,
 } from "react-icons/si";
 import { cn } from "@/lib/utils";
 
@@ -74,6 +74,62 @@ const TARGETS: Target[] = [
       "Execute init with --adapter agents",
       "Generates AGENTS.md & .agents/skills/ directory",
       "Compatible with Copilot, Roo Code, Aider, & local LLMs",
+    ],
+  },
+  {
+    id: "gemini",
+    name: "Gemini (Antigravity)",
+    cmd: "npx @nomiwsd/product-engineer-pro init --adapter gemini",
+    fileNote: "GEMINI.md + .agents/skills/",
+    descriptor: "Google Gemini / Antigravity IDE agent",
+    details: "Writes GEMINI.md adapter with full skill references for Gemini-powered coding agents and Antigravity IDE.",
+    icon: SiGoogle,
+    nextSteps: [
+      "Run init with --adapter gemini in project root",
+      "Generates GEMINI.md adapter and skill files",
+      "Gemini agent reads rules on every engineering task",
+    ],
+  },
+  {
+    id: "codex",
+    name: "OpenAI Codex",
+    cmd: "npx @nomiwsd/product-engineer-pro init --adapter codex",
+    fileNote: ".codex/instructions.md",
+    descriptor: "OpenAI Codex CLI agent",
+    details: "Writes .codex/instructions.md adapter for the OpenAI Codex CLI agent with all engineering constraints embedded.",
+    icon: SiOpenid,
+    nextSteps: [
+      "Execute init with --adapter codex in root terminal",
+      "Creates .codex/instructions.md automatically",
+      "Codex CLI reads skill rules on every session start",
+    ],
+  },
+  {
+    id: "aider",
+    name: "Aider",
+    cmd: "npx @nomiwsd/product-engineer-pro init --adapter aider",
+    fileNote: "CONVENTIONS.md",
+    descriptor: "Terminal-based pair programming agent",
+    details: "Writes CONVENTIONS.md adapter for Aider — the open-source terminal pair programmer that respects project conventions.",
+    icon: Terminal,
+    nextSteps: [
+      "Run init with --adapter aider in project root",
+      "Generates CONVENTIONS.md with full engineering standards",
+      "Aider auto-loads conventions on every coding session",
+    ],
+  },
+  {
+    id: "roocode",
+    name: "Roo Code",
+    cmd: "npx @nomiwsd/product-engineer-pro init --adapter roo-code",
+    fileNote: ".clinerules",
+    descriptor: "VS Code Roo Code extension",
+    details: "Writes .clinerules adapter file for the Roo Code VS Code extension with all version-adaptive engineering rules.",
+    icon: Code2,
+    nextSteps: [
+      "Execute init with --adapter roo-code in terminal",
+      "Creates .clinerules file in workspace root",
+      "Roo Code applies rules automatically in VS Code",
     ],
   },
 ];
