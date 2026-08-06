@@ -18,10 +18,8 @@ function getVersion() {
   }
 }
 
-const SKILL_DEST_PATHS = [
-  ".agents/skills/product-engineer-pro",
-  ".claude/skills/product-engineer-pro",
-];
+const AGENTS_SKILL_PATH = ".agents/skills/product-engineer-pro";
+const CLAUDE_SKILL_PATH = ".claude/skills/product-engineer-pro";
 
 const ADAPTER_TARGETS = {
   claude: { src: "adapters/claude-code/CLAUDE.md", dest: "CLAUDE.md" },
@@ -44,14 +42,24 @@ const isAll = args.includes("--all") || args.includes("-a") || args.includes("al
 const toolFlagIndex = Math.max(args.indexOf("--tool"), args.indexOf("--adapter"));
 const tool = toolFlagIndex >= 0 ? args[toolFlagIndex + 1] : (isAll ? "all" : "claude");
 
-function copySkillFolders() {
+function getTargetSkillPaths(toolName) {
+  if (toolName === "all") {
+    return [AGENTS_SKILL_PATH, CLAUDE_SKILL_PATH];
+  }
+  if (toolName === "claude" || toolName === "claude-code") {
+    return [CLAUDE_SKILL_PATH, AGENTS_SKILL_PATH];
+  }
+  return [AGENTS_SKILL_PATH];
+}
+
+function copySkillFolders(destPaths) {
   // Warn if legacy unhidden root folder is present rather than silently removing it (Constraint C2)
   const legacyPath = join(process.cwd(), "product-engineer-pro");
   if (existsSync(legacyPath)) {
     console.warn('⚠️ Found legacy unhidden folder "./product-engineer-pro". Please inspect and remove it manually if no longer needed.');
   }
 
-  for (const destRel of SKILL_DEST_PATHS) {
+  for (const destRel of destPaths) {
     const destRoot = join(process.cwd(), destRel);
     mkdirSync(destRoot, { recursive: true });
     cpSync(SKILL_SRC, destRoot, { recursive: true });
@@ -69,15 +77,17 @@ function installAdapter(toolName) {
 }
 
 function installFor(toolName) {
-  copySkillFolders();
+  const skillPaths = getTargetSkillPaths(toolName);
+  copySkillFolders(skillPaths);
 
   if (toolName === "all" || isAll) {
     for (const t of Object.keys(ADAPTER_TARGETS)) {
       installAdapter(t);
     }
     console.log(`✔ @nomiwsd/product-engineer-pro v${getVersion()} installed for ALL tools & IDEs.`);
-    console.log(`  Skills:   ./.agents/skills/product-engineer-pro/`);
-    console.log(`            ./.claude/skills/product-engineer-pro/`);
+    for (const p of skillPaths) {
+      console.log(`  Skills:   ./${p}/`);
+    }
     console.log(`  Adapters: Configured for Cursor, Windsurf, Copilot, Gemini, Codex, Claude Code, Roo Code, Aider, Generic.`);
     return;
   }
@@ -91,8 +101,9 @@ function installFor(toolName) {
   installAdapter(toolName);
 
   console.log(`✔ @nomiwsd/product-engineer-pro v${getVersion()} installed for "${toolName}".`);
-  console.log(`  Skills:   ./.agents/skills/product-engineer-pro/`);
-  console.log(`            ./.claude/skills/product-engineer-pro/`);
+  for (const p of skillPaths) {
+    console.log(`  Skills:   ./${p}/`);
+  }
   if (config.dest) console.log(`  Adapter:  ./${config.dest}`);
 }
 
@@ -102,13 +113,22 @@ switch (command) {
     installFor(tool);
     break;
   case "update":
-    const hasExisting = SKILL_DEST_PATHS.some((p) => existsSync(join(process.cwd(), p))) || existsSync(join(process.cwd(), "product-engineer-pro"));
-    if (!hasExisting) {
+    const existingPaths = [AGENTS_SKILL_PATH, CLAUDE_SKILL_PATH].filter((p) =>
+      existsSync(join(process.cwd(), p))
+    );
+    if (existingPaths.length === 0) {
+      const hasLegacy = existsSync(join(process.cwd(), "product-engineer-pro"));
+      if (hasLegacy) {
+        console.warn('⚠️ Found legacy unhidden folder "./product-engineer-pro". Please inspect and remove it manually if no longer needed.');
+      }
       console.error("❌ No existing install found. Run `npx @nomiwsd/product-engineer-pro init` first.");
       process.exit(1);
     }
-    copySkillFolders();
+    copySkillFolders(existingPaths);
     console.log(`✔ product-engineer-pro updated to v${getVersion()}.`);
+    for (const p of existingPaths) {
+      console.log(`  Updated:  ./${p}/`);
+    }
     break;
   case "list-tools":
     console.log([...Object.keys(ADAPTER_TARGETS), "all"].join("\n"));

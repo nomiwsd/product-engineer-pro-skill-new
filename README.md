@@ -26,7 +26,7 @@ suggestion instead of asserting opinions.
 Run via `npx` in your project root to auto-install or update the skill:
 
 ```bash
-# Default install (places skill in .agents/skills/ and .claude/skills/)
+# Default install (for Claude Code: .claude/skills/ and .agents/skills/)
 npx @nomiwsd/product-engineer-pro init
 
 # Install for ALL supported agents and IDEs at once:
