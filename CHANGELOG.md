@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.1.2] — 2026-08-06
+
+### Added
+- Maintenance update for version 1.1.2.
+
+
 ## [1.1.1] — 2026-08-05
 
 ### Added
