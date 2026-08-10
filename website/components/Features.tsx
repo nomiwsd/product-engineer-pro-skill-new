@@ -10,7 +10,7 @@ import { TiltCard } from "@/components/ui/tilt-card";
 import { SpotlightGlow } from "@/components/ui/spotlight-glow";
 import { cn } from "@/lib/utils";
 
-type Feature = {
+type FeatureBase = {
   id: string;
   icon: React.ElementType;
   badge: string;
@@ -18,10 +18,14 @@ type Feature = {
   description: string;
   gridAreaClass: string;
   brandIcon?: React.ElementType;
-  proofType: "code" | "checklist" | "comparison" | "tags";
-  proofContent: any;
   metaLine: string;
 };
+
+type Feature = FeatureBase & (
+  | { proofType: "code"; proofContent: string | { badCode: string; goodCode: string } }
+  | { proofType: "checklist" | "tags"; proofContent: string[] }
+  | { proofType: "comparison"; proofContent: Record<string, { name: string; icon: React.ElementType; note: string }> }
+);
 
 const FEATURES: Feature[] = [
   {
@@ -29,7 +33,7 @@ const FEATURES: Feature[] = [
     icon: ShieldAlert,
     badge: "Security Baseline",
     title: "OWASP-Aligned Security By Default",
-    description: "Enforces Zod schema validation, SQL injection prevention, CSRF handling, and auth guard rails before writing any API endpoint.",
+    description: "Routes boundary validation, injection prevention, CSRF, and authorization checks through the repository's established conventions.",
     gridAreaClass: "md:[grid-area:security]",
     brandIcon: SiTypescript,
     proofType: "code",
@@ -67,16 +71,16 @@ const c = await cookies();`,
     icon: Zap,
     badge: "Performance",
     title: "Core Web Vitals Enforcement",
-    description: "Eliminates CLS with explicit image dimensions, enforces dynamic imports, and optimizes font paths.",
+    description: "Measures layout stability, image sizing, loading boundaries, bundle evidence, and font delivery before recommending changes.",
     gridAreaClass: "md:[grid-area:vitals]",
     brandIcon: SiNextdotjs,
     proofType: "checklist",
     proofContent: [
-      "Zero CLS layout dimension guards",
+      "Image and layout dimension review",
       "Dynamic import split for heavy libraries",
       "Font subsetting & display: swap",
     ],
-    metaLine: "Target: LCP < 1.2s · INP < 100ms · CLS = 0",
+    metaLine: "Measures current Web Vitals before claiming improvement",
   },
   {
     id: "diff",
@@ -89,9 +93,9 @@ const c = await cookies();`,
     proofContent: [
       "Preserves docstrings & comments",
       "Strict scope boundary enforcement",
-      "Zero wholesale file overwrites",
+      "Ownership-aware generated-file updates",
     ],
-    metaLine: "Git delta limit: ≤ 150 lines per atomic commit",
+    metaLine: "Diff scope follows the requested change and repository conventions",
   },
   {
     id: "database",
@@ -106,7 +110,7 @@ const c = await cookies();`,
       relational: { name: "PostgreSQL", icon: SiPostgresql, note: "ACID · Compound Indexes · Prisma/Drizzle" },
       document: { name: "MongoDB", icon: SiMongodb, note: "Document · Typed Schemas · Mongoose" },
     },
-    metaLine: "Supported ORMs: Prisma, Drizzle, Mongoose, TypeORM",
+    metaLine: "Documented data tools: Prisma, Drizzle, and Mongoose",
   },
   {
     id: "a11y",
@@ -174,7 +178,7 @@ function HeroCodeToggle({ badCode, goodCode }: { badCode: string; goodCode: stri
         </div>
       </div>
       <pre className="p-3 overflow-x-auto text-muted-foreground leading-relaxed min-w-0">
-        <code className="whitespace-pre-wrap break-words sm:whitespace-pre sm:break-normal">
+        <code className="whitespace-pre-wrap wrap-break-word sm:whitespace-pre sm:break-normal">
           {showGood ? goodCode : badCode}
         </code>
       </pre>
@@ -266,16 +270,16 @@ export function Features() {
 
                       {/* Title & Description */}
                       <div className="space-y-1.5 min-w-0">
-                        <h3 className="text-base sm:text-lg font-bold text-card-foreground break-words">
+                        <h3 className="text-base sm:text-lg font-bold text-card-foreground wrap-break-word">
                           {feature.title}
                         </h3>
-                        <p className="text-xs sm:text-sm text-muted-foreground leading-relaxed break-words">
+                        <p className="text-xs sm:text-sm text-muted-foreground leading-relaxed wrap-break-word">
                           {feature.description}
                         </p>
                       </div>
 
                       {/* Concrete Proof Elements per Card */}
-                      {feature.proofType === "code" && feature.id === "security" && (
+                      {feature.proofType === "code" && typeof feature.proofContent !== "string" && (
                         <div className="space-y-3 min-w-0">
                           <HeroCodeToggle
                             badCode={feature.proofContent.badCode}
@@ -293,9 +297,9 @@ export function Features() {
                         </div>
                       )}
 
-                      {feature.proofType === "code" && feature.id !== "security" && (
+                      {feature.proofType === "code" && typeof feature.proofContent === "string" && (
                         <div className="mt-3 p-2.5 rounded-xl border border-border bg-background font-mono text-xs text-primary/90 leading-relaxed overflow-x-auto min-w-0">
-                          <code className="whitespace-pre-wrap break-words sm:whitespace-pre sm:break-normal">
+                          <code className="whitespace-pre-wrap wrap-break-word sm:whitespace-pre sm:break-normal">
                             {feature.proofContent}
                           </code>
                         </div>
@@ -303,10 +307,10 @@ export function Features() {
 
                       {feature.proofType === "checklist" && (
                         <div className="mt-3 space-y-1.5 pt-1 min-w-0">
-                          {feature.proofContent.map((item: string) => (
+                          {feature.proofContent.map((item) => (
                             <div key={item} className="flex items-start gap-2 text-xs font-mono text-foreground/90 min-w-0">
                               <Check className="h-3.5 w-3.5 text-success shrink-0 mt-0.5" />
-                              <span className="break-words">{item}</span>
+                              <span className="wrap-break-word">{item}</span>
                             </div>
                           ))}
                         </div>
@@ -319,21 +323,21 @@ export function Features() {
                               <SiPostgresql className="h-3.5 w-3.5 text-primary shrink-0" />
                               <span className="truncate">PostgreSQL</span>
                             </div>
-                            <p className="text-[0.6875rem] text-muted-foreground font-mono break-words">ACID · Indexes · Prisma</p>
+                            <p className="text-[0.6875rem] text-muted-foreground font-mono wrap-break-word">ACID · Indexes · Prisma</p>
                           </div>
                           <div className="p-2.5 rounded-xl border border-border bg-background space-y-1 min-w-0">
                             <div className="flex items-center gap-1.5 text-xs font-semibold text-foreground font-mono min-w-0">
                               <SiMongodb className="h-3.5 w-3.5 text-success shrink-0" />
                               <span className="truncate">MongoDB</span>
                             </div>
-                            <p className="text-[0.6875rem] text-muted-foreground font-mono break-words">Document · Mongoose</p>
+                            <p className="text-[0.6875rem] text-muted-foreground font-mono wrap-break-word">Document · Mongoose</p>
                           </div>
                         </div>
                       )}
 
                       {feature.proofType === "tags" && (
                         <div className="mt-3 flex flex-wrap gap-1.5 min-w-0">
-                          {feature.proofContent.map((tag: string) => (
+                          {feature.proofContent.map((tag) => (
                             <span key={tag} className="px-2 py-0.5 rounded-md border border-border bg-background text-[0.6875rem] font-mono text-muted-foreground whitespace-nowrap">
                               {tag}
                             </span>

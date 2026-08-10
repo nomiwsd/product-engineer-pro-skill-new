@@ -1,0 +1,78 @@
+{
+  "schemaVersion": 2,
+  "skill": {
+    "name": "product-engineer-pro",
+    "displayName": "Product Engineer Pro",
+    "version": "2.0.1"
+  },
+  "lifecycles": [
+    {
+      "id": "plan",
+      "label": "Planner / Researcher",
+      "mutation": "read-only",
+      "purpose": "Research the repository and produce a decision-complete implementation plan."
+    },
+    {
+      "id": "build",
+      "label": "Builder",
+      "mutation": "host-controlled",
+      "purpose": "Implement and verify authorized changes under the host permission model."
+    },
+    {
+      "id": "review",
+      "label": "Reviewer / Auditor",
+      "mutation": "read-only",
+      "purpose": "Inspect code, diffs, tests, security, and quality without editing."
+    }
+  ],
+  "workflows": [
+    { "id": "audit", "label": "Audit", "aliases": ["health-check"], "defaultLifecycle": "review", "diagnostic": true, "buildCapable": false, "description": "Assess repository health, risk, security, performance, and maintainability." },
+    { "id": "backend", "label": "Backend", "aliases": ["api"], "defaultLifecycle": "build", "diagnostic": true, "buildCapable": true, "description": "Design, implement, or review Node.js, Express, and NestJS services and APIs." },
+    { "id": "database", "label": "Database", "aliases": ["db"], "defaultLifecycle": "build", "diagnostic": true, "buildCapable": true, "description": "Design, migrate, query, and review PostgreSQL and MongoDB data layers." },
+    { "id": "debug", "label": "Debug", "aliases": ["diagnose"], "defaultLifecycle": "build", "diagnostic": true, "buildCapable": true, "description": "Reproduce, isolate, repair, and verify defects when repair is authorized." },
+    { "id": "design-system", "label": "Design system", "aliases": ["design", "theme"], "defaultLifecycle": "build", "diagnostic": true, "buildCapable": true, "description": "Audit, extend, create, or rebrand design tokens and component systems." },
+    { "id": "frontend", "label": "Frontend", "aliases": ["ui"], "defaultLifecycle": "build", "diagnostic": true, "buildCapable": true, "description": "Build or review React, Next.js, TypeScript, Tailwind, and shadcn/ui interfaces." },
+    { "id": "implement", "label": "Implement", "aliases": ["build"], "defaultLifecycle": "build", "diagnostic": false, "buildCapable": true, "description": "Deliver a scoped feature through repository-aligned implementation and verification." },
+    { "id": "performance", "label": "Performance", "aliases": ["perf"], "defaultLifecycle": "build", "diagnostic": true, "buildCapable": true, "description": "Measure and improve runtime, rendering, database, and delivery performance." },
+    { "id": "refactor", "label": "Refactor", "aliases": ["cleanup"], "defaultLifecycle": "build", "diagnostic": true, "buildCapable": true, "description": "Improve structure while preserving observable behavior and contracts." },
+    { "id": "review", "label": "Review", "aliases": ["pr-review"], "defaultLifecycle": "review", "diagnostic": true, "buildCapable": false, "description": "Review diffs and pull requests for correctness, regressions, security, and tests." },
+    { "id": "security", "label": "Security", "aliases": ["secure"], "defaultLifecycle": "review", "diagnostic": true, "buildCapable": true, "description": "Threat-model, audit, harden, or repair supported applications." },
+    { "id": "seo", "label": "SEO", "aliases": ["seo-check"], "defaultLifecycle": "review", "diagnostic": true, "buildCapable": true, "description": "Audit and improve crawlability, metadata, structured data, and discoverability." },
+    { "id": "test", "label": "Test", "aliases": ["testing"], "defaultLifecycle": "build", "diagnostic": true, "buildCapable": true, "description": "Design, implement, stabilize, and review unit, integration, and end-to-end tests." }
+  ],
+  "hosts": [
+    { "id": "claude", "label": "Claude Code", "tier": "full-native", "skillRoot": ".claude/skills/product-engineer-pro", "commandStyle": "pep:<workflow>", "agents": true, "commands": true, "nativeModes": ["plan", "acceptEdits", "default", "dontAsk", "bypassPermissions"] },
+    { "id": "codex", "label": "Codex", "tier": "full-native", "skillRoot": ".agents/skills/product-engineer-pro", "commandStyle": "$product-engineer-pro", "agents": true, "commands": false, "nativeModes": ["plan", "review", "agent"] },
+    { "id": "gemini", "label": "Gemini CLI", "tier": "full-native", "skillRoot": ".agents/skills/product-engineer-pro", "commandStyle": "pep:<workflow>", "agents": true, "commands": true, "nativeModes": ["plan", "default"] },
+    { "id": "cursor", "label": "Cursor", "tier": "full-native", "skillRoot": ".agents/skills/product-engineer-pro", "commandStyle": "$product-engineer-pro", "agents": true, "commands": false, "nativeModes": ["ask", "agent"] },
+    { "id": "copilot", "label": "VS Code / Copilot", "tier": "full-native", "skillRoot": ".agents/skills/product-engineer-pro", "commandStyle": "/pep-<workflow>", "agents": true, "commands": true, "nativeModes": ["plan", "agent"] },
+    { "id": "windsurf", "label": "Windsurf", "tier": "native-workflow", "skillRoot": ".windsurf/skills/product-engineer-pro", "commandStyle": "/pep-<workflow>", "agents": false, "commands": true, "nativeModes": ["plan", "code"] },
+    { "id": "roo-code", "label": "Roo Code", "tier": "native-workflow", "skillRoot": ".agents/skills/product-engineer-pro", "commandStyle": "pep-<role>", "agents": false, "commands": false, "nativeModes": ["pep-plan", "pep-build", "pep-review"] },
+    { "id": "cline", "label": "Cline", "tier": "native-workflow", "skillRoot": ".cline/skills/product-engineer-pro", "commandStyle": "$product-engineer-pro", "agents": false, "commands": false, "nativeModes": ["plan", "act"] },
+    { "id": "aider", "label": "Aider", "tier": "portable-fallback", "skillRoot": null, "commandStyle": "prompt", "agents": false, "commands": false, "nativeModes": [] },
+    { "id": "portable", "label": "Portable AGENTS.md", "tier": "portable-fallback", "skillRoot": ".agents/skills/product-engineer-pro", "commandStyle": "$product-engineer-pro", "agents": false, "commands": false, "nativeModes": [] }
+  ],
+  "aliases": {
+    "claude-code": "claude",
+    "vscode": "copilot",
+    "github-copilot": "copilot",
+    "agents": "portable",
+    "generic": "portable"
+  },
+  "legacyArtifacts": [
+    { "path": ".codex/instructions.md", "sha256": ["b0410544d9f111bf4862e3ff0e4b8a0fc02af77df5113819706e3fc85a26472d"], "tool": "codex", "replacement": ".agents/skills/product-engineer-pro and .codex/agents" },
+    { "path": ".windsurfrules", "sha256": ["209c33f7bce415e0156896ea71f26996a259af38347238f6a61d38a3429c50fa"], "tool": "windsurf", "replacement": ".windsurf/skills, .windsurf/workflows, and .windsurf/rules" },
+    { "path": ".clinerules", "sha256": ["4b25d6e1e677c05bb706c92c8062fbde7b5255478d8e1b50b0840a5fb9ba463f"], "tool": "roo-code", "replacement": ".roomodes/.roo rules for Roo or .cline/skills for Cline" },
+    { "path": "CLAUDE.md", "sha256": ["0815b567bc915b0a2d9866b7c762c72620e9f5ad198177cbff60976613780f0e"], "tool": "claude", "replacement": ".claude/skills and .claude/agents" },
+    { "path": "GEMINI.md", "sha256": ["4d7345949dad435efc15419cd95ceb71fdff670d5820910519c3be926602eacf"], "tool": "gemini", "replacement": ".agents/skills, .gemini/commands, and .gemini/agents" },
+    { "path": ".github/copilot-instructions.md", "sha256": ["8cb25a9dea72947279fcb1bf21b9868a3d2b11cdd4b8703e08f2fa3a015c5fc4"], "tool": "copilot", "replacement": ".agents/skills, .github/prompts, and .github/agents" },
+    { "path": ".cursor/rules/product-engineer-pro.mdc", "sha256": ["bd522ba15611ebc483376265b1a4782539a04f1936f57b1bf0daae17144300f9"], "tool": "cursor", "replacement": "the generated v2 Cursor rule and native skill" },
+    { "path": "CONVENTIONS.md", "sha256": ["48db22528fad2814715a566f165e977c94c57fcd8595b1a31bf1e09061d7c660"], "tool": "aider", "replacement": "the v2 portable Aider conventions" },
+    { "path": ".aider.conf.yml", "sha256": ["69c2a51f91d0ee10fd210c0e496fef161a60e2bbf34179379dbb7b28f090d64d"], "tool": "aider", "replacement": "a managed Aider read-list entry" },
+    { "path": "AGENTS.md", "sha256": ["4f65bbac844527166d310ef4da02ae53c23e54ff41b385731781b331a477301b"], "tool": "portable", "replacement": "a managed portable guidance block" },
+    { "path": "product-engineer-pro", "sha256": [], "tool": "portable", "replacement": "a host-native hidden skill directory" }
+  ],
+  "legacySkillTrees": [
+    { "version": "1.1.2", "fileCount": 63, "sha256": "a5e0dd52662cb18db11245a1b412fc3b8d8045a1cdc909963046ffb288eb5470" }
+  ]
+}

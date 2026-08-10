@@ -13,7 +13,7 @@ jobs:
 
     strategy:
       matrix:
-        node-version: [18.x, 20.x, 22.x]
+        node-version: [18.x, 20.x, 22.x, 24.x]
 
     steps:
       - name: Checkout Code
@@ -25,13 +25,34 @@ jobs:
           node-version: ${{ matrix.node-version }}
 
       - name: Validate Package Structure
-        run: npm run validate
-
-      - name: Verify Relative Markdown Links
-        run: npm run check-links
-
-      - name: Check Version Sync
-        run: npm run sync-version
+        run: npm test
 
       - name: Verify CLI Executable
         run: node bin/cli.js --help
+
+  website:
+    name: Clean offline-capable website build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+      - name: Setup Node.js 24
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24.x
+          cache: npm
+          cache-dependency-path: website/package-lock.json
+      - name: Clean install
+        working-directory: website
+        run: npm ci
+      - name: Lint
+        working-directory: website
+        run: npm run lint
+      - name: Type-check
+        working-directory: website
+        run: npm run typecheck
+      - name: Production build without remote font fetches
+        working-directory: website
+        env:
+          NEXT_TELEMETRY_DISABLED: "1"
+        run: npm run build

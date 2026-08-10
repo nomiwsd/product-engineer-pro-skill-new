@@ -14,7 +14,7 @@ export function FinalCTA() {
       <ParallaxLayer speed={-0.3} className="absolute top-1/2 left-[35%] -translate-x-1/2 -translate-y-1/2 pointer-events-none">
         <div
           aria-hidden="true"
-          className="w-[450px] sm:w-[600px] h-[350px] rounded-full opacity-70"
+          className="w-112.5 sm:w-150 h-87.5 rounded-full opacity-70"
           style={{
             background: "radial-gradient(ellipse at center, var(--glow-color) 0%, transparent 70%)",
             filter: "blur(60px)",
@@ -25,7 +25,7 @@ export function FinalCTA() {
       <ParallaxLayer speed={0.4} className="absolute top-1/2 left-[65%] -translate-x-1/2 -translate-y-1/2 pointer-events-none">
         <div
           aria-hidden="true"
-          className="w-[400px] sm:w-[500px] h-[300px] rounded-full opacity-60"
+          className="w-100 sm:w-125 h-75 rounded-full opacity-60"
           style={{
             background: `radial-gradient(ellipse at center, oklch(0.80 0.17 38 / 0.20) 0%, transparent 70%)`,
             filter: "blur(70px)",
@@ -76,7 +76,7 @@ export function FinalCTA() {
         </div>
 
         <p className="text-eyebrow text-muted-foreground pt-3">
-          MIT Licensed · Zero Telemetry · Works with Claude, GPT, Gemini, Cursor, Windsurf
+          MIT Licensed · Zero Telemetry · Tiered integrations for supported hosts
         </p>
       </div>
     </section>

@@ -28,7 +28,7 @@ if greenfield).
 4. Apply `core/engineering-principles.md` (naming, error handling,
    abstraction discipline) throughout.
 5. Validate all external input at the boundary; never trust client data
-   for authorization decisions (`core/security-owasp.md` A01/A03).
+   for authorization and input decisions (`core/security-owasp.md` A01/A05).
 6. Write or update tests appropriate to the risk of the change
    (`core/testing-strategy.md`) — required for business logic, auth, and
    data mutations; optional for pure presentational UI.

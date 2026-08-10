@@ -2,137 +2,103 @@
 
 [![npm version](https://img.shields.io/npm/v/@nomiwsd/product-engineer-pro.svg)](https://www.npmjs.com/package/@nomiwsd/product-engineer-pro)
 [![CI](https://github.com/nomiwsd/product-engineer-pro-skill-new/actions/workflows/ci.yml/badge.svg)](https://github.com/nomiwsd/product-engineer-pro-skill-new/actions)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
-A portable, open-source AI coding skill that makes any compatible coding
-agent behave like a senior/principal full-stack engineer across **Next.js,
-React, TypeScript, Tailwind CSS, shadcn/ui, Node.js, Express, NestJS,
-PostgreSQL, and MongoDB** — for new and existing codebases, on any version
-of these frameworks.
+A cross-agent engineering skill for the supported Next.js/React/TypeScript/
+Tailwind/shadcn, Node/Express/NestJS, PostgreSQL, and MongoDB stack.
 
-Repository: [https://github.com/nomiwsd/product-engineer-pro-skill-new](https://github.com/nomiwsd/product-engineer-pro-skill-new)
+Product Engineer Pro separates host lifecycle state (`plan`, `build`, `review`)
+from engineering specialty. Host Plan/Ask/read-only state always prevents edits;
+the 13 workflows are task recipes, not pretend universal modes.
 
-## Why This Exists
+## Install
 
-Generic AI coding assistance produces tutorial-grade code: inconsistent
-security posture, no awareness of Core Web Vitals, no accessibility
-baseline, inconsistent database design. `@nomiwsd/product-engineer-pro` encodes
-concrete, version-aware engineering standards so agents produce
-production-grade output by default — and cites the standard behind every
-suggestion instead of asserting opinions.
+```text
+product-engineer-pro init --tool <id> [--dry-run] [--guidance] [--force]
+product-engineer-pro init --all [--dry-run]
+product-engineer-pro update [--dry-run] [--force]
+product-engineer-pro migrate [--dry-run] [--force]
+product-engineer-pro doctor [--tool <id>] [--json]
+product-engineer-pro list-tools [--json]
+product-engineer-pro version
+```
 
-## Quick Install (Zero-Dependency CLI)
-
-Run via `npx` in your project root to auto-install or update the skill:
+Example:
 
 ```bash
-# Default install (for Claude Code: .claude/skills/ and .agents/skills/)
-npx @nomiwsd/product-engineer-pro init
-
-# Install for ALL supported agents and IDEs at once:
-npx @nomiwsd/product-engineer-pro init --all
-
-# Target specific IDE or CLI tool environment:
-npx @nomiwsd/product-engineer-pro init --tool gemini      # -> GEMINI.md (Gemini CLI / Google Antigravity)
-npx @nomiwsd/product-engineer-pro init --tool codex       # -> .codex/instructions.md (OpenAI Codex CLI)
-npx @nomiwsd/product-engineer-pro init --tool cursor      # -> .cursor/rules/product-engineer-pro.mdc
-npx @nomiwsd/product-engineer-pro init --tool windsurf    # -> .windsurfrules
-npx @nomiwsd/product-engineer-pro init --tool copilot     # -> .github/copilot-instructions.md
-npx @nomiwsd/product-engineer-pro init --tool claude-code # -> CLAUDE.md
-npx @nomiwsd/product-engineer-pro init --tool roo-code    # -> .clinerules (Roo Code / Cline)
-npx @nomiwsd/product-engineer-pro init --tool aider       # -> CONVENTIONS.md (Aider CLI)
-npx @nomiwsd/product-engineer-pro init --tool generic     # -> AGENTS.md in project root
+npx @nomiwsd/product-engineer-pro init --tool codex
 ```
 
-## Online & Offline IDE / CLI Compatibility
+`--adapter` remains a deprecated v2 alias for `--tool`. Compatibility aliases are
+`claude-code`, `vscode`, `github-copilot`, `agents`, and `generic`.
 
-| Tool / IDE Environment | Execution Mode | Adapter Target File | Auto-Discovered? |
+## Host capability tiers
+
+<!-- pep:hosts:start -->
+| Tool ID | Host | Tier | Skill discovery | Roles | Workflow entry |
+|---|---|---|---|---|---|
+| `claude` | Claude Code | full-native | `.claude/skills/product-engineer-pro` | Three native roles | `pep:<workflow>` |
+| `codex` | Codex | full-native | `.agents/skills/product-engineer-pro` | Three native roles | `$product-engineer-pro` |
+| `gemini` | Gemini CLI | full-native | `.agents/skills/product-engineer-pro` | Three native roles | `pep:<workflow>` |
+| `cursor` | Cursor | full-native | `.agents/skills/product-engineer-pro` | Three native roles | `$product-engineer-pro` |
+| `copilot` | VS Code / Copilot | full-native | `.agents/skills/product-engineer-pro` | Three native roles | `/pep-<workflow>` |
+| `windsurf` | Windsurf | native-workflow | `.windsurf/skills/product-engineer-pro` | No package-defined agents | `/pep-<workflow>` |
+| `roo-code` | Roo Code | native-workflow | `.agents/skills/product-engineer-pro` | No package-defined agents | `pep-<role>` |
+| `cline` | Cline | native-workflow | `.cline/skills/product-engineer-pro` | No package-defined agents | `$product-engineer-pro` |
+| `aider` | Aider | portable-fallback | Configuration file | No package-defined agents | `prompt` |
+| `portable` | Portable AGENTS.md | portable-fallback | `.agents/skills/product-engineer-pro` | No package-defined agents | `$product-engineer-pro` |
+<!-- pep:hosts:end -->
+
+Portable fallback hosts receive honest condensed guidance; they are not described
+as supporting native skills, package-defined agents, or enforceable modes.
+
+## Workflows
+
+<!-- pep:readme-workflows:start -->
+| Specialty | Aliases | Default lifecycle | Purpose |
 |---|---|---|---|
-| **Claude / Claude Code** | Desktop & CLI | `.claude/skills/product-engineer-pro` / `CLAUDE.md` | Yes |
-| **Gemini CLI / Antigravity / Android Studio** | Offline CLI / Desktop IDE | `GEMINI.md` / `AGENTS.md` | Yes |
-| **OpenAI Codex CLI / ChatGPT Canvas** | CLI & Web Workspace | `.codex/instructions.md` / `AGENTS.md` | Yes |
-| **Cursor IDE** | Desktop IDE | `.cursor/rules/product-engineer-pro.mdc` | Yes |
-| **Windsurf IDE** | Desktop IDE | `.windsurfrules` | Yes |
-| **GitHub Copilot / VS Code** | IDE Extension | `.github/copilot-instructions.md` | Yes |
-| **Roo Code / Cline** | VS Code Extension | `.clinerules` | Yes |
-| **Aider CLI** | Terminal CLI | `CONVENTIONS.md` (`.aider.conf.yml`) | Yes |
-| **Replit / v0 / Bolt.new / OpenHands** | Web / Cloud IDE | `AGENTS.md` | Yes |
+| `audit` | `health-check` | review | Assess repository health, risk, security, performance, and maintainability. |
+| `backend` | `api` | build | Design, implement, or review Node.js, Express, and NestJS services and APIs. |
+| `database` | `db` | build | Design, migrate, query, and review PostgreSQL and MongoDB data layers. |
+| `debug` | `diagnose` | build | Reproduce, isolate, repair, and verify defects when repair is authorized. |
+| `design-system` | `design`, `theme` | build | Audit, extend, create, or rebrand design tokens and component systems. |
+| `frontend` | `ui` | build | Build or review React, Next.js, TypeScript, Tailwind, and shadcn/ui interfaces. |
+| `implement` | `build` | build | Deliver a scoped feature through repository-aligned implementation and verification. |
+| `performance` | `perf` | build | Measure and improve runtime, rendering, database, and delivery performance. |
+| `refactor` | `cleanup` | build | Improve structure while preserving observable behavior and contracts. |
+| `review` | `pr-review` | review | Review diffs and pull requests for correctness, regressions, security, and tests. |
+| `security` | `secure` | review | Threat-model, audit, harden, or repair supported applications. |
+| `seo` | `seo-check` | review | Audit and improve crawlability, metadata, structured data, and discoverability. |
+| `test` | `testing` | build | Design, implement, stabilize, and review unit, integration, and end-to-end tests. |
+<!-- pep:readme-workflows:end -->
 
-## Supported Modes & Chat Slash Commands
+## Safe installation
 
-Workflows can be triggered directly in chat via **Slash Commands** or selectable mode names:
+Installation state lives at `.product-engineer-pro/install-state.json`. Standalone
+generated files are tracked by hash; shared instruction files use managed markers.
+Unowned files are never overwritten. Edited package-owned content produces a
+collision, and `--force` backs up only recorded package artifacts before replacing
+their managed content. `migrate` deletes only legacy files or payloads that match a
+known generated fingerprint.
 
-| Chat Slash Command | Mode | Workflow Description |
-|---|---|---|
-| `/frontend` or `/ui` | `frontend` | Frontend Principal Agent: Next.js 16, React 19, Tailwind v4, WCAG AA & Web Vitals |
-| `/backend` or `/api` | `backend` | Backend Principal Agent: Node.js ESM, Express, NestJS, Zod validation & OWASP APIs |
-| `/seo-check` or `/seo` | `seo` | Technical SEO check, meta tags, sitemap & structured data |
-| `/audit` | `audit` | Full-stack codebase health, security & performance audit |
-| `/security` | `security` | OWASP Top 10 threat modeling & auth hardening |
-| `/implement` | `implement` | Surgical feature, API route, or component implementation |
-| `/database` | `database` | Schema design, Prisma/Mongoose migrations & indexing |
-| `/debug` | `debug` | Bug diagnosis & root-cause investigation |
-| `/refactor` | `refactor` | Clean structural refactoring without breaking contracts |
-| `/design-system` | `design-system` | Design tokens, component library & theme extension |
-| `/performance` | `performance` | Core Web Vitals, bundle optimization & INP/LCP/CLS fixes |
-| `/test` | `test` | Unit, integration & e2e test assertion generation |
-| `/review` | `review` | PR/diff review enforcing WCAG AA & zero hardcoded colors |
+## Version policy
 
-> **Selective Activation Protocol:** Heavy workflow scans activate **only** when explicitly invoked via a Slash Command (e.g. `/seo-check`, `/audit`, `/security`, `/implement`) or explicit user request. The skill will not run unprompted multi-file scans on routine chat messages.
+Repository-installed versions always take precedence. The verified snapshot and
+source ledger are in
+[`skill/references/version-snapshot.json`](skill/references/version-snapshot.json).
+When a detected major is newer, verify official documentation or report reduced
+confidence; the package does not claim support for every future version.
 
-See [`skill/SKILL.md`](skill/SKILL.md) for full mode definitions and workflow references.
+## Development
 
-## Supported Stack
-
-| Layer | Technologies |
-|---|---|
-| Frontend | React, Next.js (Pages & App Router, all major versions), TypeScript, Tailwind CSS (v3 & v4), shadcn/ui |
-| Backend | Node.js, Express, NestJS |
-| Database | PostgreSQL, MongoDB |
-| Cross-cutting | Auth/authz, OWASP-aligned security, testing, accessibility, performance, technical SEO, deployment/observability |
-
-Framework versions are **detected, not assumed** — see [`skill/references/core/repo-analysis.md`](skill/references/core/repo-analysis.md).
-
-## Package Structure
-
-```
-product-engineer-pro/                    ← repo root = npm package root
-├── package.json                         ← npm metadata + CLI bin
-├── bin/
-│   └── cli.js                           ← install/update CLI (zero-dependency)
-├── skill/                               ← the actual skill (core payload)
-│   ├── SKILL.md
-│   ├── AGENTS.md
-│   ├── adapters/                        ← per-tool pointer files (Gemini, Codex, Cursor, Windsurf, Copilot, ...)
-│   ├── references/
-│   ├── templates/
-│   └── examples/
-├── scripts/
-│   ├── validate-structure.mjs           ← CI: checks required sections exist
-│   ├── check-links.mjs                  ← CI: verifies relative links resolve
-│   └── sync-version.mjs                 ← keeps SKILL.md version in sync with package.json
-├── .github/
-│   ├── workflows/
-│   │   ├── ci.yml                       ← runs on every PR
-│   │   └── release.yml                  ← npm publish + GitHub Release on tag
-│   ├── ISSUE_TEMPLATE/
-│   │   ├── bug_report.yml
-│   │   ├── feature_request.yml
-│   │   └── unsafe_instruction.yml       ← ties to SECURITY.md
-│   └── PULL_REQUEST_TEMPLATE.md
-├── README.md                            ← updated with npx install + badges
-├── LICENSE
-├── CONTRIBUTING.md
-├── CHANGELOG.md
-├── SECURITY.md
-├── CODE_OF_CONDUCT.md                   ← required OSS health file
-└── .npmignore
+```bash
+npm test
+cd website
+npm ci
+npm run lint
+npm run typecheck
+npm run build
 ```
 
-## Contributing
-
-See [`CONTRIBUTING.md`](CONTRIBUTING.md).
-
-## License
-
-MIT — see [`LICENSE`](LICENSE).
+See [CONTRIBUTING.md](CONTRIBUTING.md), [SECURITY.md](SECURITY.md), and
+[CHANGELOG.md](CHANGELOG.md). MIT licensed.

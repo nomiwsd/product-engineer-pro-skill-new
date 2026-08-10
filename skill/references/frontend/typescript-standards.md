@@ -12,7 +12,8 @@ Verify before relying on "Current" tier: check the installed version via lockfil
 
 | Version Range | Support Tier | Key Differences |
 |---|---|---|
-| TypeScript 5.8+ / 5.x | Current (Latest) | `--erasableSyntaxOnly` flag (TS 5.8), never-initialized variable checks (TS 5.7), inferred type predicates for `.filter()` (TS 5.5), `isolatedDeclarations` (TS 5.5), `using`/`await using` explicit resource management (TS 5.2), `satisfies` operator (TS 4.9+), `<const T>` (TS 5.0) |
+| TypeScript 7.x | Snapshot current | Verify compiler, config, and official migration guidance before relying on new behavior |
+| TypeScript 5.x-6.x | Supported | `--erasableSyntaxOnly` (5.8), inferred predicates for supported callback shapes (5.5), `isolatedDeclarations` (5.5), explicit resource management (5.2), `satisfies` (4.9), const type parameters (5.0) |
 | TypeScript 4.x | Supported | `satisfies` operator (4.9+), template literal types (4.1+), `override` keyword (4.3+), legacy experimental decorators (`experimentalDecorators`) |
 | TypeScript 3.x and earlier | Legacy | No template literal types, limited conditional type support — flag as outdated but work within its constraints |
 
@@ -29,7 +30,10 @@ Per `references/core/repo-analysis.md`: check `typescript` version in lockfile a
 - Avoid `as` type assertions to force incompatible types — an assertion should only bridge a gap the compiler cannot see, never override a real type mismatch.
 
 ### TS 5.x Modern Features
-- **Inferred Type Predicates (TS 5.5+)**: TypeScript automatically infers type predicates for `.filter()` calls. Avoid manual type guards when standard checks (e.g., `.filter(Boolean)`) already narrow types automatically.
+- **Inferred Type Predicates (TS 5.5+)**: TypeScript can infer predicates for
+  supported boolean-returning callbacks such as `value => value !== undefined`.
+  `.filter(Boolean)` does not reliably remove nullish values from arbitrary unions;
+  use an explicit predicate when the compiler does not narrow the result.
 - **`satisfies` Operator (TS 4.9+)**: Use `satisfies` when validating a value against a type while preserving its exact literal type:
   ```ts
   const palette = {

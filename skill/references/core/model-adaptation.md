@@ -1,103 +1,52 @@
-# Model Adaptation
+# Capability-based adaptation
 
 ## Scope
 
-Owns: how this skill's instructions should be applied consistently
-across different model families and consumption/hosting patterns.
+Adapt Product Engineer Pro to observable host capabilities, not vendor/model-family
+stereotypes. Host mappings live in `host-capabilities.md`; this file covers graceful
+degradation when some capabilities are absent.
 
-Defers to: SKILL.md for the actual constraints/defaults being adapted —
-this file only governs *how* to survive different reading conditions,
-never *what* the rules are.
+## Inspect capabilities
 
-## Design Principles (apply throughout this entire skill)
+Before a substantial workflow, determine what the current session actually provides:
 
-- Plain markdown only — no reliance on any single vendor's special
-  tokens or tag semantics for correctness.
-- Imperative, unambiguous sentences ("Do X", "Never Y") over descriptive
-  prose — this degrades gracefully across all model capability tiers.
-- Critical content (constraints, mode registry) is front-loaded in
-  `SKILL.md` so it survives truncation if a host limits context length.
-- No instruction in this skill should depend on a specific reasoning
-  feature (e.g., extended/hidden thinking) — it must work correctly with
-  a single-pass, non-reasoning model too.
+| Capability | If available | If unavailable |
+|---|---|---|
+| Repository file access | Inspect relevant source/config and load references on demand | Ask for or work from supplied excerpts; name missing evidence |
+| Mutation permission | Implement only when user intent and host state authorize it | Produce a decision-complete plan or findings only |
+| Scoped command execution | Run repository-defined diagnostics and verification under host permissions | Provide exact commands without claiming they ran |
+| Native skill discovery | Load `SKILL.md`, then the selected recipe/references | Use the portable condensed contract and disclose reduced context |
+| Repository commands/prompts | Use the generated `pep` entry | Name lifecycle and specialty in ordinary chat |
+| Role agents | Offer explicit planner/builder/reviewer handoffs when useful | Keep the same lifecycle in the current agent |
+| Large context/on-demand loading | Read the selected recipe and relevant references completely | Prioritize the contract, one recipe, then the nearest stack reference |
+| Browser/official docs | Verify newer major versions and unstable claims | Use the snapshot and explicitly lower confidence |
 
-## Consumption Modes
+## Degraded-context order
 
-This skill may reach a model in two different ways:
+When a host cannot progressively load files, preserve information in this order:
 
-1. **Agentic file access** (Claude Skills, Claude Code, Cursor agent
-   mode, Cline, Continue, Windsurf Cascade): the model reads files on
-   demand per `SKILL.md`'s Loading Protocol. This is the preferred mode
-   — full fidelity, minimal wasted context.
-2. **Flattened single-prompt injection** (a full file or subset pasted
-   once into a system prompt, some IDE integrations, thin Copilot
-   configs): no on-demand file reads happen. If truncation is likely,
-   prioritize content in this order:
-   - SKILL.md Constraints + Mode Registry
-   - matched workflow file (references/workflows/<mode>.md)
-   - single most relevant reference file for the detected stack
-   - templates/examples
+1. User intent and host mutation state.
+2. Constraints and lifecycle behavior from `SKILL.md`.
+3. The selected workflow recipe.
+4. The single most relevant detected-stack reference.
+5. Adapted template or example.
 
+State which references were unavailable. Do not pretend a flattened prompt provides
+native discovery, role enforcement, command execution, or the same context fidelity.
 
-When operating in this mode and full context isn't available, say so
-explicitly rather than pretending full skill context was consulted.
+## Context and verification discipline
 
-## Per-Model Calibration Notes
+- Prefer small evidence-bearing excerpts over dumping an entire repository.
+- Split long work at stable handoff boundaries: research/plan, build, review.
+- Never infer a command result, test pass, benchmark, security pass, or accessibility
+  result from model confidence.
+- If tool output or repository evidence conflicts with a default in this skill, use
+  the evidence and explain the deviation.
+- If a detected major exceeds `references/version-snapshot.json`, use official
+  verification or report reduced confidence.
 
-These are tendencies observed in practice, not hard rules — an explicit
-instruction elsewhere in this skill always overrides a calibration note
-here.
+## Related references
 
-- **Claude (Opus / Sonnet / Haiku).** Follows deeply nested structure and
-long checklists reliably; cites sources well when instructed to (D5).
-Safe to rely on multi-level markdown exactly as written elsewhere in
-this skill.
-- **GPT (4.x / 4o / o-series).** Responds well to numbered imperative
-steps. On long multi-step workflows (`audit`, `review`, `database`),
-add an explicit "complete all steps before producing the final answer"
-instruction if the host allows a system-level nudge — GPT models can
-otherwise short-circuit to an early step's output.
-- **Gemini.** Tends to weight instructions near the point of generation
-more heavily than instructions stated only once at the top of a long
-context. For `security` and `database` modes specifically, restate the
-relevant constraint (C1–C4) immediately before generating final output
-if a lot of intervening context (file contents, tool output) exists
-between the instruction and the response.
-- **Smaller / local models** (Llama, Mistral, Qwen, Phi via
-Ollama-backed IDE integrations). Prefer being pointed at the closest
-matching file in `templates/` to fill in, rather than deriving
-structure from abstract rules. Keep any ad-hoc instruction to these
-models under two levels of conditional nesting ("if X, then if Y...").
-Do not assume they will reliably self-correct without an explicit
-checklist to run against (use `code-review-checklist.md` verbatim
-rather than paraphrasing it).
-
-## Handling Degraded or Partial Context
-
-If only `SKILL.md` (or an even smaller fragment, like `AGENTS.md`) is
-available and a reference file it points to cannot be loaded:
-1. Proceed using the constraints and defaults that are available.
-2. State explicitly which reference file would normally apply and that
-it wasn't available — don't silently fabricate its content.
-3. Prefer being conservative (ask, or flag lower confidence) over
-inventing a plausible-sounding but unverified standard.
-
-## Validation
-
-`examples/evaluation-cases.md` should periodically be re-run against
-multiple model families. A case that passes on one model but silently
-fails on another indicates an instruction elsewhere in this skill is too
-implementation-specific to one model's habits and should be rewritten
-per the Design Principles above.
-
-## Related References
-
-- `references/core/repo-analysis.md` — detection output this file's
-calibration notes apply to when communicating findings.
-- All `references/workflows/*.md` — multi-step workflows most affected
-by the GPT/Gemini calibration notes above.
-
-## Applies To Modes
-
-All modes, at the meta level — this file is not mode-specific content
-but governs how every mode's instructions should be delivered.
+- `references/core/host-capabilities.md`
+- `references/core/repo-analysis.md`
+- `references/version-snapshot.json`

@@ -15,12 +15,16 @@ import { requireAuth } from "../middleware/auth";
 
 const router = Router();
 
+interface AuthenticatedRequest extends Request {
+  user: { id: string };
+}
+
 const createOrderSchema = z.object({
   productId: z.string().uuid(),
   quantity: z.number().int().positive(),
 });
 
-router.post("/orders", requireAuth, async (req: Request, res: Response) => {
+router.post("/orders", requireAuth, async (req: AuthenticatedRequest, res: Response) => {
   const parsed = createOrderSchema.safeParse(req.body);
   if (!parsed.success) {
     return res.status(400).json({
@@ -33,7 +37,7 @@ router.post("/orders", requireAuth, async (req: Request, res: Response) => {
   }
 
   // Thrown errors propagate automatically to centralized error middleware in Express 5.x
-  const order = await createOrder((req as any).user.id, parsed.data);
+  const order = await createOrder(req.user.id, parsed.data);
   res.status(201).json(order);
 });
 

@@ -67,4 +67,4 @@ export const OrderModel = model<Order>("Order", orderSchema);
 
 - `items` is embedded because it is bounded (capped at 100 items by validator) and always read together with the order (`mongodb-design.md`). If a related collection grows unboundedly (e.g., reviews or full payment transaction logs), reference it via `ObjectId` instead.
 - Verify compound indexes with `explain()` (`IXSCAN`).
-- Cast and validate client inputs before passing them into Mongoose queries (`references/core/security-owasp.md` A03).
+- Cast and validate client inputs before passing them into Mongoose queries (`references/core/security-owasp.md` A05).

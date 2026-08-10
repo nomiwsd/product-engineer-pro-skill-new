@@ -1,45 +1,48 @@
-# Workflow: Backend Principal Agent
+# Workflow: Backend
 
 ## Goal
 
-Execute specialized backend engineering tasks — Node.js ESM modules, Express & NestJS architecture, Zod request validation, JWT/session auth, OWASP Top 10 security hardening, PostgreSQL (Prisma/Drizzle), and MongoDB (Mongoose) schema & query optimization.
+Plan, build, diagnose, or review Node.js, Express, and NestJS services while
+matching the repository's module system, framework conventions, validation
+library, transport, persistence layer, and error contract.
 
 ## Process
 
-1. Run `references/core/repo-analysis.md` to detect server framework (Express, NestJS, Next.js API routes), Node.js version, and database ORM (Prisma, Drizzle, Mongoose).
-2. Design API route & request validation:
-   - Load `references/backend/api-design.md` for RESTful conventions and typed JSON payloads.
-   - Enforce strict Zod schema parsing on all incoming payloads (`req.body`, `req.query`, `req.params`).
-3. Enforce authentication & security hardening:
-   - Load `references/backend/auth-authz.md` and `references/core/security-owasp.md`.
-   - Apply SameSite HTTP-only cookie policies, CORS, rate limiting, and SQL/NoSQL injection guards.
-4. Optimize database schema & queries:
-   - Load `references/database/postgresql-design.md` or `references/database/mongodb-design.md`.
-   - Add compound indexes for high-cardinality filters, eliminate N+1 query patterns, and ensure transaction safety.
+1. Detect Node/framework versions, ESM or CommonJS, HTTP adapter, validation
+   convention, auth boundary, persistence layer, and test runner.
+2. Define the request/response contract and failure behavior before editing.
+3. Validate body, path, query, headers, and environment input at their boundary
+   using the repository's established convention. Zod, Joi, express-validator,
+   Nest DTO pipes, or another existing validator are all acceptable.
+4. Authenticate and authorize independently. Derive ownership from trusted
+   server-side identity and scope every resource read/write accordingly.
+5. Keep transport/controller code thin and business behavior testable.
+6. Preserve the repository's module format. Do not introduce ESM, CommonJS,
+   Zod, an ORM, or a framework migration as an incidental change.
+7. Verify with available type checks, focused tests, lint, and a representative
+   request when the host permits execution. In read-only mode, name the exact
+   checks the builder should run.
+
+## References
+
+- Node runtime: `references/backend/nodejs-standards.md`
+- Express: `references/backend/express-architecture.md`
+- NestJS: `references/backend/nestjs-architecture.md`
+- API contracts: `references/backend/api-design.md`
+- Authentication/authorization: `references/backend/auth-authz.md`
+- Security: `references/core/security-owasp.md`
+- PostgreSQL/MongoDB: load only the detected database reference
 
 ## Checklist
 
-- [ ] Node.js ESM import/export syntax and strict async/await error boundaries applied.
-- [ ] Zod schema validation enforced on all incoming request data.
-- [ ] Auth guards, HTTP-only SameSite cookies, and rate limiters configured.
-- [ ] SQL / NoSQL injection vulnerabilities prevented.
-- [ ] Database indexes placed on query filter columns and N+1 queries eliminated.
-- [ ] Zero hardcoded secrets/credentials — process.env used exclusively.
+- [ ] Installed versions, module system, and established conventions detected
+- [ ] Every untrusted boundary is parsed and validated
+- [ ] Authentication and resource-level authorization are both enforced
+- [ ] Error responses match the existing public contract
+- [ ] Persistence calls are parameterized/scoped and transactions are deliberate
+- [ ] Relevant checks ran, or a read-only verification plan is provided
 
-## Output Format
+## Output
 
-1. Summary of API endpoints, services, or database schema changes.
-2. Surgical diff showing controller, route, schema, or middleware modifications.
-3. Security & performance audit notes (OWASP rules applied, query speed impact).
-
-## Related References
-
-- `references/core/repo-analysis.md`
-- `references/backend/nodejs-standards.md`
-- `references/backend/api-design.md`
-- `references/backend/express-architecture.md`
-- `references/backend/nestjs-architecture.md`
-- `references/backend/auth-authz.md`
-- `references/core/security-owasp.md`
-- `references/database/postgresql-design.md`
-- `references/database/mongodb-design.md`
+Lead with the implemented contract/change in build lifecycle, a decision-complete
+file-level plan in plan lifecycle, or evidence-backed findings in review lifecycle.

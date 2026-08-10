@@ -21,7 +21,8 @@ Execute specialized frontend engineering tasks — Next.js 16 App Router, React 
 
 - [ ] Next.js 15+ dynamic parameters and cookies use `await` where applicable.
 - [ ] React Server Components and Client Components correctly separated.
-- [ ] Zero hardcoded hex color values used — 100% semantic CSS variables (matching repo conventions).
+- [ ] New styling follows the repository's token convention; any necessary raw value
+      is confined to the token source rather than component markup.
 - [ ] Keyboard focus ring (`focus-visible:ring-2`) and ARIA labels present on all interactive elements.
 - [ ] Reduced motion fallbacks (`prefers-reduced-motion`) implemented for all Framer Motion / CSS animations.
 - [ ] Layout dimensions explicitly specified to prevent CLS layout shifts.
@@ -31,7 +32,11 @@ Execute specialized frontend engineering tasks — Next.js 16 App Router, React 
 
 1. Executive summary of frontend architecture changes.
 2. Surgical diff showing component modifications or newly created UI files.
-3. Verification results: Mandatorily execute terminal tool verification (`npx tsc --noEmit` or `npm run build`) and cite exact command output, A11y contrast rating, and Web Vitals impact. Never declare success without runtime execution evidence.
+3. Verification results: run repository-provided type checks, focused tests, lint,
+   builds, accessibility checks, or browser inspection when those tools exist and
+   the host permits execution. Cite only evidence actually observed. In Plan/Ask/
+   read-only state, provide exact checks for the builder; do not claim they ran or
+   predict Web Vitals improvements.
 
 ## Related References
 

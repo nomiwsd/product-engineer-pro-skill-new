@@ -1,0 +1,38 @@
+name: Weekly version freshness
+
+on:
+  schedule:
+    - cron: "17 6 * * 1"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  issues: write
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24.x
+      - name: Check official and registry release lines
+        id: freshness
+        continue-on-error: true
+        run: node scripts/check-freshness.mjs --json > freshness-report.json
+      - name: Open or update a tracked drift issue
+        if: steps.freshness.outcome == 'failure'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          BODY="$(cat freshness-report.json)"
+          EXISTING="$(gh issue list --state open --search 'Product Engineer Pro freshness drift in:title' --json number --jq '.[0].number // empty')"
+          if [ -n "$EXISTING" ]; then
+            gh issue comment "$EXISTING" --body "Weekly drift report:\n\n\`\`\`json\n$BODY\n\`\`\`"
+          else
+            gh issue create --title "Product Engineer Pro freshness drift" --body "A major framework or standards drift blocks release until reviewed.\n\n\`\`\`json\n$BODY\n\`\`\`"
+          fi
+      - name: Fail on major or standards drift
+        if: steps.freshness.outcome == 'failure'
+        run: exit 1

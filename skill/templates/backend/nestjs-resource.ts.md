@@ -38,8 +38,8 @@ export class OrdersService {
     return this.db.orders.create({ data: { ...dto, userId } });
   }
 
-  async findOne(id: string) {
-    const order = await this.db.orders.findUnique({ where: { id } });
+  async findOneForUser(id: string, userId: string) {
+    const order = await this.db.orders.findFirst({ where: { id, userId } });
     if (!order) throw new NotFoundException("Order not found.");
     return order;
   }
@@ -49,7 +49,7 @@ export class OrdersService {
 ### `orders.controller.ts`
 
 ```ts
-import { Controller, Post, Get, Param, Body, UseGuards } from "@nestjs/common";
+import { Controller, Post, Get, Param, Body, UseGuards, ParseUUIDPipe } from "@nestjs/common";
 import { AuthGuard } from "../auth/auth.guard";
 import { CurrentUser } from "../auth/current-user.decorator";
 import { OrdersService } from "./orders.service";
@@ -67,8 +67,8 @@ export class OrdersController {
   }
 
   @Get(":id")
-  findOne(@Param("id") id: string) {
-    return this.ordersService.findOne(id);
+  findOne(@CurrentUser() user: User, @Param("id", new ParseUUIDPipe()) id: string) {
+    return this.ordersService.findOneForUser(id, user.id);
   }
 }
 ```
@@ -77,4 +77,6 @@ export class OrdersController {
 
 - Confirm global `ValidationPipe` with `whitelist: true` and `forbidNonWhitelisted: true` is configured in `main.ts` (`nestjs-architecture.md`).
 - Keep controllers thin: business logic belongs in the service, not the controller.
+- Scope the service query by both order ID and authenticated user ID (or enforce an
+  explicit privileged policy) so a valid UUID cannot bypass authorization.
 - Replace `DatabaseService`, `AuthGuard`, and `CurrentUser` with the project's actual providers.

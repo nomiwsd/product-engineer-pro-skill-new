@@ -7,14 +7,12 @@ import { Accordion } from "@/components/ui/accordion";
 const FAQ_ITEMS = [
   {
     value: "cross-model",
-    title: "Does this work across Claude, GPT-4o, Gemini, Cursor, Windsurf, and local models?",
+    title: "Does every supported host provide the same capabilities?",
     content: (
       <p>
-        Yes. <strong className="text-foreground">product-engineer-pro</strong> is built on the open-source Agent Skills standard (
-        <code className="text-xs bg-muted px-1.5 py-0.5 rounded border border-border text-primary font-mono">SKILL.md</code> /{" "}
-        <code className="text-xs bg-muted px-1.5 py-0.5 rounded border border-border text-primary font-mono">AGENTS.md</code>). It functions identically
-        across Claude Code, Cursor MDC, Windsurf Cascade, GitHub Copilot, Roo Code, Aider, and local
-        Ollama/vLLM models that parse markdown workspace instructions.
+        No. <strong className="text-foreground">product-engineer-pro</strong> publishes honest capability tiers.
+        Full-native hosts receive skill discovery and role definitions; workflow-native hosts receive their supported
+        rules, workflows, or modes; Aider and generic tools receive portable guidance. Host permissions always win.
       </p>
     ),
   },
@@ -23,10 +21,9 @@ const FAQ_ITEMS = [
     title: "How does it behave on messy or existing codebases?",
     content: (
       <p>
-        The skill enforces a{" "}
-        <strong className="text-foreground">diff-first, minimal-edits protocol</strong>. The AI agent will
-        never perform destructive file rewrites, erase unrelated comments or docstrings, or change naming conventions
-        it did not introduce. It inspects your actual{" "}
+        The skill follows a{" "}
+        <strong className="text-foreground">diff-first, minimal-edits protocol</strong>, avoids unrelated rewrites,
+        and checks ownership before updating generated files. It inspects your actual{" "}
         <code className="text-xs bg-muted px-1.5 py-0.5 rounded border border-border text-primary font-mono">package.json</code> and directory
         structure first, then generates only what is explicitly in scope.
       </p>
@@ -54,9 +51,8 @@ const FAQ_ITEMS = [
         <strong className="text-foreground">Version-Adaptive Detection</strong>. Before generating any
         code, the agent reads the installed versions from your{" "}
         <code className="text-xs bg-muted px-1.5 py-0.5 rounded border border-border text-primary font-mono">package.json</code>. If Next.js 14 is
-        installed, it uses Page Router conventions. If Next.js 16 is detected, it enforces
-        <code className="text-xs bg-muted px-1.5 py-0.5 rounded border border-border text-primary font-mono">await cookies()</code> and async route
-        parameters automatically.
+        installed, it preserves that repository&apos;s router conventions. If a newer
+        major than the verified snapshot is detected, it requires official verification or reports reduced confidence.
       </p>
     ),
   },

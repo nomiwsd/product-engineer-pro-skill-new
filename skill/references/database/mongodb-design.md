@@ -12,7 +12,8 @@ Defers to: `data-modeling-decision-guide.md` for whether MongoDB is the right ch
 
 | Version Range | Support Tier | Key Differences |
 |---|---|---|
-| MongoDB 8.0.x | Current (Latest) | "Express Path" query engine optimization, majority write acknowledgment on oplog write, parallel secondary oplog replication buffer, background `tcmallocReleaseRate` memory release, resharding `forceRedistribution` |
+| MongoDB 8.3.x | Snapshot current | Verify point-release query, indexing, and deployment behavior against installed-server documentation |
+| MongoDB 8.0.x–8.2.x | Supported | MongoDB 8 release line; confirm feature availability by detected minor |
 | MongoDB 6.0.x–7.0.x | Supported | Queryable Encryption (7.0+), time-series collection improvements, `$lookup` performance enhancements |
 | MongoDB 5.0.x and earlier | Legacy | Missing modern aggregation operators and replication performance fixes — flag for upgrade in audits |
 
@@ -46,7 +47,7 @@ Per `references/core/repo-analysis.md`: identify whether access is via native No
 
 ### Query Safety (NoSQL Injection Prevention)
 - Never pass raw `req.body` or `req.query` objects directly into query filters. Attackers can supply objects like `{ "$ne": null }` to bypass authentication or query filters.
-- Cast client inputs to explicit types (e.g., `String(req.query.email)`) or validate input shapes with Zod schemas (`references/core/security-owasp.md` A03).
+- Cast and validate client inputs with the repository's boundary-validation convention before building queries (`references/core/security-owasp.md` A05).
 
 ## Anti-Patterns
 

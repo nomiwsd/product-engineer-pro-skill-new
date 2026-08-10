@@ -19,7 +19,7 @@ export function Footer() {
           <div className="md:col-span-5 space-y-3">
             <a
               href="#"
-              className="flex items-center gap-2.5 group rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring inline-flex"
+              className="items-center gap-2.5 group rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring inline-flex"
             >
               <div className={cn(
                 "h-8 w-8 rounded-lg flex items-center justify-center",

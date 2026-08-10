@@ -35,7 +35,8 @@ describe("calculateOrderTotal", () => {
 });
 
 describe("OrderService.createOrder", () => {
-  const mockDb = { orders: { create: vi.fn() } };
+  type OrderDatabase = ConstructorParameters<typeof OrderService>[0];
+  const mockDb: OrderDatabase = { orders: { create: vi.fn() } };
 
   beforeEach(() => {
     vi.clearAllMocks(); // Ensure no shared mock state across test runs
@@ -44,7 +45,7 @@ describe("OrderService.createOrder", () => {
   it("persists the order with a calculated total", async () => {
     mockDb.orders.create.mockResolvedValue({ id: "1", total: 35 });
 
-    const service = new OrderService(mockDb as any);
+    const service = new OrderService(mockDb);
     const result = await service.createOrder("user-1", {
       items: [
         { price: 10, quantity: 2 },

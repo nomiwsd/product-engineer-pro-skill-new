@@ -72,7 +72,7 @@ jobs:
       - name: Commit & Push Version Bump
         if: ${{ github.event_name == 'workflow_dispatch' && inputs.bump_type != 'none' }}
         run: |
-          git add package.json bin/cli.js CHANGELOG.md
+          git add package.json skill/manifest.json skill/SKILL.md website/generated/catalog.json README.md CHANGELOG.md
           git commit -m "chore(release): auto-bump package version [skip ci]"
           git push origin HEAD:main
 
@@ -83,6 +83,13 @@ jobs:
         run: npm pack --dry-run
 
       - name: Publish to NPM Registry
-        run: npm publish --access public
+        shell: bash
+        run: |
+          VERSION="$(node -p "require('./package.json').version")"
+          if [[ "$VERSION" == *-* ]]; then
+            npm publish --access public --tag beta
+          else
+            npm publish --access public
+          fi
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}

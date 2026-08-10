@@ -15,7 +15,7 @@ Used as the output structure for `review` mode and as a scaffold when `implement
 
 ## Standards Applied
 
-- [e.g., "OWASP A03: Parameterized all new SQL queries"]
+- [e.g., "OWASP Top 10:2025 A05: Parameterized all new SQL queries"]
 - [e.g., "LCP Budget: Added priority loading for hero image"]
 
 ## Testing

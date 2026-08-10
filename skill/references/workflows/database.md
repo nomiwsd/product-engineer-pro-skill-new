@@ -22,7 +22,7 @@ between SQL and NoSQL — for new and existing data layers.
    `core/observability-deployment.md`'s expand/contract pattern — never
    a single breaking migration step (ties to C2).
 6. Validate that no query pattern introduces injection risk
-   (`core/security-owasp.md` A03) — parameterized queries/ORM only.
+   (`core/security-owasp.md` A05) — parameterized queries/ORM only.
 7. Consider access patterns before schema shape: design indexes and
    relationships around actual query patterns the application performs,
    not around normalized-form purity alone.

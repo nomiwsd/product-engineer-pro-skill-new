@@ -2,7 +2,9 @@
 
 ## Scope
 
-Owns: standards for using and extending shadcn/ui components — composition patterns, variant management, and the accessibility guarantees inherited from its Radix UI foundation.
+Owns: standards for using and extending shadcn/ui components — composition patterns,
+variant management, and accessibility behavior that must still be verified in the
+composed application.
 
 Defers to: `tailwind-css.md` for the utility syntax used inside component styling; `design-system-theming.md` for the token values fed into shadcn's CSS variables; `accessibility-a11y.md` for the underlying a11y standard being inherited.
 
@@ -53,7 +55,9 @@ const buttonVariants = cva(
 
 ### Accessibility Inheritance
 - shadcn/ui components are built on Radix UI primitives, which handle keyboard navigation, focus management, and ARIA attributes correctly by default for complex widgets (Dialog, Dropdown, Select, Popover, Tabs) — do not strip or override these behaviors (e.g., removing Radix's built-in focus trap in a Dialog) without a strong, explicit reason.
-- When composing a new custom interactive widget that Radix doesn't cover, apply `references/core/accessibility-a11y.md` standards manually — the inherited a11y guarantee only applies to the Radix-backed primitives themselves, not to arbitrary new components built without them.
+- Verify accessible names, focus order, keyboard interaction, state, and contrast even
+  when using Radix-backed primitives. A primitive can help with mechanics but does not
+  guarantee the accessibility of application composition or styling.
 - Preserve `asChild` (Radix's Slot-based composition) usage where the underlying component supports it, to merge behavior/props onto a custom child element instead of introducing an extra wrapping DOM node.
 
 ### Theming Integration

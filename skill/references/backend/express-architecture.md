@@ -41,7 +41,7 @@ Per `references/core/repo-analysis.md`: check the installed Express major versio
 - Scope middleware as narrowly as needed: apply auth middleware to specific route groups rather than globally unless every route requires it.
 
 ### Validation Layer
-- Validate and parse request input (body, params, query) at the route boundary using a schema library (Zod, Joi, express-validator) before business logic executes (`references/core/security-owasp.md` A03).
+- Validate and parse request input (body, params, query) at the route boundary using the repository's schema convention before business logic executes (`references/core/security-owasp.md` A05).
 - Return a consistent validation-error response shape across all routes (see `api-design.md`).
 
 ### Error-Handling Middleware

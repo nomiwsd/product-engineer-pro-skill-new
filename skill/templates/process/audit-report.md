@@ -19,7 +19,7 @@ Used as the output structure for `audit` mode and comprehensive `security` revie
 ### Blockers ([count])
 
 1. **[Finding title]** — `path/to/file.ts:line`
-   - **Standard violated:** [e.g., OWASP A03: Injection]
+   - **Standard violated:** [e.g., OWASP Top 10:2025 A05: Injection]
    - **Issue:** [Concrete problem description]
    - **Impact:** [Security / performance risk]
    - **Fix:** [Concrete code recommendation]

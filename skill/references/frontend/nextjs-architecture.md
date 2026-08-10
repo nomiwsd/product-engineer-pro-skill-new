@@ -12,7 +12,7 @@ Verify before relying on "Current" tier: check the installed version via lockfil
 
 | Version Range | Support Tier | Key Differences |
 |---|---|---|
-| Next.js 16.x | Current (Latest) | Turbopack dev bundler default, Instant Navigations, reduced memory footprint, enhanced caching controls |
+| Next.js 16.x | Snapshot current | Turbopack defaults and current caching/navigation behavior; verify minor-specific APIs against installed docs |
 | Next.js 15.x | Supported | Async Request APIs (`cookies()`, `headers()`, `params`, `searchParams` MUST be `await`ed); `fetch` requests & GET Route Handlers uncached by default; `unstable_after` API; `next/form` component; `next.config.ts` support; `@next/codemod` CLI |
 | Next.js 13.x–14.x | Legacy App Router | App Router stable; `params`/`searchParams`/`cookies()` are synchronous objects; aggressive default caching for `fetch`, Route Handlers, and Router Cache |
 | Next.js 12.x and Pages Router (any version) | Legacy Pages Router | No App Router — uses `pages/`, `getServerSideProps`/`getStaticProps`/`getStaticPaths` for data fetching, `next/head` for metadata, no React Server Components |
