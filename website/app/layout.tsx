@@ -1,19 +1,8 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { GeistSans } from "geist/font/sans";
+import { GeistMono } from "geist/font/mono";
 import { Providers } from "@/app/providers";
 import "./globals.css";
-
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-  display: "swap",
-});
-
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
-  display: "swap",
-});
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://product-engineer-pro.dev"),
@@ -22,7 +11,7 @@ export const metadata: Metadata = {
     template: "%s | product-engineer-pro",
   },
   description:
-    "An open-source, MIT-licensed AI coding skill that turns any AI coding agent (Claude, GPT, Gemini, local models) into a principal-level engineer across Next.js, React, TypeScript, Tailwind CSS, shadcn/ui, Node.js, Express, NestJS, PostgreSQL, and MongoDB.",
+    "An open-source engineering skill with capability-tiered integrations for planning, building, and reviewing supported full-stack applications.",
   keywords: [
     "AI coding skill",
     "product engineer pro",
@@ -44,7 +33,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "product-engineer-pro — Principal-Level AI Coding Skill",
     description:
-      "Turn any AI agent (Claude, GPT, Gemini, local models) into a principal-level engineer. Open-source, MIT licensed. Next.js · React · TypeScript · Tailwind CSS · NestJS · PostgreSQL · MongoDB.",
+      "Cross-agent engineering workflows with host-native permissions, safe updates, and version-aware references. Open source and MIT licensed.",
     url: "https://product-engineer-pro.dev",
     siteName: "product-engineer-pro",
     locale: "en_US",
@@ -54,7 +43,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "product-engineer-pro — Principal-Level AI Coding Skill",
     description:
-      "Turn any AI agent into a principal engineer across Next.js, React, TypeScript, Tailwind CSS, NestJS, PostgreSQL, and MongoDB. Open-source & MIT licensed.",
+      "Cross-agent engineering workflows with honest host capability tiers. Open source and MIT licensed.",
     creator: "@productengpro",
   },
   robots: {
@@ -82,7 +71,7 @@ export default function RootLayout({
     <html
       lang="en"
       suppressHydrationWarning
-      className={`${geistSans.variable} ${geistMono.variable}`}
+      className={`${GeistSans.variable} ${GeistMono.variable}`}
     >
       <body className="bg-background text-foreground font-sans min-h-screen antialiased">
         <Providers>{children}</Providers>

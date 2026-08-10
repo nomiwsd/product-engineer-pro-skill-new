@@ -12,14 +12,17 @@ Defers to: `data-modeling-decision-guide.md` for whether PostgreSQL is the right
 
 | Version Range | Support Tier | Key Differences |
 |---|---|---|
-| PostgreSQL 17.x | Current (Latest) | `JSON_TABLE()` function for JSON-to-table queries, streaming I/O optimizations, `MERGE ... RETURNING` clause, `pg_createsubscriber` logical replication, incremental `pg_basebackup`, updated `VACUUM` memory management |
+| PostgreSQL 18.x | Snapshot current | Use installed-server documentation for planner/statistics, virtual generated columns, UUID, and upgrade behavior |
+| PostgreSQL 17.x | Supported | `JSON_TABLE()`, `MERGE ... RETURNING`, logical-replication and maintenance improvements |
 | PostgreSQL 15.x–16.x | Supported | Logical replication enhancements, `MERGE` statement (15+), parallel query optimizations |
 | PostgreSQL 13.x–14.x | Legacy | No `MERGE` statement — use `INSERT ... ON CONFLICT` for upsert operations |
 | PostgreSQL 12.x and earlier | Legacy (EOL) | Flag for immediate upgrade in audits |
 
 ## Detection
 
-Per `references/core/repo-analysis.md`: identify the ORM or query builder in use (Prisma, Drizzle, TypeORM, Knex, or raw `pg`).
+Per `references/core/repo-analysis.md`: identify the supported data access layer in
+use (Prisma, Drizzle, or raw `pg`). Preserve another existing repository tool, but do
+not advertise or introduce it without a maintained reference and tests.
 
 ## Standards
 
@@ -49,7 +52,7 @@ Per `references/core/repo-analysis.md`: identify the ORM or query builder in use
 - Avoid locking large production tables (e.g., adding `NOT NULL` without a default on large tables blocks writes).
 
 ### Query Safety
-- Always use parameterized queries (`$1`, `$2`) or ORM query builders. Never concatenate user input into raw SQL strings (`references/core/security-owasp.md` A03).
+- Always use parameterized queries (`$1`, `$2`) or ORM query builders. Never concatenate user input into raw SQL strings (`references/core/security-owasp.md` A05).
 
 ## Anti-Patterns
 

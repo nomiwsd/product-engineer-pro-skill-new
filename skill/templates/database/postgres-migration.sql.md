@@ -19,8 +19,10 @@ UPDATE orders SET status = 'completed' WHERE status IS NULL;
 ALTER TABLE orders ALTER COLUMN status SET NOT NULL;
 ALTER TABLE orders ALTER COLUMN status SET DEFAULT 'pending';
 
--- Migration 3 (Contract): Only after old application code path is fully retired
-ALTER TABLE orders DROP COLUMN legacy_status_flag;
+-- Migration 3 (Contract) is intentionally non-executable in this template.
+-- After explicit confirmation that rollback and old application versions no longer
+-- need the column, create a separate reviewed migration containing:
+-- ALTER TABLE orders DROP COLUMN legacy_status_flag;
 ```
 
 ## Template — New Table Creation

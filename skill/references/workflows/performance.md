@@ -30,10 +30,9 @@ changes.
 5. Propose the highest-leverage fix first (e.g., fixing an N+1 query
    before micro-optimizing a component render) — prioritize by expected
    impact, not by ease of implementation.
-6. State the expected metric improvement in concrete terms tied to the
-   budget in `performance-web-vitals.md` (e.g., "removes a 1.2MB
-   duplicate dependency from the initial bundle"), not vague claims like
-   "this should be faster."
+6. State measured before/after changes when both observations exist. If only static
+   evidence exists, describe the mechanism and verification method without inventing
+   a numeric improvement.
 7. Flag any performance fix that trades off maintainability or
    correctness (e.g., aggressive memoization, denormalized data) as an
    explicit trade-off, not a free win.
@@ -44,13 +43,13 @@ changes.
 - [ ] Baseline measurement used if available; stated as static analysis
       if not.
 - [ ] Highest-leverage fix proposed first.
-- [ ] Expected improvement stated concretely, tied to a named metric/budget.
+- [ ] No numeric improvement is claimed without before/after evidence.
 - [ ] Trade-offs (maintainability, correctness) flagged explicitly.
 
 ## Output Format
 
-State the target metric and current/expected values. Then the fix as a
-diff. Then the trade-off statement if applicable.
+State the target metric and observed baseline when available. Then provide the fix
+or read-only plan, the verification result/method, and any trade-off.
 
 ## Related References
 

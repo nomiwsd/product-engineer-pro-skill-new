@@ -11,6 +11,11 @@ Writing end-to-end integration tests for high-impact user flows.
 ```ts
 import { test, expect } from "@playwright/test";
 
+const paymentEnvironment = process.env.PAYMENT_ENVIRONMENT;
+if (paymentEnvironment !== "test" && paymentEnvironment !== "sandbox") {
+  throw new Error("Checkout E2E tests require PAYMENT_ENVIRONMENT=test or sandbox.");
+}
+
 test.describe("Checkout flow", () => {
   test("user can complete a purchase with a valid card", async ({ page }) => {
     await page.goto("/products/blue-widget");
@@ -43,4 +48,5 @@ test.describe("Checkout flow", () => {
 
 - Reserve E2E tests for critical user journeys (checkout, authentication, onboarding).
 - Prefer accessibility role/label selectors (`getByRole`, `getByLabel`) over brittle CSS selectors (`accessibility-a11y.md`).
-- Run E2E tests against dedicated sandbox/test environments.
+- Keep the environment guard and use provider-documented test credentials only.
+  Never point payment E2E tests at production accounts, endpoints, or webhooks.

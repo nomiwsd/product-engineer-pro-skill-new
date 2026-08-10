@@ -12,8 +12,8 @@ Verify before relying on "Current" tier: check the installed version via lockfil
 
 | Version Range | Support Tier | Key Differences |
 |---|---|---|
-| Tailwind v4.x (v4.0–v4.3+) | Current (Latest) | CSS-first configuration via `@theme` in CSS (no `tailwind.config.js` required); `@import "tailwindcss";` replaces `@tailwind` directives; Rust-based Oxide engine; automatic template content detection; native CSS cascade layers & container queries; `text-shadow-*`, `mask-*`, and scrollbar utilities |
-| Tailwind v3.x | Supported | JS/TS-based `tailwind.config.js` with `theme.extend`; `@tailwind base/components/utilities` directives required; explicit `content` array required for purging; container queries require `@tailwindcss/container-queries` plugin |
+| Tailwind v4.x (v4.0–v4.3+) | Snapshot current | CSS-first configuration via `@theme`; `@import "tailwindcss";`, automatic content detection, cascade layers, and container queries; verify minor-specific utilities before using them |
+| Tailwind v3.x | Supported | JS/TS-based `tailwind.config.js` with `theme.extend`; `@tailwind base/components/utilities` directives and explicit content paths; container queries are built in from v3.2, while older minors may use the legacy plugin |
 | Tailwind v2.x and earlier | Legacy | No JIT engine by default, significantly different default color palette and utility set — flag as outdated |
 
 ## Detection
@@ -61,7 +61,9 @@ Always confirm via the actual CSS entry file, not just presence/absence of a con
   };
   ```
 - Keep the `content` array accurate and specific — an overly broad glob slows build scanning; a too-narrow glob silently drops used classes from the production build.
-- Container queries require the official `@tailwindcss/container-queries` plugin in v3.
+- Tailwind v3.2+ includes container-query utilities. Use the legacy
+  `@tailwindcss/container-queries` plugin only when the detected older v3 minor
+  requires it; do not add the plugin blindly.
 
 ## Standards — Both Versions
 

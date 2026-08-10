@@ -1,0 +1,6 @@
+interface:
+  display_name: "Product Engineer Pro"
+  short_description: "Plan, build, and review production applications"
+  default_prompt: "Use $product-engineer-pro to inspect this repository and handle the requested engineering workflow under the current host permissions."
+policy:
+  allow_implicit_invocation: true

@@ -1,5 +1,18 @@
 # Changelog
 
+## [2.0.1] — 2026-08-10
+
+### Changed
+
+- Rebuilt installation around a canonical manifest with 13 workflow recipes and
+  separate plan/build/review lifecycle roles.
+- Added capability-tiered native integrations for Claude Code, Codex, Gemini CLI,
+  Cursor, VS Code/Copilot, Windsurf, Roo Code, Cline, Aider, and portable hosts.
+- Added hash ownership state, managed merges, collision reports, recoverable force
+  backups, migration fingerprints, full updates, doctor, JSON output, and aliases.
+- Updated the verified version snapshot and OWASP Top 10:2025 mapping; repaired
+  unsafe/inaccurate templates and removed unsupported performance guarantees.
+
 ## [1.1.2] — 2026-08-06
 
 ### Added

@@ -12,7 +12,7 @@ Defers to: `nodejs-standards.md` for runtime-level conventions; `api-design.md` 
 
 | Version Range | Support Tier | Key Differences |
 |---|---|---|
-| NestJS 11.x | Current (Latest) | Express 5 default adapter, native SWC compiler (5x faster builds), Vitest default test runner, standalone apps (`NestFactory.create(AppController)`), `@nestjs/telemetry` OpenTelemetry support, ESM by default, JSON `ConsoleLogger` |
+| NestJS 11.x | Snapshot current | Express 5 is used by the platform-express adapter; test runner, compiler, telemetry, and CommonJS/ESM remain project choices rather than universal defaults |
 | NestJS 10.x | Supported | Standard decorators, stable module federation support, Node.js 16+ baseline, Express 4 / Fastify 4 adapters |
 | NestJS 9.x & earlier | Legacy | Missing modern decorator/telemetry APIs — flag for upgrade in audits |
 
@@ -71,10 +71,13 @@ Per `references/core/repo-analysis.md`: check `@nestjs/core` version and whether
 
 ### Testing Integration
 - Use `@nestjs/testing`'s `Test.createTestingModule` to build an isolated testing module per suite, overriding only providers that need mocking.
-- In NestJS 11+, leverage Vitest + SWC for fast, parallel unit and integration tests.
+- Use the repository's configured test runner and transformer. Nest's standard
+  starter has historically used Jest; Vitest and SWC are valid opt-in choices,
+  not universal NestJS 11 defaults.
 
 ### Configuration
-- Use `@nestjs/config` (`ConfigModule`/`ConfigService`) with a Zod or Joi validation schema to validate process environment variables at startup.
+- Use `@nestjs/config` (`ConfigModule`/`ConfigService`) and the repository's
+  established validation convention to validate environment variables at startup.
 
 ## Anti-Patterns
 

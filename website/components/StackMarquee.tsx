@@ -1,6 +1,5 @@
 "use client";
 
-import * as React from "react";
 import {
   SiNextdotjs, SiReact, SiTypescript, SiTailwindcss, SiNodedotjs,
   SiExpress, SiNestjs, SiPostgresql, SiMongodb, SiGithub,

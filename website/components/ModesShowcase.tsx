@@ -6,7 +6,8 @@ import {
   Search, Code2, ShieldAlert, Database, CheckCircle2, ChevronRight, ChevronLeft,
   Layout, Server, Bug, Wrench, Palette, Gauge, Globe, TestTube2,
 } from "lucide-react";
-import { SiPostgresql, SiMongodb } from "react-icons/si";
+import { SiPostgresql } from "react-icons/si";
+import catalog from "@/generated/catalog.json";
 import { cn } from "@/lib/utils";
 
 type Mode = {
@@ -24,391 +25,52 @@ type Mode = {
   brandIcon?: React.ElementType;
 };
 
-const MODES: Mode[] = [
-  {
-    id: "audit",
-    name: "Audit",
-    icon: Search,
-    badge: "Diagnostic Mode",
-    headline: "Full-Stack Codebase Health Audit",
-    description: "Inspects architecture, flags legacy Next.js API usage, detects unindexed database queries, and validates error boundary coverage before writing code.",
-    checks: ["Next 16 async params & cookies check", "API route error boundary coverage", "Unindexed database query detection"],
-    stats: [
-      { label: "Avg Findings", value: "3-8 Issues" },
-      { label: "Scan Speed", value: "~0.8s" },
-      { label: "Scope", value: "Full Src" },
-    ],
-    fileName: "audit-report.log",
-    borderAccentClass: "border-l-primary",
-    output: ` 1 | [AUDIT] Scanning workspace /src ...
- 2 | ✔ Next.js version detected: 16.3.0 (App Router)
- 3 | ⚠ WARN  app/api/users/route.ts:14
- 4 |         Missing \`await\` on cookies() — required in Next.js 16
- 5 | ⚠ WARN  components/UserProfile.tsx:42
- 6 |         Missing \`key\` prop on list item render
- 7 | ✖ ERROR lib/db/queries.ts:88
- 8 |         Unindexed SELECT on high-cardinality column user.email
- 9 |         Recommendation: CREATE INDEX idx_users_email ON users(email)
-10 | ────────────────────────────────────────────────────────
-11 | Status: Scan complete — 1 Critical · 2 Warnings · 0 Security Blockers`,
-  },
-  {
-    id: "implement",
-    name: "Implement",
-    icon: Code2,
-    badge: "Execution Mode",
-    headline: "Surgical Feature Implementation",
-    description: "Applies minimal, diff-first additions that respect your existing component design system, type interfaces, and naming conventions.",
-    checks: ["Zod schema verification against TS types", "Semantic CSS token adherence (0 hardcoded hex)", "Co-located unit test assertion generation"],
-    stats: [
-      { label: "Diff Limit", value: "≤ 150 Lines" },
-      { label: "Build Pass", value: "100%" },
-      { label: "Scope", value: "Target File" },
-    ],
-    fileName: "implementation.patch",
-    borderAccentClass: "border-l-primary",
-    output: ` 1 | [IMPLEMENT] Target: app/dashboard/page.tsx
- 2 | + export async function DashboardPage() {
- 3 | +   const session = await auth();
- 4 | +   if (!session) redirect("/login");
- 5 | +
- 6 | +   return <DashboardClient user={session.user} />;
- 7 | + }
- 8 |
- 9 | ✔ Types updated: lib/types/auth.ts → Added: DashboardUser
-10 | ✔ Zod schema verified: DashboardUserSchema
-11 | ────────────────────────────────────────────────────────
-12 | Status: Diff applied cleanly — 0 TS errors · 0 lint warnings`,
-  },
-  {
-    id: "security",
-    name: "Security",
-    icon: ShieldAlert,
-    badge: "OWASP Hardening",
-    headline: "Security Vulnerability Scan & Remediation",
-    description: "Automated OWASP Top 10 analysis with auto-remediation. Enforces Zod validation, rate limiting, CSRF tokens, and strict SameSite cookies.",
-    checks: ["Zod validation on request body", "CSRF & SameSite=Lax/Strict policy", "NoSQL / SQL injection prevention"],
-    stats: [
-      { label: "OWASP Coverage", value: "Top 10" },
-      { label: "Auto-Fix", value: "Enabled" },
-      { label: "Severity", value: "High / Med" },
-    ],
-    fileName: "security-report.json",
-    borderAccentClass: "border-l-destructive",
-    output: ` 1 | {
- 2 |   "scan_target": "POST /api/checkout",
- 3 |   "findings": [
- 4 |     { "rule": "SEC-004", "severity": "HIGH",
- 5 |       "file": "app/api/checkout/route.ts:22",
- 6 |       "issue": "Unvalidated JSON body → db.create()",
- 7 |       "fix": "CheckoutSchema.parseAsync(body)" },
- 8 |     { "rule": "SEC-011", "severity": "MEDIUM",
- 9 |       "file": "middleware.ts:8",
-10 |       "issue": "No rate limit on auth endpoints",
-11 |       "fix": "ratelimit(10, '1m') middleware" }
-12 |   ],
-13 |   "status": "REMEDIATION_APPLIED"
-14 | }`,
-  },
-  {
-    id: "database",
-    name: "Database",
-    icon: Database,
-    badge: "Schema & Queries",
-    headline: "PostgreSQL & MongoDB Optimization",
-    description: "Designs relational schemas or document collections with compound indexes, cascade rules, migration safety, and N+1 query elimination.",
-    checks: ["Prisma/Drizzle compound index schema", "Mongoose typed document schema", "EXPLAIN ANALYZE performance audit"],
-    stats: [
-      { label: "Query Speed", value: "420ms → 1.4ms" },
-      { label: "Index Lock", value: "Safe CONCURRENTLY" },
-      { label: "ORMs", value: "Prisma / Mongoose" },
-    ],
-    fileName: "migration.sql",
-    borderAccentClass: "border-l-accent",
-    brandIcon: SiPostgresql,
-    output: ` 1 | -- PostgreSQL Migration: Add Compound Index
- 2 | -- Safe for production: CONCURRENTLY avoids table lock
- 3 |
- 4 | CREATE UNIQUE INDEX CONCURRENTLY
- 5 |   idx_users_org_email ON users (organization_id, email);
- 6 |
- 7 | ALTER TABLE audit_logs
- 8 |   ADD CONSTRAINT fk_audit_user
- 9 |   FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE;
-10 |
-11 | -- EXPLAIN ANALYZE: Before 420ms (Seq Scan) → After 1.4ms (Index Scan)
-12 | ────────────────────────────────────────────────────────
-13 | Status: Migration generated safely — 0 locking queries`,
-  },
-  {
-    id: "review",
-    name: "Review",
-    icon: CheckCircle2,
-    badge: "PR Inspector",
-    headline: "Principal-Level Code Review",
-    description: "Pre-merge review enforcing design system adherence, bundle impact analysis, accessibility validation, and type safety.",
-    checks: ["Zero hardcoded color hex values", "WCAG 2.2 AA contrast verification", "Public API breaking change guard"],
-    stats: [
-      { label: "Score", value: "97 / 100" },
-      { label: "Bundle Impact", value: "+2.1KB gzip" },
-      { label: "Merge State", value: "Ready" },
-    ],
-    fileName: "pr-review.md",
-    borderAccentClass: "border-l-success",
-    output: ` 1 | ## Code Review Summary: PASS (97/100)
- 2 |
- 3 | ✔ Security       OWASP Top 10 — no new vulnerabilities
- 4 | ✔ Accessibility  WCAG 2.2 AA contrast verified
- 5 | ✔ Performance    Bundle impact: +2.1KB gzip (within threshold)
- 6 | ✔ Design System  0 hardcoded colors — 100% semantic tokens
- 7 | ✔ Types          0 TypeScript errors · 0 \`any\` casts
- 8 | ⚠ Note           UserCard hover state missing focus ring
- 9 |                  → Added \`focus-visible:ring-2\` before merge
-10 | ────────────────────────────────────────────────────────
-11 | Status: Ready for production merge`,
-  },
-  {
-    id: "frontend",
-    name: "Frontend",
-    icon: Layout,
-    badge: "UI Principal",
-    headline: "Next.js & React Component Engineering",
-    description: "Enforces App Router / RSC patterns, WCAG 2.2 AA, Core Web Vitals, Tailwind semantic tokens, and shadcn/ui composition — version-adaptive across Next.js 14/15/16.",
-    checks: ["RSC vs Client component boundary check", "WCAG 2.2 AA contrast & focus ring audit", "Zero hardcoded hex / CLS dimension guards"],
-    stats: [
-      { label: "Next.js", value: "14 / 15 / 16" },
-      { label: "React", value: "18 / 19 RSC" },
-      { label: "A11y", value: "WCAG 2.2 AA" },
-    ],
-    fileName: "frontend-checklist.md",
-    borderAccentClass: "border-l-primary",
-    output: ` 1 | [FRONTEND] Mode: Next.js 16 App Router
- 2 | ✔ RSC boundary enforced — DashboardClient is 'use client'
- 3 | ✔ Page params awaited: const { id } = await params
- 4 | ✔ cookies() awaited — required in Next.js 16
- 5 |
- 6 | ⚠ WARN  components/Card.tsx:18
- 7 |         Hardcoded color: style={{ color: '#3b82f6' }}
- 8 |         Fix: use var(--color-primary) semantic token
- 9 |
-10 | ✔ Image explicit width/height — CLS = 0
-11 | ✔ WCAG AA contrast verified: 7.1:1 on primary text
-12 | ────────────────────────────────────────────────────────
-13 | Status: Frontend check complete — 0 Critical · 1 Warning`,
-  },
-  {
-    id: "backend",
-    name: "Backend",
-    icon: Server,
-    badge: "API Principal",
-    headline: "Node.js, Express & NestJS API Engineering",
-    description: "Generates OWASP-hardened API routes, NestJS modules with guards/pipes/DTOs, and Express controllers with strict Zod validation and rate limiting.",
-    checks: ["Zod body validation before db.create()", "JWT + RBAC guard on protected routes", "Express arity-4 error handler placement"],
-    stats: [
-      { label: "Express", value: "v4 / v5" },
-      { label: "NestJS", value: "v10 / v11" },
-      { label: "Node", value: "v20+ ESM" },
-    ],
-    fileName: "api-route.ts",
-    borderAccentClass: "border-l-accent",
-    output: ` 1 | [BACKEND] Target: POST /api/orders
- 2 | + export async function POST(req: Request) {
- 3 | +   const body = await req.json();
- 4 | +   const data = OrderSchema.parse(body);  // Zod guard
- 5 | +   const session = await auth();           // JWT check
- 6 | +   if (!session) return unauthorized();
- 7 | +
- 8 | +   const order = await db.order.create({ data });
- 9 | +   return NextResponse.json(order, { status: 201 });
-10 | + }
-11 |
-12 | ✔ Zod schema enforced · Auth guard active
-13 | ────────────────────────────────────────────────────────
-14 | Status: Route generated — OWASP A03 injection-safe`,
-  },
-  {
-    id: "design-system",
-    name: "Design System",
-    icon: Palette,
-    badge: "Token Architecture",
-    headline: "OKLCH Design Tokens & Advanced UI/UX",
-    description: "Scaffolds a 3-layer token system (primitive → semantic → component) with OKLCH color scales, 4px grid spacing, micro-animations, and glassmorphism utilities.",
-    checks: ["OKLCH perceptual color scale generation", "4px/8px grid spacing enforcement", "prefers-reduced-motion animation guards"],
-    stats: [
-      { label: "Color Space", value: "OKLCH" },
-      { label: "Grid Unit", value: "4px base" },
-      { label: "Dark Mode", value: "Semantic" },
-    ],
-    fileName: "tailwind-tokens.css",
-    borderAccentClass: "border-l-primary",
-    output: ` 1 | @theme {
- 2 |   /* OKLCH Primitives */
- 3 |   --color-brand-500: oklch(0.58 0.19 250);
- 4 |   --color-neutral-950: oklch(0.14 0.01 250);
- 5 |
- 6 |   /* Semantic tokens — components consume these */
- 7 |   --color-primary: var(--color-brand-500);
- 8 |   --color-background: oklch(0.99 0 0);
- 9 |
-10 |   /* Motion easing */
-11 |   --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
-12 |   --shadow-glow: 0 0 20px -5px var(--color-primary);
-13 | }
-14 | .dark { --color-background: oklch(0.14 0.01 250); }
-15 | ────────────────────────────────────────────────────────
-16 | Status: Token scaffold generated — 0 hardcoded hex`,
-  },
-  {
-    id: "performance",
-    name: "Performance",
-    icon: Gauge,
-    badge: "Core Web Vitals",
-    headline: "LCP, INP & CLS Optimization",
-    description: "Diagnoses bundle bloat, missing image dimensions, font-display issues, and dynamic import opportunities to hit LCP < 1.2s, INP < 100ms, and CLS = 0.",
-    checks: ["Image dimension guard — CLS = 0", "Dynamic import split for heavy libs", "Font-display: swap + subset verification"],
-    stats: [
-      { label: "LCP Target", value: "< 1.2s" },
-      { label: "INP Target", value: "< 100ms" },
-      { label: "CLS Target", value: "= 0" },
-    ],
-    fileName: "vitals-report.md",
-    borderAccentClass: "border-l-success",
-    output: ` 1 | [PERFORMANCE] Bundle analysis: /app/dashboard
- 2 |
- 3 | ✖ ERROR  LCP: 3.4s — exceeds 1.2s budget
- 4 |           Cause: /lib/chart.js (480KB) loaded eagerly
- 5 |           Fix: dynamic(() => import('@/lib/chart'), { ssr: false })
- 6 |
- 7 | ⚠ WARN   Image /hero.png — missing width/height → CLS risk
- 8 |           Fix: <Image width={1200} height={630} .../>
- 9 |
-10 | ✔ Font: Inter subset via next/font — display:swap OK
-11 | ────────────────────────────────────────────────────────
-12 | Status: 1 Critical fix · 1 Warning · LCP budget restoring`,
-  },
-  {
-    id: "seo",
-    name: "SEO",
-    icon: Globe,
-    badge: "Technical SEO",
-    headline: "Metadata, Sitemap & Structured Data",
-    description: "Audits meta tags, Open Graph, canonical URLs, sitemap.xml, robots.txt, and JSON-LD structured data to fix indexability and rich result eligibility.",
-    checks: ["generateMetadata() per route check", "Canonical URL & OG tag completeness", "JSON-LD Article / Product schema"],
-    stats: [
-      { label: "Coverage", value: "Meta + OG" },
-      { label: "Schema", value: "JSON-LD" },
-      { label: "robots.txt", value: "Validated" },
-    ],
-    fileName: "seo-audit.md",
-    borderAccentClass: "border-l-accent",
-    output: ` 1 | [SEO] Scanning: /app/**/page.tsx
- 2 |
- 3 | ✖ ERROR  /app/blog/[slug]/page.tsx
- 4 |           Missing generateMetadata() export
- 5 |           Fix: export async function generateMetadata({ params })
- 6 |
- 7 | ⚠ WARN   /app/about/page.tsx
- 8 |           og:image missing — falls back to default
- 9 |
-10 | ✔ sitemap.xml detected and valid
-11 | ✔ robots.txt: no critical disallow rules
-12 | ────────────────────────────────────────────────────────
-13 | Status: 1 Critical · 1 Warning · Sitemap OK`,
-  },
-  {
-    id: "debug",
-    name: "Debug",
-    icon: Bug,
-    badge: "Root Cause Analysis",
-    headline: "Bug Diagnosis & Root Cause Investigation",
-    description: "Traces runtime errors, hydration mismatches, async race conditions, and type errors to their root cause and provides a minimal, targeted fix.",
-    checks: ["Hydration mismatch source tracing", "Async/await race condition detection", "TypeScript error root cause isolation"],
-    stats: [
-      { label: "Fix Scope", value: "Minimal Diff" },
-      { label: "Trace Depth", value: "Full Stack" },
-      { label: "Side Effects", value: "Zero" },
-    ],
-    fileName: "debug-trace.log",
-    borderAccentClass: "border-l-destructive",
-    output: ` 1 | [DEBUG] Error: Hydration mismatch in <ThemeProvider>
- 2 | Traceback:
- 3 |   app/layout.tsx:12 → <ThemeProvider>
- 4 |   components/Navbar.tsx:44 → useTheme()
- 5 |
- 6 | Root Cause: theme read on server (SSR) before mount
- 7 | Pattern: useState(false) — set true on useEffect mount
- 8 |
- 9 | Fix:
-10 | +  const [mounted, setMounted] = useState(false);
-11 | +  useEffect(() => setMounted(true), []);
-12 | +  if (!mounted) return <Skeleton />;
-13 | ────────────────────────────────────────────────────────
-14 | Status: Root cause identified — minimal fix generated`,
-  },
-  {
-    id: "refactor",
-    name: "Refactor",
-    icon: Wrench,
-    badge: "Code Cleanup",
-    headline: "Structural Refactoring Without Breaking Contracts",
-    description: "Eliminates duplication, extracts reusable hooks and utilities, and enforces consistent naming without touching public API contracts, existing tests, or comments.",
-    checks: ["Public API contract preservation", "Docstring & comment retention", "Zero new external dependency introduction"],
-    stats: [
-      { label: "API Safety", value: "100%" },
-      { label: "Diff Style", value: "Additive" },
-      { label: "Test Impact", value: "Zero Break" },
-    ],
-    fileName: "refactor.patch",
-    borderAccentClass: "border-l-success",
-    output: ` 1 | [REFACTOR] Target: lib/api/users.ts
- 2 |
- 3 | - async function fetchUser(id: string) {
- 4 | -   const res = await fetch('/api/users/' + id);
- 5 | -   const data = await res.json();
- 6 | -   return data;
- 7 | - }
- 8 | + async function fetchUser(id: string): Promise<User> {
- 9 | +   const res = await fetch(\`/api/users/\${id}\`);
-10 | +   if (!res.ok) throw new ApiError(res.status);
-11 | +   return UserSchema.parse(await res.json());
-12 | + }
-13 | ────────────────────────────────────────────────────────
-14 | Status: Refactored — existing tests: 0 failures`,
-  },
-  {
-    id: "test",
-    name: "Test",
-    icon: TestTube2,
-    badge: "Test Generation",
-    headline: "Unit, Integration & E2E Test Assertions",
-    description: "Generates co-located unit tests with Vitest/Jest, API integration tests with Supertest, and Playwright E2E specs — all with typed mock factories.",
-    checks: ["Typed mock factory generation", "Edge case & error path coverage", "Playwright E2E happy path spec"],
-    stats: [
-      { label: "Coverage", value: "≥ 80% Target" },
-      { label: "Framework", value: "Vitest / Jest" },
-      { label: "E2E", value: "Playwright" },
-    ],
-    fileName: "user.spec.ts",
-    borderAccentClass: "border-l-primary",
-    output: ` 1 | // unit: lib/api/users.test.ts
- 2 | import { describe, it, expect, vi } from 'vitest';
- 3 |
- 4 | describe('fetchUser', () => {
- 5 |   it('returns parsed user on 200', async () => {
- 6 |     vi.spyOn(global, 'fetch').mockResolvedValueOnce(
- 7 |       new Response(JSON.stringify(mockUser), { status: 200 })
- 8 |     );
- 9 |     const result = await fetchUser('usr_123');
-10 |     expect(result.id).toBe('usr_123');
-11 |   });
-12 |   it('throws ApiError on 404', async () => {
-13 |     expect(fetchUser('bad')).rejects.toThrow(ApiError);
-14 |   });
-15 | });
-16 | ────────────────────────────────────────────────────────
-17 | Status: Tests generated — 2 cases · 0 skipped`,
-  },
+type ModePresentation = Pick<Mode, "id" | "icon" | "fileName" | "borderAccentClass" | "brandIcon">;
+
+const MODE_PRESENTATION: ModePresentation[] = [
+  { id: "audit", icon: Search, fileName: "audit-report.log", borderAccentClass: "border-l-primary" },
+  { id: "implement", icon: Code2, fileName: "implementation.patch", borderAccentClass: "border-l-primary" },
+  { id: "security", icon: ShieldAlert, fileName: "security-review.log", borderAccentClass: "border-l-destructive" },
+  { id: "database", icon: Database, fileName: "database-plan.sql", borderAccentClass: "border-l-success", brandIcon: SiPostgresql },
+  { id: "review", icon: CheckCircle2, fileName: "review-findings.log", borderAccentClass: "border-l-accent" },
+  { id: "frontend", icon: Layout, fileName: "frontend-workflow.log", borderAccentClass: "border-l-primary" },
+  { id: "backend", icon: Server, fileName: "backend-workflow.log", borderAccentClass: "border-l-success" },
+  { id: "design-system", icon: Palette, fileName: "design-system.log", borderAccentClass: "border-l-accent" },
+  { id: "performance", icon: Gauge, fileName: "performance-evidence.log", borderAccentClass: "border-l-primary" },
+  { id: "seo", icon: Globe, fileName: "seo-review.log", borderAccentClass: "border-l-success" },
+  { id: "debug", icon: Bug, fileName: "debug-evidence.log", borderAccentClass: "border-l-destructive" },
+  { id: "refactor", icon: Wrench, fileName: "refactor-plan.log", borderAccentClass: "border-l-accent" },
+  { id: "test", icon: TestTube2, fileName: "test-workflow.log", borderAccentClass: "border-l-primary" },
 ];
+
+const MODES: Mode[] = MODE_PRESENTATION.map((presentation) => {
+  const workflow = catalog.workflows.find((item) => item.id === presentation.id);
+  if (!workflow) throw new Error(`Missing workflow manifest entry: ${presentation.id}`);
+  const aliases = workflow.aliases.length ? workflow.aliases.join(", ") : "none";
+  return {
+    ...presentation,
+    name: workflow.label,
+    badge: `${workflow.defaultLifecycle} lifecycle`,
+    headline: `${workflow.label} engineering workflow`,
+    description: workflow.description,
+    checks: [
+      `Aliases: ${aliases}`,
+      workflow.diagnostic ? "Evidence-first diagnosis is available" : "Build intent routes directly to implementation",
+      workflow.buildCapable ? "Edits require user intent and writable host state" : "Read-only findings and explicit handoff",
+    ],
+    stats: [
+      { label: "Lifecycle", value: workflow.defaultLifecycle },
+      { label: "Diagnostic", value: workflow.diagnostic ? "Supported" : "Not primary" },
+      { label: "Mutation", value: workflow.buildCapable ? "Host-controlled" : "Read-only" },
+    ],
+    output: ` 1 | [${workflow.id.toUpperCase()}] Product Engineer Pro v${catalog.version}
+ 2 | Lifecycle: ${workflow.defaultLifecycle} (host state remains authoritative)
+ 3 | Recipe: references/workflows/${workflow.id}.md
+ 4 | Repository versions and conventions are inspected first
+ 5 | Verification claims require observed evidence
+ 6 | Status: workflow routed from canonical manifest`,
+  };
+});
 
 const SLIDE_OFFSET_PX = 300;
 const SIDE_ROTATE_DEG = 26;
@@ -477,12 +139,12 @@ export function ModesShowcase() {
 
         {/* Section Header */}
         <div className="text-center max-w-3xl mx-auto mb-12 space-y-3">
-          <p className="text-eyebrow text-accent">Operating Modes — 3D Coverflow</p>
+          <p className="text-eyebrow text-accent">Engineering Workflows — 3D Coverflow</p>
           <h2 className="text-2xl sm:text-4xl font-bold text-foreground text-balance">
             Specialized workflows, invoked on demand
           </h2>
           <p className="text-base sm:text-lg text-muted-foreground text-balance">
-            Click any slide or use controls to navigate the 3D coverflow showcase.
+            Choose a specialty here; your host&apos;s Plan, Ask, Agent, or editing state independently controls mutation.
           </p>
         </div>
 
@@ -493,7 +155,7 @@ export function ModesShowcase() {
         >
           <div
             role="tablist"
-            aria-label="Operating mode selector"
+            aria-label="Engineering workflow selector"
             tabIndex={0}
             onKeyDown={handleKeyDown}
             className="flex items-center justify-start gap-2 min-w-max pb-2 pt-1 focus-visible:outline-none"
@@ -513,7 +175,7 @@ export function ModesShowcase() {
                   onClick={() => setActiveIndex(idx)}
                   className={cn(
                     "relative flex items-center gap-2 px-3.5 sm:px-4 py-2.5 rounded-xl text-xs font-mono font-medium",
-                    "border transition-all duration-200 cursor-pointer shrink-0 min-h-[44px]",
+                    "border transition-all duration-200 cursor-pointer shrink-0 min-h-11",
                     "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring",
                     isActive
                       ? "bg-primary text-primary-foreground border-primary shadow-glow font-bold scale-105"
@@ -539,7 +201,7 @@ export function ModesShowcase() {
           <button
             type="button"
             onClick={handlePrev}
-            aria-label="Previous mode"
+            aria-label="Previous workflow"
             className="hidden lg:flex absolute -left-6 top-1/2 -translate-y-1/2 z-50 h-11 w-11 rounded-full border border-border bg-background/95 backdrop-blur-md items-center justify-center text-muted-foreground hover:text-foreground hover:border-border-strong hover:bg-muted transition-all duration-150 cursor-pointer shadow-card"
           >
             <ChevronLeft className="h-5 w-5" />
@@ -547,7 +209,7 @@ export function ModesShowcase() {
           <button
             type="button"
             onClick={handleNext}
-            aria-label="Next mode"
+            aria-label="Next workflow"
             className="hidden lg:flex absolute -right-6 top-1/2 -translate-y-1/2 z-50 h-11 w-11 rounded-full border border-border bg-background/95 backdrop-blur-md items-center justify-center text-muted-foreground hover:text-foreground hover:border-border-strong hover:bg-muted transition-all duration-150 cursor-pointer shadow-card"
           >
             <ChevronRight className="h-5 w-5" />
@@ -558,7 +220,7 @@ export function ModesShowcase() {
             <button
               type="button"
               onClick={handlePrev}
-              aria-label="Previous mode"
+              aria-label="Previous workflow"
               className="h-11 w-11 rounded-full border border-border bg-card flex items-center justify-center text-muted-foreground hover:text-foreground hover:bg-muted active:scale-95 transition-all"
             >
               <ChevronLeft className="h-5 w-5" />
@@ -569,7 +231,7 @@ export function ModesShowcase() {
             <button
               type="button"
               onClick={handleNext}
-              aria-label="Next mode"
+              aria-label="Next workflow"
               className="h-11 w-11 rounded-full border border-border bg-card flex items-center justify-center text-muted-foreground hover:text-foreground hover:bg-muted active:scale-95 transition-all"
             >
               <ChevronRight className="h-5 w-5" />
@@ -577,12 +239,12 @@ export function ModesShowcase() {
           </div>
 
           {/* 3D coverflow container — overflow-hidden only on lg+ */}
-          <div className="lg:[perspective:1500px] lg:overflow-hidden rounded-2xl">
+          <div className="lg:perspective-[1500px] lg:overflow-hidden rounded-2xl">
             {/*
               h-auto below lg (natural stacking flow),
               fixed h-[580px] on lg+ where absolute-positioned slides live.
             */}
-            <div className="relative w-full h-auto lg:h-[580px] lg:[transform-style:preserve-3d]">
+            <div className="relative w-full h-auto lg:h-145 lg:transform-3d">
               {MODES.map((mode, idx) => {
                 const isActive = activeIndex === idx;
 
@@ -643,8 +305,8 @@ function ModeSlideContent({ mode, idx }: { mode: Mode; idx: number }) {
           </div>
 
           <div className="min-w-0">
-            <h3 className="text-lg font-bold text-card-foreground break-words">{mode.headline}</h3>
-            <p className="text-xs sm:text-sm text-muted-foreground leading-relaxed mt-1 break-words">
+            <h3 className="text-lg font-bold text-card-foreground wrap-break-word">{mode.headline}</h3>
+            <p className="text-xs sm:text-sm text-muted-foreground leading-relaxed mt-1 wrap-break-word">
               {mode.description}
             </p>
           </div>
@@ -654,7 +316,7 @@ function ModeSlideContent({ mode, idx }: { mode: Mode; idx: number }) {
             {mode.checks.map((check) => (
               <div key={check} className="flex items-start gap-2 text-xs font-mono text-foreground/90 min-w-0">
                 <ChevronRight className="h-3.5 w-3.5 text-primary shrink-0 mt-0.5" />
-                <span className="break-words">{check}</span>
+                <span className="wrap-break-word">{check}</span>
               </div>
             ))}
           </div>
@@ -677,16 +339,16 @@ function ModeSlideContent({ mode, idx }: { mode: Mode; idx: number }) {
             <span className="h-2 w-2 rounded-full bg-primary shrink-0" />
             <span className="truncate">{mode.fileName}</span>
           </span>
-          <span className="text-eyebrow whitespace-nowrap shrink-0">Mode {idx + 1} of {MODES.length}</span>
+          <span className="text-eyebrow whitespace-nowrap shrink-0">Workflow {idx + 1} of {MODES.length}</span>
         </div>
 
-        <pre className="my-2 p-4 rounded-xl bg-noise border border-border text-xs font-mono leading-relaxed overflow-auto text-foreground/90 tabular-nums max-h-[400px] flex-1 min-w-0">
+        <pre className="my-2 p-4 rounded-xl bg-noise border border-border text-xs font-mono leading-relaxed overflow-auto text-foreground/90 tabular-nums max-h-100 flex-1 min-w-0">
           <code>{mode.output}</code>
         </pre>
 
         <div className="pt-2 border-t border-border flex items-center justify-between gap-2 text-eyebrow text-muted-foreground shrink-0">
-          <span>Terminal Output</span>
-          <span className="text-success font-mono font-bold">100% Enforced</span>
+          <span>Workflow Preview</span>
+          <span className="text-success font-mono font-bold">Manifest Routed</span>
         </div>
       </div>
     </div>

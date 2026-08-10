@@ -1,0 +1,271 @@
+{
+  "version": "2.0.1",
+  "lifecycles": [
+    {
+      "id": "plan",
+      "label": "Planner / Researcher",
+      "mutation": "read-only",
+      "purpose": "Research the repository and produce a decision-complete implementation plan."
+    },
+    {
+      "id": "build",
+      "label": "Builder",
+      "mutation": "host-controlled",
+      "purpose": "Implement and verify authorized changes under the host permission model."
+    },
+    {
+      "id": "review",
+      "label": "Reviewer / Auditor",
+      "mutation": "read-only",
+      "purpose": "Inspect code, diffs, tests, security, and quality without editing."
+    }
+  ],
+  "workflows": [
+    {
+      "id": "audit",
+      "label": "Audit",
+      "aliases": [
+        "health-check"
+      ],
+      "defaultLifecycle": "review",
+      "diagnostic": true,
+      "buildCapable": false,
+      "description": "Assess repository health, risk, security, performance, and maintainability."
+    },
+    {
+      "id": "backend",
+      "label": "Backend",
+      "aliases": [
+        "api"
+      ],
+      "defaultLifecycle": "build",
+      "diagnostic": true,
+      "buildCapable": true,
+      "description": "Design, implement, or review Node.js, Express, and NestJS services and APIs."
+    },
+    {
+      "id": "database",
+      "label": "Database",
+      "aliases": [
+        "db"
+      ],
+      "defaultLifecycle": "build",
+      "diagnostic": true,
+      "buildCapable": true,
+      "description": "Design, migrate, query, and review PostgreSQL and MongoDB data layers."
+    },
+    {
+      "id": "debug",
+      "label": "Debug",
+      "aliases": [
+        "diagnose"
+      ],
+      "defaultLifecycle": "build",
+      "diagnostic": true,
+      "buildCapable": true,
+      "description": "Reproduce, isolate, repair, and verify defects when repair is authorized."
+    },
+    {
+      "id": "design-system",
+      "label": "Design system",
+      "aliases": [
+        "design",
+        "theme"
+      ],
+      "defaultLifecycle": "build",
+      "diagnostic": true,
+      "buildCapable": true,
+      "description": "Audit, extend, create, or rebrand design tokens and component systems."
+    },
+    {
+      "id": "frontend",
+      "label": "Frontend",
+      "aliases": [
+        "ui"
+      ],
+      "defaultLifecycle": "build",
+      "diagnostic": true,
+      "buildCapable": true,
+      "description": "Build or review React, Next.js, TypeScript, Tailwind, and shadcn/ui interfaces."
+    },
+    {
+      "id": "implement",
+      "label": "Implement",
+      "aliases": [
+        "build"
+      ],
+      "defaultLifecycle": "build",
+      "diagnostic": false,
+      "buildCapable": true,
+      "description": "Deliver a scoped feature through repository-aligned implementation and verification."
+    },
+    {
+      "id": "performance",
+      "label": "Performance",
+      "aliases": [
+        "perf"
+      ],
+      "defaultLifecycle": "build",
+      "diagnostic": true,
+      "buildCapable": true,
+      "description": "Measure and improve runtime, rendering, database, and delivery performance."
+    },
+    {
+      "id": "refactor",
+      "label": "Refactor",
+      "aliases": [
+        "cleanup"
+      ],
+      "defaultLifecycle": "build",
+      "diagnostic": true,
+      "buildCapable": true,
+      "description": "Improve structure while preserving observable behavior and contracts."
+    },
+    {
+      "id": "review",
+      "label": "Review",
+      "aliases": [
+        "pr-review"
+      ],
+      "defaultLifecycle": "review",
+      "diagnostic": true,
+      "buildCapable": false,
+      "description": "Review diffs and pull requests for correctness, regressions, security, and tests."
+    },
+    {
+      "id": "security",
+      "label": "Security",
+      "aliases": [
+        "secure"
+      ],
+      "defaultLifecycle": "review",
+      "diagnostic": true,
+      "buildCapable": true,
+      "description": "Threat-model, audit, harden, or repair supported applications."
+    },
+    {
+      "id": "seo",
+      "label": "SEO",
+      "aliases": [
+        "seo-check"
+      ],
+      "defaultLifecycle": "review",
+      "diagnostic": true,
+      "buildCapable": true,
+      "description": "Audit and improve crawlability, metadata, structured data, and discoverability."
+    },
+    {
+      "id": "test",
+      "label": "Test",
+      "aliases": [
+        "testing"
+      ],
+      "defaultLifecycle": "build",
+      "diagnostic": true,
+      "buildCapable": true,
+      "description": "Design, implement, stabilize, and review unit, integration, and end-to-end tests."
+    }
+  ],
+  "hosts": [
+    {
+      "id": "claude",
+      "label": "Claude Code",
+      "tier": "full-native",
+      "skillRoot": ".claude/skills/product-engineer-pro",
+      "commandStyle": "pep:<workflow>",
+      "agents": true,
+      "commands": true,
+      "installCommand": "npx @nomiwsd/product-engineer-pro init --tool claude"
+    },
+    {
+      "id": "codex",
+      "label": "Codex",
+      "tier": "full-native",
+      "skillRoot": ".agents/skills/product-engineer-pro",
+      "commandStyle": "$product-engineer-pro",
+      "agents": true,
+      "commands": false,
+      "installCommand": "npx @nomiwsd/product-engineer-pro init --tool codex"
+    },
+    {
+      "id": "gemini",
+      "label": "Gemini CLI",
+      "tier": "full-native",
+      "skillRoot": ".agents/skills/product-engineer-pro",
+      "commandStyle": "pep:<workflow>",
+      "agents": true,
+      "commands": true,
+      "installCommand": "npx @nomiwsd/product-engineer-pro init --tool gemini"
+    },
+    {
+      "id": "cursor",
+      "label": "Cursor",
+      "tier": "full-native",
+      "skillRoot": ".agents/skills/product-engineer-pro",
+      "commandStyle": "$product-engineer-pro",
+      "agents": true,
+      "commands": false,
+      "installCommand": "npx @nomiwsd/product-engineer-pro init --tool cursor"
+    },
+    {
+      "id": "copilot",
+      "label": "VS Code / Copilot",
+      "tier": "full-native",
+      "skillRoot": ".agents/skills/product-engineer-pro",
+      "commandStyle": "/pep-<workflow>",
+      "agents": true,
+      "commands": true,
+      "installCommand": "npx @nomiwsd/product-engineer-pro init --tool copilot"
+    },
+    {
+      "id": "windsurf",
+      "label": "Windsurf",
+      "tier": "native-workflow",
+      "skillRoot": ".windsurf/skills/product-engineer-pro",
+      "commandStyle": "/pep-<workflow>",
+      "agents": false,
+      "commands": true,
+      "installCommand": "npx @nomiwsd/product-engineer-pro init --tool windsurf"
+    },
+    {
+      "id": "roo-code",
+      "label": "Roo Code",
+      "tier": "native-workflow",
+      "skillRoot": ".agents/skills/product-engineer-pro",
+      "commandStyle": "pep-<role>",
+      "agents": false,
+      "commands": false,
+      "installCommand": "npx @nomiwsd/product-engineer-pro init --tool roo-code"
+    },
+    {
+      "id": "cline",
+      "label": "Cline",
+      "tier": "native-workflow",
+      "skillRoot": ".cline/skills/product-engineer-pro",
+      "commandStyle": "$product-engineer-pro",
+      "agents": false,
+      "commands": false,
+      "installCommand": "npx @nomiwsd/product-engineer-pro init --tool cline"
+    },
+    {
+      "id": "aider",
+      "label": "Aider",
+      "tier": "portable-fallback",
+      "skillRoot": null,
+      "commandStyle": "prompt",
+      "agents": false,
+      "commands": false,
+      "installCommand": "npx @nomiwsd/product-engineer-pro init --tool aider"
+    },
+    {
+      "id": "portable",
+      "label": "Portable AGENTS.md",
+      "tier": "portable-fallback",
+      "skillRoot": ".agents/skills/product-engineer-pro",
+      "commandStyle": "$product-engineer-pro",
+      "agents": false,
+      "commands": false,
+      "installCommand": "npx @nomiwsd/product-engineer-pro init --tool portable"
+    }
+  ]
+}

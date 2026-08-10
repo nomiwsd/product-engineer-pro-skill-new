@@ -6,6 +6,7 @@ import { Copy, Check, Sparkles, FolderGit2, CheckCircle2, Bot, Terminal, Code2 }
 import {
   SiClaude, SiCursor, SiWindsurf, SiGithubcopilot, SiOpenid, SiGoogle,
 } from "react-icons/si";
+import catalog from "@/generated/catalog.json";
 import { cn } from "@/lib/utils";
 
 type Target = {
@@ -19,120 +20,46 @@ type Target = {
   nextSteps: string[];
 };
 
-const TARGETS: Target[] = [
-  {
-    id: "claude",
-    name: "Claude Code",
-    cmd: "npx @nomiwsd/product-engineer-pro init",
-    fileNote: "CLAUDE.md + .claude/skills/",
-    descriptor: "CLI-based Anthropic coding agent",
-    details: "Installs into Claude Code CLI and Anthropic API agents. Writes CLAUDE.md adapter and full skill references.",
-    icon: SiClaude,
-    nextSteps: [
-      "Paste command in your project root terminal",
-      "Skill deploys CLAUDE.md adapter & rules automatically",
-      "Prompt Claude: \"Audit this repo against engineering standards\"",
-    ],
-  },
-  {
-    id: "cursor",
-    name: "Cursor AI",
-    cmd: "npx @nomiwsd/product-engineer-pro init --adapter cursor",
-    fileNote: ".cursor/rules/product-engineer-pro.mdc",
-    descriptor: "AI-first IDE with MDC rules",
-    details: "Writes Cursor MDC rules enforcing Next.js 16, React 19, and Tailwind v4 syntax constraints.",
-    icon: SiCursor,
-    nextSteps: [
-      "Execute init command in project terminal",
-      "Generates .cursor/rules/product-engineer-pro.mdc file",
-      "Cursor automatically applies rules on every file edit",
-    ],
-  },
-  {
-    id: "windsurf",
-    name: "Windsurf Cascade",
-    cmd: "npx @nomiwsd/product-engineer-pro init --adapter windsurf",
-    fileNote: ".windsurfrules",
-    descriptor: "Cascade memory protocol agent",
-    details: "Configures Windsurf Cascade memory protocol with engineering constraints and version detection.",
-    icon: SiWindsurf,
-    nextSteps: [
-      "Run init with --adapter windsurf in root",
-      "Creates .windsurfrules file in workspace root",
-      "Cascade loads rules into persistent memory",
-    ],
-  },
-  {
-    id: "copilot",
-    name: "GitHub Copilot",
-    cmd: "npx @nomiwsd/product-engineer-pro init --adapter agents",
-    fileNote: "AGENTS.md + .agents/skills/",
-    descriptor: "Universal AGENTS.md open standard",
-    details: "Universal AGENTS.md format — works with any open-source coding agent that reads workspace instructions.",
-    icon: SiGithubcopilot,
-    nextSteps: [
-      "Execute init with --adapter agents",
-      "Generates AGENTS.md & .agents/skills/ directory",
-      "Compatible with Copilot, Roo Code, Aider, & local LLMs",
-    ],
-  },
-  {
-    id: "gemini",
-    name: "Gemini (Antigravity)",
-    cmd: "npx @nomiwsd/product-engineer-pro init --adapter gemini",
-    fileNote: "GEMINI.md + .agents/skills/",
-    descriptor: "Google Gemini / Antigravity IDE agent",
-    details: "Writes GEMINI.md adapter with full skill references for Gemini-powered coding agents and Antigravity IDE.",
-    icon: SiGoogle,
-    nextSteps: [
-      "Run init with --adapter gemini in project root",
-      "Generates GEMINI.md adapter and skill files",
-      "Gemini agent reads rules on every engineering task",
-    ],
-  },
-  {
-    id: "codex",
-    name: "OpenAI Codex",
-    cmd: "npx @nomiwsd/product-engineer-pro init --adapter codex",
-    fileNote: ".codex/instructions.md",
-    descriptor: "OpenAI Codex CLI agent",
-    details: "Writes .codex/instructions.md adapter for the OpenAI Codex CLI agent with all engineering constraints embedded.",
-    icon: SiOpenid,
-    nextSteps: [
-      "Execute init with --adapter codex in root terminal",
-      "Creates .codex/instructions.md automatically",
-      "Codex CLI reads skill rules on every session start",
-    ],
-  },
-  {
-    id: "aider",
-    name: "Aider",
-    cmd: "npx @nomiwsd/product-engineer-pro init --adapter aider",
-    fileNote: "CONVENTIONS.md",
-    descriptor: "Terminal-based pair programming agent",
-    details: "Writes CONVENTIONS.md adapter for Aider — the open-source terminal pair programmer that respects project conventions.",
-    icon: Terminal,
-    nextSteps: [
-      "Run init with --adapter aider in project root",
-      "Generates CONVENTIONS.md with full engineering standards",
-      "Aider auto-loads conventions on every coding session",
-    ],
-  },
-  {
-    id: "roocode",
-    name: "Roo Code",
-    cmd: "npx @nomiwsd/product-engineer-pro init --adapter roo-code",
-    fileNote: ".clinerules",
-    descriptor: "VS Code Roo Code extension",
-    details: "Writes .clinerules adapter file for the Roo Code VS Code extension with all version-adaptive engineering rules.",
-    icon: Code2,
-    nextSteps: [
-      "Execute init with --adapter roo-code in terminal",
-      "Creates .clinerules file in workspace root",
-      "Roo Code applies rules automatically in VS Code",
-    ],
-  },
-];
+const HOST_ICONS: Record<string, React.ElementType> = {
+  claude: SiClaude,
+  codex: SiOpenid,
+  gemini: SiGoogle,
+  cursor: SiCursor,
+  copilot: SiGithubcopilot,
+  windsurf: SiWindsurf,
+  "roo-code": Code2,
+  cline: Bot,
+  aider: Terminal,
+  portable: Bot,
+};
+
+const HOST_DESTINATIONS: Record<string, string> = {
+  claude: ".claude/skills + .claude/agents + commands",
+  codex: ".agents/skills + .codex/agents",
+  gemini: ".agents/skills + .gemini/commands + agents",
+  cursor: ".agents/skills + .cursor/rules + agents",
+  copilot: ".agents/skills + .github/prompts + agents",
+  windsurf: ".windsurf/skills + workflows + rules",
+  "roo-code": ".agents/skills + .roomodes + .roo/rules-*",
+  cline: ".cline/skills/product-engineer-pro",
+  aider: "CONVENTIONS.md + .aider.conf.yml",
+  portable: ".agents/skills + managed AGENTS.md",
+};
+
+const TARGETS: Target[] = catalog.hosts.map((host) => ({
+  id: host.id,
+  name: host.label,
+  cmd: host.installCommand,
+  fileNote: HOST_DESTINATIONS[host.id] ?? host.skillRoot ?? "Portable configuration",
+  descriptor: host.tier.replace("-", " "),
+  details: `${host.label} receives the ${host.tier} integration defined by the v2 capability contract. ${host.agents ? "Planner, Builder, and Reviewer roles are generated." : "No package-defined role agents are claimed."}`,
+  icon: HOST_ICONS[host.id] ?? Bot,
+  nextSteps: [
+    "Run the generated command in your project root",
+    `Verify discovery with product-engineer-pro doctor --tool ${host.id}`,
+    `Invoke ${host.commandStyle} and name one of the 13 specialties`,
+  ],
+}));
 
 function CopyButton({ text }: { text: string }) {
   const [copied, setCopied] = React.useState(false);
@@ -148,7 +75,7 @@ function CopyButton({ text }: { text: string }) {
       aria-label="Copy command to clipboard"
       className={cn(
         "flex items-center gap-1.5 shrink-0 px-3.5 py-2 rounded-lg text-xs font-mono font-medium",
-        "border transition-all duration-150 cursor-pointer min-h-[38px]",
+        "border transition-all duration-150 cursor-pointer min-h-9.5",
         "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring",
         "active:scale-95",
         copied
@@ -161,7 +88,6 @@ function CopyButton({ text }: { text: string }) {
     </button>
   );
 }
-
 export function Install() {
   const [selectedId, setSelectedId] = React.useState("claude");
   const prefersReduced = useReducedMotion();
@@ -176,7 +102,7 @@ export function Install() {
         <div className="text-center max-w-2xl mx-auto mb-12 space-y-3">
           <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full border border-primary/25 bg-primary/8 text-primary">
             <Sparkles className="h-3.5 w-3.5 shrink-0" />
-            <span className="text-eyebrow">30-Second Installation</span>
+            <span className="text-eyebrow">Host-Native Installation</span>
           </div>
           <h2 className="text-2xl sm:text-4xl font-bold text-foreground text-balance">
             App-Like Selector &amp; Live Command Preview
@@ -197,7 +123,7 @@ export function Install() {
                 type="button"
                 onClick={() => setSelectedId(t.id)}
                 className={cn(
-                  "flex items-center gap-2 px-3.5 py-2.5 rounded-xl text-xs font-mono shrink-0 border transition-all cursor-pointer min-h-[44px]",
+                  "flex items-center gap-2 px-3.5 py-2.5 rounded-xl text-xs font-mono shrink-0 border transition-all cursor-pointer min-h-11",
                   isSelected
                     ? "bg-primary text-primary-foreground border-primary font-bold shadow-glow"
                     : "bg-card text-muted-foreground border-border"
@@ -236,7 +162,7 @@ export function Install() {
                   {isSelected && (
                     <motion.div
                       layoutId="install-selector-highlight"
-                      className="absolute inset-0 rounded-2xl bg-primary/[0.06] ring-1 ring-inset ring-primary/30"
+                      className="absolute inset-0 rounded-2xl bg-primary/6 ring-1 ring-inset ring-primary/30"
                       transition={prefersReduced ? { duration: 0 } : { type: "spring", stiffness: 350, damping: 30 }}
                     />
                   )}
@@ -297,12 +223,12 @@ export function Install() {
                       </div>
                       <div className="min-w-0">
                         <h3 className="text-lg font-bold text-card-foreground truncate">{current.name}</h3>
-                        <p className="text-xs text-muted-foreground break-words">{current.details}</p>
+                        <p className="text-xs text-muted-foreground wrap-break-word">{current.details}</p>
                       </div>
                     </div>
                     <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-muted border border-border text-eyebrow text-muted-foreground shrink-0 self-start sm:self-auto font-mono min-w-0">
                       <FolderGit2 className="h-3.5 w-3.5 text-primary shrink-0" />
-                      <span className="truncate max-w-[160px] sm:max-w-[200px] min-w-0">{current.fileNote}</span>
+                      <span className="truncate max-w-40 sm:max-w-50 min-w-0">{current.fileNote}</span>
                     </div>
                   </div>
 
@@ -327,7 +253,7 @@ export function Install() {
                           <span className="h-5 w-5 rounded-full bg-primary/15 border border-primary/30 text-primary font-bold flex items-center justify-center shrink-0 text-[0.6875rem]">
                             {idx + 1}
                           </span>
-                          <span className="pt-0.5 leading-relaxed break-words min-w-0">{step}</span>
+                          <span className="pt-0.5 leading-relaxed wrap-break-word min-w-0">{step}</span>
                         </div>
                       ))}
                     </div>
@@ -337,7 +263,7 @@ export function Install() {
 
               {/* Bottom Security Keyline */}
               <div className="pt-3 border-t border-border flex flex-col sm:flex-row sm:items-center sm:justify-between gap-1.5 text-xs font-mono text-muted-foreground min-w-0">
-                <span className="break-words">✔ Zero Cloud Dependency · Local Configuration</span>
+                <span className="wrap-break-word">✔ Zero Cloud Dependency · Local Configuration</span>
                 <span className="text-success font-semibold shrink-0">MIT Licensed</span>
               </div>
 

@@ -1,0 +1,33 @@
+{
+  "verifiedAt": "2026-08-10",
+  "policy": "Installed repository versions take precedence. If a detected major is newer than this snapshot, verify against an official source or report reduced confidence.",
+  "runtime": {
+    "node": { "lts": "24", "current": "26", "source": "https://nodejs.org/en/about/previous-releases" },
+    "typescript": { "current": "7.0.2", "source": "https://www.npmjs.com/package/typescript" }
+  },
+  "frameworks": {
+    "next": "16.3.0",
+    "react": "19.2.8",
+    "tailwindcss": "4.3.3",
+    "shadcn": "4.16.2",
+    "express": "5.2.1",
+    "nestjs": "11.1.28",
+    "zod": "4.4.3",
+    "prisma": "7.9.1",
+    "mongoose": "9.9.1"
+  },
+  "databases": {
+    "postgresql": { "current": "18", "preview": "19 beta", "source": "https://www.postgresql.org/docs/current/release.html" },
+    "mongodb": { "current": "8.3", "source": "https://www.mongodb.com/docs/manual/release-notes/" }
+  },
+  "standards": {
+    "owaspTop10": { "current": "2025", "source": "https://owasp.org/Top10/2025/" }
+  },
+  "sources": [
+    { "subject": "Node.js releases", "url": "https://nodejs.org/en/about/previous-releases", "checkedAt": "2026-08-10" },
+    { "subject": "PostgreSQL releases", "url": "https://www.postgresql.org/docs/current/release.html", "checkedAt": "2026-08-10" },
+    { "subject": "MongoDB releases", "url": "https://www.mongodb.com/docs/manual/release-notes/", "checkedAt": "2026-08-10" },
+    { "subject": "OWASP Top 10", "url": "https://owasp.org/Top10/2025/", "checkedAt": "2026-08-10" },
+    { "subject": "npm package versions", "url": "https://registry.npmjs.org/", "checkedAt": "2026-08-10" }
+  ]
+}

@@ -38,7 +38,7 @@ Per `references/core/repo-analysis.md`: check for existing API patterns (REST ro
 - Status codes: `200` (OK with body), `201` (Created), `204` (No Content), `400` (Bad Request / Validation Error), `401` (Unauthenticated), `403` (Forbidden), `404` (Not Found), `409` (Conflict), `422` (Unprocessable Entity), `429` (Rate Limited), `500` (Internal Server Error).
 
 ### Request Validation Boundary
-- Validate all incoming request payloads before business logic executes. Return a structured `400` or `422` error response immediately on failure (`references/core/security-owasp.md` A03).
+- Validate all incoming request payloads before business logic executes. Return a structured `400` or `422` error response immediately on failure (`references/core/security-owasp.md` A05).
 
 ### Consistent Error Response Shape
 Use one standardized error shape across the entire API:

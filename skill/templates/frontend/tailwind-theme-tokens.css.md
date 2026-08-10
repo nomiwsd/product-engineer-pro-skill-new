@@ -94,7 +94,7 @@ Configuring design system tokens. Check detected Tailwind version (`references/c
 
 /* Glassmorphism Utility */
 .glass {
-  background: oklch(var(--color-background) / 0.75);
+  background: color-mix(in oklch, var(--color-background) 75%, transparent);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
   border: 1px solid var(--color-border);
@@ -111,13 +111,13 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        background: "oklch(var(--color-background) / <alpha-value>)",
-        foreground: "oklch(var(--color-foreground) / <alpha-value>)",
+        background: "rgb(var(--color-background) / <alpha-value>)",
+        foreground: "rgb(var(--color-foreground) / <alpha-value>)",
         primary: {
-          DEFAULT: "oklch(var(--color-primary) / <alpha-value>)",
-          foreground: "oklch(var(--color-primary-foreground) / <alpha-value>)",
+          DEFAULT: "rgb(var(--color-primary) / <alpha-value>)",
+          foreground: "rgb(var(--color-primary-foreground) / <alpha-value>)",
         },
-        border: "oklch(var(--color-border) / <alpha-value>)",
+        border: "rgb(var(--color-border) / <alpha-value>)",
       },
       fontFamily: {
         sans: ["Inter", "sans-serif"],
@@ -134,4 +134,7 @@ module.exports = {
 ## Adaptation Notes
 
 - Verify semantic token contrast ratios for light and dark themes independently (`references/core/accessibility-a11y.md`).
+- For the Tailwind v3 `rgb(var(...))` form, define channel-only variables such as
+  `--color-background: 255 255 255`. Do not place a complete `oklch(...)` value
+  inside another color function.
 - Respect reduced motion (`prefers-reduced-motion: reduce`) by disabling keyframes.

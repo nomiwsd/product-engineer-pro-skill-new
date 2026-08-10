@@ -3,7 +3,7 @@
 import * as React from "react";
 import { motion, useReducedMotion } from "motion/react";
 import {
-  Terminal, Copy, Check, ArrowRight, ShieldCheck, Cpu, CheckCircle2, Zap, Layers,
+  Copy, Check, ArrowRight, ShieldCheck, Cpu, CheckCircle2, Zap, Layers,
 } from "lucide-react";
 import { SiGithub, SiClaude, SiCursor, SiWindsurf, SiNextdotjs, SiReact, SiTypescript } from "react-icons/si";
 import { Button } from "@/components/ui/button";
@@ -20,11 +20,7 @@ function TerminalBlock() {
   const prefersReduced = useReducedMotion();
 
   React.useEffect(() => {
-    if (prefersReduced) {
-      setTyped(installCmd);
-      setDone(true);
-      return;
-    }
+    if (prefersReduced) return;
     const startDelay = setTimeout(() => {
       let i = 0;
       const iv = setInterval(() => {
@@ -39,6 +35,9 @@ function TerminalBlock() {
     }, 600);
     return () => clearTimeout(startDelay);
   }, [prefersReduced]);
+
+  const visibleTyped = prefersReduced ? installCmd : typed;
+  const visibleDone = prefersReduced || done;
 
   const copy = () => {
     navigator.clipboard.writeText(installCmd);
@@ -58,17 +57,17 @@ function TerminalBlock() {
         </div>
         <div className="flex items-center gap-1.5 text-eyebrow text-muted-foreground font-mono">
           <Cpu className="h-3.5 w-3.5 text-primary shrink-0" />
-          <span>v1.0.2</span>
+          <span>v2.0.1</span>
         </div>
       </div>
 
       {/* Terminal Body */}
-      <div className="p-4 sm:p-5 font-mono text-xs sm:text-sm space-y-3 bg-card/90 min-h-[210px] rounded-b-2xl">
+      <div className="p-4 sm:p-5 font-mono text-xs sm:text-sm space-y-3 bg-card/90 min-h-52.5 rounded-b-2xl">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-border/50 pb-3">
           <div className="flex items-center gap-2 min-w-0">
             <span className="text-primary font-bold select-none shrink-0">$</span>
-            <span className="text-foreground truncate tracking-tight">{typed}</span>
-            {!done && (
+            <span className="text-foreground truncate tracking-tight">{visibleTyped}</span>
+            {!visibleDone && (
               <span className="inline-block w-2 h-4 bg-accent align-middle animate-pulse shrink-0" />
             )}
           </div>
@@ -76,7 +75,7 @@ function TerminalBlock() {
             type="button"
             onClick={copy}
             className={cn(
-              "self-start sm:self-auto flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium border transition-all shrink-0 cursor-pointer min-h-[36px]",
+              "self-start sm:self-auto flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium border transition-all shrink-0 cursor-pointer min-h-9",
               copied
                 ? "bg-success/10 border-success/30 text-success"
                 : "bg-muted border-border text-muted-foreground hover:text-foreground hover:border-border-strong"
@@ -87,15 +86,15 @@ function TerminalBlock() {
           </button>
         </div>
 
-        {done && (
+        {visibleDone && (
           <div className="space-y-1.5 text-xs text-muted-foreground pt-1 animate-in fade-in duration-300 leading-relaxed">
             <p className="text-success flex items-center gap-2 font-medium">
               <CheckCircle2 className="h-3.5 w-3.5 shrink-0" /> Skill deployed to workspace root
             </p>
             <div className="pl-5 space-y-0.5 text-foreground/80 font-mono">
-              <p>• Next.js 16 (App Router) rules active</p>
-              <p>• React 19 strict hooks baseline verified</p>
-              <p>• OWASP Top 10 security guards active</p>
+              <p>• Host-native discovery files installed</p>
+              <p>• 13 workflow recipes available</p>
+              <p>• Ownership hashes recorded for safe updates</p>
             </div>
           </div>
         )}
@@ -111,13 +110,13 @@ export function Hero() {
     <section className="relative min-h-[85vh] pt-28 sm:pt-36 pb-20 overflow-hidden bg-background">
       {/* ── PARALLAX BACKGROUND LAYERS ── */}
       <ParallaxLayer speed={-0.15} className="absolute inset-0 pointer-events-none">
-        <div className="absolute inset-0 bg-dot-grid opacity-50 [mask-image:radial-gradient(ellipse_80%_60%_at_50%_40%,black_30%,transparent_100%)]" />
+        <div className="absolute inset-0 bg-dot-grid opacity-50 mask-[radial-gradient(ellipse_80%_60%_at_50%_40%,black_30%,transparent_100%)]" />
       </ParallaxLayer>
 
       <ParallaxLayer speed={0.2} className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-none">
         <div
           aria-hidden="true"
-          className="w-[600px] sm:w-[800px] h-[400px] rounded-full"
+          className="w-150 sm:w-200 h-100 rounded-full"
           style={{
             background: "radial-gradient(ellipse at center, var(--glow-color) 0%, transparent 70%)",
             filter: "blur(60px)",
@@ -138,8 +137,8 @@ export function Hero() {
 
             {/* Headline — Fluid Responsive Scale */}
             <h1 className="text-3xl sm:text-5xl md:text-5xl lg:text-6xl font-extrabold text-foreground tracking-tight leading-[1.1]">
-              Turn any AI coding agent into a{" "}
-              <span className="text-gradient-brand">principal-level</span> engineer
+              Principal engineering workflows that respect your{" "}
+              <span className="text-gradient-brand">agent&apos;s real permissions</span>
             </h1>
 
             {/* Subheadline with max-width constraint on mobile */}
@@ -154,7 +153,7 @@ export function Hero() {
               <span className="inline-flex items-center gap-1 font-semibold text-foreground bg-muted px-2 py-0.5 rounded border border-border">
                 <SiTypescript className="h-3.5 w-3.5 text-primary shrink-0" /> TypeScript
               </span>{" "}
-              embedded directly in your agent&apos;s reasoning loop.
+              routed through one version-aware skill contract.
             </p>
 
             {/* CTA Buttons — Equal Heights & Baseline Alignment */}
@@ -207,7 +206,7 @@ export function Hero() {
                 className="flex items-center gap-2 px-3.5 py-2 rounded-xl border border-success/40 bg-background/95 backdrop-blur-md shadow-card text-xs font-mono text-success"
               >
                 <CheckCircle2 className="h-4 w-4 text-success shrink-0" />
-                <span>OWASP Security Check: Passed</span>
+                <span>OWASP 2025 reference available</span>
               </motion.div>
             </ParallaxLayer>
 
@@ -220,7 +219,7 @@ export function Hero() {
                 className="flex items-center gap-2 px-3.5 py-2 rounded-xl border border-primary/40 bg-background/95 backdrop-blur-md shadow-card text-xs font-mono text-primary"
               >
                 <Zap className="h-4 w-4 text-primary shrink-0" />
-                <span>TS Strict Baseline: 100%</span>
+                <span>Host permissions remain authoritative</span>
               </motion.div>
             </ParallaxLayer>
 
@@ -233,7 +232,7 @@ export function Hero() {
                 className="flex items-center gap-2 px-3 py-1.5 rounded-xl border border-border bg-background/95 backdrop-blur-md shadow-card text-xs font-mono text-foreground"
               >
                 <Layers className="h-3.5 w-3.5 text-accent shrink-0" />
-                <span>Next.js 16 App Router</span>
+                <span>Installed versions take precedence</span>
               </motion.div>
             </ParallaxLayer>
 

@@ -4,7 +4,7 @@
 
 Owns: identity verification (authentication) and permission enforcement (authorization) patterns — session/token strategy, password handling, RBAC/ABAC — independent of framework.
 
-Defers to: `security-owasp.md` for the broader OWASP context (A01, A02, A07); `express-architecture.md`/`nestjs-architecture.md` for how these patterns are wired in as middleware/guards.
+Defers to: `security-owasp.md` for the broader OWASP 2025 context (A01, A04, A07); `express-architecture.md`/`nestjs-architecture.md` for how these patterns are wired in as middleware/guards.
 
 ## Version Matrix
 
@@ -29,7 +29,7 @@ Per `references/core/repo-analysis.md`: identify the existing auth mechanism (se
 - Hash passwords with a modern adaptive algorithm: Argon2id (preferred) or bcrypt — never MD5, SHA-1, or unsalted SHA-256.
 - Use built-in salt generation — never implement manual salting alongside modern hash functions.
 - Set a cost factor appropriate for server hardware while avoiding excessive login latency.
-- Never log, store, or transmit plaintext passwords at any point (C4 constraint, OWASP A02).
+- Never log, store, or transmit plaintext passwords at any point (C4 constraint, OWASP A04).
 
 ### Session-Based Auth
 - Set security attributes on session cookies: `HttpOnly` (prevents XSS token theft), `Secure` (HTTPS only), and `SameSite=Lax` or `Strict` (mitigates CSRF).

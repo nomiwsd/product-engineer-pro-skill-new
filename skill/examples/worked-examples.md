@@ -8,13 +8,13 @@ One realistic example per mode demonstrating input, reasoning, and output struct
 
 **Input:** "Audit the /api/users routes for security and code quality issues."
 
-**Reasoning:** Run `references/core/repo-analysis.md` → detects Express 4.x, unvalidated `req.body` passed to SQL query (`security-owasp.md` A03), missing authorization check on `DELETE /users/:id` (`security-owasp.md` A01), and inconsistent error response shapes (`api-design.md`).
+**Reasoning:** Run `references/core/repo-analysis.md` → detects Express 4.x, unvalidated `req.body` passed to SQL query (`security-owasp.md` A05), missing authorization check on `DELETE /users/:id` (`security-owasp.md` A01), and inconsistent error response shapes (`api-design.md`).
 
 **Output (Abbreviated):**
 
 ```markdown
 ## Blockers (2)
-1. **SQL Injection Risk** — `routes/users.js:34` — OWASP A03
+1. **SQL Injection Risk** — `routes/users.js:34` — OWASP Top 10:2025 A05
    - Issue: Unvalidated `req.body.email` concatenated into raw SQL string.
    - Fix: Use parameterized query `WHERE email = $1`.
 2. **Missing Authorization** — `routes/users.js:58` (`DELETE /users/:id`) — OWASP A01
@@ -121,6 +121,42 @@ One realistic example per mode demonstrating input, reasoning, and output struct
 
 **Input:** "Review this PR diff adding a POST /api/export endpoint."
 
-**Reasoning:** Security check finds missing authorization on export route (Blocker, OWASP A01) and password hash included in CSV payload (Blocker, OWASP A02). Performance check finds no pagination or row cap (Major). Maintainability matches router conventions.
+**Reasoning:** Security check finds missing authorization on export route (Blocker, OWASP A01) and password hash included in CSV payload (Blocker, OWASP A04). Performance check finds no pagination or row cap (Major). Maintainability matches router conventions.
+
+---
+
+## 12. `frontend` workflow
+
+**Input:** "Fix the inaccessible account menu and add a loading state."
+
+**Reasoning:** In build lifecycle, inspect the existing component primitives and test
+setup, repair keyboard/focus semantics, use the repository's loading pattern, and run
+available focused accessibility/type checks. In Plan/Ask state, provide the same
+file-level design and verification steps without editing.
+
+**Output:** Scoped component/test changes or a decision-complete read-only plan.
+
+---
+
+## 13. `backend` workflow
+
+**Input:** "Add a NestJS endpoint to read one order."
+
+**Reasoning:** Detect the existing DTO/pipe, auth guard, persistence, and error
+conventions. Validate the route parameter and scope the query by authenticated user;
+do not add Zod or change module format unless the repository already uses it.
+
+**Output:** Controller/service/test changes with authorization evidence.
+
+---
+
+## Lifecycle examples
+
+- **Plan + implement:** inspect and return a decision-complete implementation plan;
+  no files change even though `implement` normally builds.
+- **Build + debug, "find and fix":** reproduce, isolate, repair the scoped defect,
+  and verify it without pausing for a second authorization request.
+- **Review + security:** report findings with file/line evidence and OWASP Top 10:2025
+  mappings; do not edit unless the user separately asks for remediation.
 
 **Output:** PR review formatted per `templates/process/pr-description.md` with 2 Blockers, 1 Major, positive feedback, and "Changes Requested" verdict.

@@ -1,113 +1,94 @@
-# Security — OWASP-Aligned Baseline
+# Security — OWASP-aligned baseline
 
-## Scope
+## Scope and snapshot
 
-Owns: framework-agnostic secure coding baseline mapped to OWASP Top 10
-(2021) categories, applicable to any web application in this skill's
-supported stack.
+Apply the OWASP Top 10:2025 category names below. This is a secure-coding router,
+not a substitute for threat modeling, an advisory database, or framework-specific
+official guidance. See `references/version-snapshot.json` for the verified source.
 
-Defers to: `auth-authz.md` for authentication/session implementation
-detail; each database file for injection specifics in that engine;
-`nextjs-architecture.md`/`express-architecture.md`/`nestjs-architecture.md`
-for framework-specific enforcement mechanisms (middleware, guards, etc.).
+## OWASP Top 10:2025 applied baseline
 
-## OWASP Top 10 (2021) — Applied Baseline
+### A01: Broken Access Control
 
-**A01: Broken Access Control**
-- Enforce authorization on every server-side entry point (route handler,
-  controller, resolver) — never rely on hiding a UI element as the only
-  control.
-- Default-deny: an endpoint is inaccessible until explicitly authorized,
-  not accessible until explicitly restricted.
-- Re-check ownership/scope on every request for user-owned resources
-  (e.g., a user editing "their" record — verify the ID belongs to them
-  server-side, don't trust a client-supplied owner ID).
+- Default-deny every server entry point and enforce server-side role, tenant, and
+  resource ownership checks independently of UI visibility.
+- Constrain server-side URL fetching with allowlists and network controls; SSRF is
+  an access-control/design concern even though it is no longer a standalone Top 10 item.
 
-**A02: Cryptographic Failures**
-- Never store passwords in plaintext or with reversible encryption —
-  use a modern adaptive hash (bcrypt, argon2, scrypt) — see
-  `auth-authz.md`.
-- All traffic over TLS in production; no mixed content.
-- Don't invent custom crypto — use vetted libraries for hashing, signing,
-  and encryption.
+### A02: Security Misconfiguration
 
-**A03: Injection**
-- Never build SQL/NoSQL queries via string concatenation with user
-  input — use parameterized queries / ORM query builders (see
-  `postgresql-design.md`, `mongodb-design.md` for engine specifics).
-- Validate and constrain input shape/type at the boundary (schema
-  validation: Zod, class-validator, Joi) before it reaches business logic.
-- Sanitize/escape any user input rendered into HTML, shell commands, or
-  file paths.
+- Disable default credentials, debug endpoints, directory listings, verbose errors,
+  and unnecessary services in production.
+- Configure CSP, HSTS, content-type protections, secure cookie attributes, CORS, and
+  framework/edge headers from an explicit deployment policy.
 
-**A04: Insecure Design**
-- Threat-model new features that touch money, PII, or permissions before
-  implementation, not after — ask "what happens if this input is
-  malicious/this actor is unauthorized" during design, not just review.
-- Rate-limit and abuse-guard sensitive actions (login, password reset,
-  payment) by design, not as an afterthought.
+### A03: Software Supply Chain Failures
 
-**A05: Security Misconfiguration**
-- No default credentials, no verbose error responses in production
-  (stack traces, internal paths) — see `engineering-principles.md` error
-  handling.
-- Security headers set at the framework/edge level: `Content-Security-
-  Policy`, `X-Content-Type-Options: nosniff`, `Strict-Transport-Security`,
-  `X-Frame-Options` (or CSP `frame-ancestors`).
-- Disable directory listing, verbose framework banners, and debug
-  endpoints in production builds.
+- Review lockfiles, provenance, lifecycle scripts, abandoned packages, vulnerable
+  transitive dependencies, build artifacts, and CI release permissions.
+- Pin/verify critical automation and avoid installing packages merely to reproduce
+  functionality already available in the platform or repository.
 
-**A06: Vulnerable and Outdated Components**
-- Flag known-vulnerable or abandoned dependencies during `audit`/
-  `review` when detectable from lockfile/advisory context.
-- Prefer maintained, widely-used libraries over ad-hoc reimplementation
-  of security-sensitive functionality (auth, crypto, parsing).
+### A04: Cryptographic Failures
 
-**A07: Identification and Authentication Failures**
-- Enforce minimum password strength or prefer passwordless/OAuth where
-  feasible; never roll a custom session-ID scheme — see `auth-authz.md`.
-- Invalidate sessions/tokens on logout and on password change.
-- Lock out or throttle after repeated failed authentication attempts.
+- Use modern adaptive password hashing and vetted authenticated encryption/signing.
+- Protect keys and sensitive data in transit and at rest; never invent cryptography
+  or log plaintext credentials, tokens, payment data, or encryption keys.
 
-**A08: Software and Data Integrity Failures**
-- Verify integrity of anything deserialized from an untrusted source
-  before acting on it (webhooks, uploaded files, third-party payloads).
-- Don't `eval`/dynamically execute strings derived from user input under
-  any circumstance.
+### A05: Injection
 
-**A09: Security Logging and Monitoring Failures**
-- Log authentication events, authorization failures, and input-validation
-  rejections with enough context to investigate — without logging
-  secrets or full PII (see `observability-deployment.md`).
-- Ensure a failed security control produces a log entry, not just a
-  silent 4xx.
+- Parse and constrain untrusted body, path, query, header, file, webhook, and
+  environment input at the boundary.
+- Parameterize SQL/NoSQL operations and avoid interpolating user-controlled values
+  into HTML, shells, paths, templates, regular expressions, or interpreter contexts.
 
-**A10: Server-Side Request Forgery (SSRF)**
-- Never fetch a URL directly from unvalidated user input server-side
-  without an allowlist or network-level restriction — this includes
-  webhook targets, image-proxy URLs, and "import from URL" features.
+### A06: Insecure Design
 
-## Baseline Checklist (apply to every `security` and `review` pass)
+- Threat-model money, identity, PII, permissions, uploads, webhooks, and multi-tenant
+  boundaries before implementation.
+- Design rate limits, idempotency, abuse prevention, recovery, and safe defaults into
+  the contract rather than adding them after an incident.
 
-- [ ] All user input validated at the boundary (C3-adjacent: don't trust
-      client-declared types).
-- [ ] No secrets in code, logs, or client-exposed bundles (C4).
-- [ ] Authorization checked server-side on every sensitive action.
-- [ ] Parameterized queries / ORM used exclusively for DB access.
-- [ ] Security headers configured at the app/edge layer.
-- [ ] Passwords hashed with a modern adaptive algorithm, never plaintext.
-- [ ] Rate limiting present on auth and other abuse-prone endpoints.
-- [ ] Error responses don't leak stack traces/internal details in
-      production.
+### A07: Authentication Failures
 
-## Anti-Patterns
+- Use established session/token mechanisms, rotation, expiration, revocation, secure
+  cookies, MFA where appropriate, and throttling for authentication attempts.
+- Do not roll custom session IDs or trust authentication state supplied by a client.
+
+### A08: Software or Data Integrity Failures
+
+- Verify webhook signatures and provenance before deserializing or acting.
+- Do not execute untrusted serialized data, dynamic code, unsigned updates, or
+  unverified build outputs.
+
+### A09: Security Logging and Alerting Failures
+
+- Record authentication, authorization, validation, administrative, and integrity
+  failures with useful context but without secrets or excessive PII.
+- Ensure actionable alerting and retention exist; logging without detection is not
+  sufficient.
+
+### A10: Mishandling of Exceptional Conditions
+
+- Fail closed at security boundaries, handle partial failures and timeouts, release
+  resources, and avoid leaking internal details.
+- Test malformed inputs, dependency outages, retry exhaustion, transaction rollback,
+  duplicate delivery, and recovery paths.
+
+## Review checklist
+
+- [ ] Trust boundaries and attacker-controlled inputs identified
+- [ ] Authentication, authorization, and tenant/resource scope checked separately
+- [ ] Dependencies/build pipeline and configuration reviewed
+- [ ] Data protection and cryptography use established primitives
+- [ ] Injection sinks are parameterized/escaped for their exact context
+- [ ] Integrity, logging/alerting, and exceptional conditions are covered
+
+## Anti-pattern
 
 ```ts
-// A03 — Injection via string concatenation
-db.query(`SELECT * FROM users WHERE email = '${email}'`);
+const result = await db.query(`SELECT * FROM users WHERE email = '${email}'`);
+```
 
-// A01 — Trusting client-supplied ownership
-await db.update({ id: req.body.id }, req.body); // no ownership check
-
-// A05 — Leaking internals
-res.status(500).json({ error: err.stack });
+Use the database driver's parameter binding and validate the email before the query.
+This maps to OWASP Top 10:2025 A05.

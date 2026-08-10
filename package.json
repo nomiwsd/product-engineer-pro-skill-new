@@ -1,7 +1,7 @@
 {
   "name": "@nomiwsd/product-engineer-pro",
-  "version": "1.1.2",
-  "description": "Portable AI coding skill: production-grade full-stack engineering standards for Next.js, React, TypeScript, Tailwind, shadcn/ui, Node.js, Express, NestJS, PostgreSQL, and MongoDB.",
+  "version": "2.0.1",
+  "description": "Capability-tiered cross-agent engineering workflows for planning, building, and reviewing supported full-stack applications.",
   "license": "MIT",
   "type": "module",
   "publishConfig": {
@@ -13,6 +13,7 @@
   "files": [
     "skill",
     "bin",
+    "lib",
     "README.md",
     "LICENSE",
     "CHANGELOG.md"
@@ -46,10 +47,14 @@
   },
   "homepage": "https://github.com/nomiwsd/product-engineer-pro-skill-new#readme",
   "scripts": {
+    "generate": "node scripts/generate-artifacts.mjs",
+    "check-generated": "node scripts/generate-artifacts.mjs --check",
     "validate": "node scripts/validate-structure.mjs",
     "check-links": "node scripts/check-links.mjs",
+    "check-freshness": "node scripts/check-freshness.mjs --offline",
     "sync-version": "node scripts/sync-version.mjs",
-    "test": "node scripts/validate-structure.mjs && node scripts/check-links.mjs && node scripts/sync-version.mjs"
+    "test:integration": "node --test tests/*.test.mjs",
+    "test": "npm run check-generated && node scripts/validate-structure.mjs && node scripts/check-links.mjs && node scripts/sync-version.mjs && npm run test:integration"
   },
   "engines": {
     "node": ">=18"

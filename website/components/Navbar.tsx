@@ -10,10 +10,12 @@ import { cn } from "@/lib/utils";
 
 function ThemeToggle() {
   const { theme, setTheme } = useTheme();
-  const [mounted, setMounted] = React.useState(false);
+  const mounted = React.useSyncExternalStore(
+    () => () => undefined,
+    () => true,
+    () => false
+  );
   const prefersReduced = useReducedMotion();
-
-  React.useEffect(() => { setMounted(true); }, []);
 
   if (!mounted) {
     return <div className="h-9 w-9 rounded-lg" aria-hidden="true" />;
