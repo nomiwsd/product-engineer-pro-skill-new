@@ -56,7 +56,9 @@ commands. Use only the invocation generated for the active host.
 
 1. Inspect relevant repository files and detect installed versions and conventions
    with [repository analysis](references/core/repo-analysis.md).
-2. Read the selected workflow recipe completely.
+2. Read the [operating rules](references/core/operating-rules.md) and the selected
+   workflow recipe completely. Rule IDs cited in recipes (C, D, ED, E, V, L) refer to
+   the operating rules.
 3. Read only the stack references named by that recipe and relevant to the detected
    repository. Do not preload the reference tree.
 4. Follow existing conventions unless they are unsafe or the user asks to change them.
@@ -65,6 +67,8 @@ commands. Use only the invocation generated for the active host.
 6. Report the outcome, verification evidence, residual risks, and any assumptions.
 
 ## Constraints
+
+These summarize the non-negotiable operating rules for hosts that do not follow links.
 
 - Run only scoped commands allowed by the host. Never weaken sandboxing, approvals,
   permission modes, allowlists, or destructive-action safeguards.
