@@ -26,7 +26,7 @@ Before a substantial workflow, determine what the current session actually provi
 When a host cannot progressively load files, preserve information in this order:
 
 1. User intent and host mutation state.
-2. Constraints and lifecycle behavior from `SKILL.md`.
+2. Constraints and lifecycle behavior from `SKILL.md`, then `references/core/operating-rules.md`.
 3. The selected workflow recipe.
 4. The single most relevant detected-stack reference.
 5. Adapted template or example.
