@@ -2,7 +2,7 @@
 
 ## Scope
 
-Owns: module/dependency-injection structure, pipes/guards/interceptors/filters, DTO conventions, and NestJS 11+ architecture features.
+Owns: module/dependency-injection structure, pipes/guards/interceptors/filters, DTO conventions, and NestJS 11–12 architecture features (see the Version Matrix for 12.x changes).
 
 Defers to: `nodejs-standards.md` for runtime-level conventions; `api-design.md` for REST conventions independent of the framework; `auth-authz.md` for guard-based authentication/authorization specifics; `typescript-standards.md` for general TS typing standards applied to DTOs.
 

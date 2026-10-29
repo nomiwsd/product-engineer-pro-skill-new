@@ -19,7 +19,7 @@ Per `references/core/repo-analysis.md`: check for an existing token source (CSS 
 ## Standards
 
 ### Visual Excellence & Depth
-- **Avoid Generic/Default Colors**: Use curated, harmonious OKLCH color palettes with perceptually uniform lightness steps. Avoid flat browser defaults.
+- **Avoid Generic/Default Colors**: Use curated, harmonious palettes with perceptually uniform lightness steps. Prefer OKLCH for new palettes when the token source and browser targets support it (Tailwind v4 defaults to it); keep the project's existing color format otherwise (rule D2). Avoid flat browser defaults.
 - **Layered Elevation & Depth**: Use multi-layered dark mode surfaces (`surface-0` background, `surface-1` cards, `surface-2` popovers/modals) with subtle, semi-transparent borders (`border/10` or `border/15`).
 - **Glassmorphism & Backdrop Blur**: Use glass effects (`backdrop-blur-md bg-background/80 border border-white/10`) for headers, sticky bars, floating cards, and overlays.
 - **Glow & Gradient Accents**: Accent primary elements with subtle radial glows (`bg-gradient-to-r from-primary/20 via-accent/20 to-transparent`) and linear borders.
