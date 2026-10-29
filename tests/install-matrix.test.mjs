@@ -76,3 +76,37 @@ test("migrate recognises a CRLF copy of a known legacy file", () => {
   assert.equal(existsSync(join(root, ".codex/instructions.md")), false);
   assert.ok(files(root).some((rel) => rel.startsWith(".product-engineer-pro/backups/migration-")));
 });
+
+test("repeat Aider installs keep a new read list valid", () => {
+  const root = repository();
+  assert.equal(run(root, "init", "--tool", "aider").status, 0);
+  const first = readFileSync(join(root, ".aider.conf.yml"), "utf8");
+  assert.match(first, /^read:\n {2}- CONVENTIONS\.md$/m);
+  for (const args of [["init", "--tool", "aider"], ["update"], ["init", "--tool", "aider"]]) {
+    assert.equal(run(root, ...args).status, 0);
+    assert.equal(readFileSync(join(root, ".aider.conf.yml"), "utf8"), first, `after ${args.join(" ")}`);
+  }
+});
+
+test("repeat Aider installs keep an existing read list valid", () => {
+  const root = repository();
+  write(root, ".aider.conf.yml", "model: sonnet\nread:\n  - docs/architecture.md\nmap-tokens: 2048\n");
+  assert.equal(run(root, "init", "--tool", "aider").status, 0);
+  const first = readFileSync(join(root, ".aider.conf.yml"), "utf8");
+  assert.match(first, /^ {2}- CONVENTIONS\.md$/m);
+  assert.match(first, /docs\/architecture\.md[\s\S]*CONVENTIONS\.md[\s\S]*map-tokens: 2048/);
+  for (const args of [["update"], ["init", "--tool", "aider"], ["update"]]) {
+    assert.equal(run(root, ...args).status, 0);
+    assert.equal(readFileSync(join(root, ".aider.conf.yml"), "utf8"), first, `after ${args.join(" ")}`);
+  }
+});
+
+test("an inline Aider read value is preserved and reported", () => {
+  const root = repository();
+  const original = "model: sonnet\nread: [docs/architecture.md]\n";
+  write(root, ".aider.conf.yml", original);
+  const result = run(root, "init", "--tool", "aider");
+  assert.equal(result.status, 2, result.stdout);
+  assert.match(result.stdout, /inline value/);
+  assert.equal(readFileSync(join(root, ".aider.conf.yml"), "utf8"), original);
+});
