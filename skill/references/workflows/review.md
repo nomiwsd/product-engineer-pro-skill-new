@@ -2,50 +2,77 @@
 
 ## Goal
 
-Review a PR/diff for correctness, security, performance, accessibility,
-and standards adherence — producing a structured, severity-ranked report.
+Review a pull request or diff for correctness, security, performance, accessibility,
+maintainability, tests, and documentation, producing severity-ranked findings with evidence
+and a clear verdict — without editing.
+
+## Detect first
+
+- The full diff and its intent: PR description, linked issue, or the user's summary.
+- The conventions and versions the diff should follow (D2, V2); read surrounding unchanged code.
+
+## Lifecycle behavior
+
+- `plan`: not applicable; a review request is read-only.
+- `build`: still read-only unless the user explicitly asks for fixes; then switch to the
+  matching build workflow and say so (L2).
+- `review`: the default. Findings by severity with locations and a verdict.
 
 ## Process
 
-1. Run `references/core/repo-analysis.md` only as needed to understand
-   conventions the diff should be matching against.
-2. Read the entire diff first, in context of surrounding unchanged code
-   — don't comment line-by-line before understanding the full change.
-3. Walk `core/code-review-checklist.md` categories in order: correctness
-   → security → performance → accessibility (UI diffs) →
-   maintainability → tests → documentation.
-4. For security-relevant changes (auth, input handling, queries) →
-   cross-check against `core/security-owasp.md` and, if applicable,
-   `backend/auth-authz.md` or the relevant database file.
-5. For UI diffs → cross-check `core/accessibility-a11y.md`.
-6. Classify every finding using the four-level severity taxonomy from
-   `code-review-checklist.md` (Blocker/Major/Minor/Nit) — never invent
-   new severity labels.
-7. For each Blocker/Major finding: cite file/line, the standard
-   violated, and a concrete fix — not just a description of the problem.
-8. Explicitly note what's done well, not only problems — a review that's
-   purely critical is a calibration failure.
-9. Do not rewrite large portions of the diff as "suggested changes" —
-   point to the specific minimal change needed instead.
+1. Read the intent, then the entire diff in context, before commenting.
+2. Walk `references/core/code-review-checklist.md` in order: correctness → security →
+   performance → accessibility (UI diffs) → maintainability → tests → documentation. Skip a
+   category explicitly when it does not apply.
+3. Cross-check security-relevant changes (auth, input handling, queries) with
+   `references/core/security-owasp.md`, `references/backend/auth-authz.md`, or the database
+   reference.
+4. Cross-check UI changes with `references/core/accessibility-a11y.md` and the frontend recipe
+   checklist.
+5. Classify each finding as Blocker, Major, Minor, or Nit; never invent labels.
+6. For Blocker and Major findings, give `file:line`, the standard violated (D5), and the
+   minimal concrete fix.
+7. Note what the diff does well.
+8. Decide the verdict: any Blocker means changes requested.
 
-## Checklist
+## Version gates
 
-- [ ] Full diff read in context before commenting.
-- [ ] All seven review categories considered (skip explicitly, don't
-      silently omit, any that don't apply).
-- [ ] Every finding has a severity label from the standard taxonomy.
-- [ ] Blocker/Major findings include file/line, standard, and fix.
-- [ ] Positive aspects of the diff noted, not only issues.
-- [ ] No large-scale rewrite proposed in place of pointing to a minimal fix.
+None beyond the loaded stack references; judge version-specific code against the detected
+version, not the newest one (V4).
 
-## Output Format
+## Best-practice checklist
 
-Use `templates/process/pr-description.md`-adjacent structure: summary →
-findings grouped by severity → explicit approve/changes-requested
-verdict, tied to whether any Blocker findings exist.
+- [ ] Intent and full diff read in context before commenting.
+- [ ] All seven categories covered or explicitly skipped.
+- [ ] Every finding has a standard severity label and a location.
+- [ ] Blocker and Major findings include the standard and a minimal fix.
+- [ ] Positive aspects noted.
+- [ ] Verdict follows from the findings.
 
-## Related References
+## Evidence required
 
+`file:line` for every finding (E4). Checks run during review (tests, type check) reported as
+passed, failed, or not run (E2); say explicitly when no actionable finding exists.
+
+## Stop conditions
+
+Stop and ask for the missing context when the diff's intent cannot be determined or the diff
+is incomplete.
+
+## Never
+
+- Edit files or rewrite large parts of the diff as "suggestions".
+- Comment line by line before understanding the whole change.
+- Give a purely critical review that ignores what works.
+
+## Output
+
+Summary → findings grouped by severity → verdict (approve or changes requested), following the
+`templates/process/pr-description.md` structure where useful.
+
+## References
+
+- `references/core/operating-rules.md`
 - `references/core/code-review-checklist.md`
 - `references/core/security-owasp.md`
 - `references/core/accessibility-a11y.md`
