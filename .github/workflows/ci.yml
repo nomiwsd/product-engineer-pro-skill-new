@@ -80,3 +80,30 @@ jobs:
           package-manager-cache: false
       - name: Pack, install, and run the CLI from the tarball
         run: npm run smoke:pack
+
+  windows:
+    # Windows runners check out with core.autocrlf=true, so this covers CRLF working
+    # trees; Node.js 18 covers the shell-glob behaviour of older test runners.
+    name: Windows (CRLF checkout), Node.js ${{ matrix.node-version }}
+    runs-on: windows-latest
+    strategy:
+      matrix:
+        node-version: [18.x, 24.x]
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v7
+      - name: Setup Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v7
+        with:
+          node-version: ${{ matrix.node-version }}
+          package-manager-cache: false
+      - name: Validate Package Structure
+        run: npm test
+      - name: Verify CLI Executable
+        run: node bin/cli.js --help
+      - name: Fail if the checks changed tracked files
+        shell: bash
+        run: |
+          git status --porcelain
+          git diff --exit-code
+          test -z "$(git status --porcelain)"
