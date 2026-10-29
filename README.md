@@ -83,11 +83,17 @@ known generated fingerprint.
 
 ## Version policy
 
-Repository-installed versions always take precedence. The verified snapshot and
-source ledger are in
-[`skill/references/version-snapshot.json`](skill/references/version-snapshot.json).
-When a detected major is newer, verify official documentation or report reduced
-confidence; the package does not claim support for every future version.
+Product Engineer Pro detects versions from the target repository, follows known
+compatibility guidance, and verifies newer major versions against official sources
+before making confident recommendations. Repository-installed versions always take
+precedence. Each verified version, with its meaning, official source, and check date,
+is in [`skill/references/version-snapshot.json`](skill/references/version-snapshot.json).
+When a detected major is newer, the skill verifies official documentation or reports
+reduced confidence; the package does not claim support for every future version.
+
+The CLI accepts Node.js 18 or later (18 is legacy compatibility) and is tested on
+Node.js 18, 22, 24, and 26. See [COMPATIBILITY.md](COMPATIBILITY.md) for the full
+policy and how snapshot freshness is checked.
 
 ## Development
 
