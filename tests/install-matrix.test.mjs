@@ -101,6 +101,69 @@ test("repeat Aider installs keep an existing read list valid", () => {
   }
 });
 
+const STATE = ".product-engineer-pro/install-state.json";
+
+function corruptState(root) {
+  assert.equal(run(root, "init", "--tool", "claude").status, 0);
+  write(root, STATE, "{not json");
+}
+
+test("doctor reports an unreadable install state instead of healthy", () => {
+  const root = repository();
+  corruptState(root);
+  const report = JSON.parse(run(root, "doctor", "--json").stdout);
+  assert.ok(report.results.some((item) => item.code === "corrupt-state"));
+  assert.ok(!report.results.some((item) => item.code === "healthy"));
+});
+
+test("update refuses an unreadable install state without changing files", () => {
+  const root = repository();
+  corruptState(root);
+  const before = files(root).map((rel) => [rel, readFileSync(join(root, rel), "utf8")]);
+  const result = run(root, "update");
+  assert.equal(result.status, 1);
+  assert.match(result.stderr, /unreadable/);
+  assert.deepEqual(files(root).map((rel) => [rel, readFileSync(join(root, rel), "utf8")]), before);
+});
+
+test("init backs up an unreadable install state and rebuilds ownership", () => {
+  const root = repository();
+  corruptState(root);
+  const result = run(root, "init", "--tool", "claude");
+  assert.equal(result.status, 0, result.stdout);
+  assert.match(result.stdout, /WARNING.*unreadable/);
+  const backup = files(root).find((rel) => rel.startsWith(".product-engineer-pro/backups/") && rel.endsWith("install-state.json"));
+  assert.ok(backup, "corrupt state was not backed up");
+  assert.equal(readFileSync(join(root, backup), "utf8"), "{not json");
+  const state = JSON.parse(readFileSync(join(root, STATE), "utf8"));
+  assert.deepEqual(state.tools, ["claude"]);
+  assert.ok(Object.keys(state.files).length > 0);
+});
+
+test("a state written by a newer schema is never overwritten", () => {
+  const root = repository();
+  const newer = JSON.stringify({ schemaVersion: 3, tools: ["claude"], files: {} });
+  write(root, STATE, newer);
+  for (const args of [["init", "--tool", "claude"], ["update"], ["migrate"]]) {
+    const result = run(root, ...args);
+    assert.equal(result.status, 1, `${args.join(" ")}: ${result.stdout}`);
+    assert.match(result.stderr, /newer Product Engineer Pro/);
+  }
+  assert.equal(readFileSync(join(root, STATE), "utf8"), newer);
+  assert.deepEqual(files(root), [STATE]);
+});
+
+test("doctor reports a deleted package file and update restores it", () => {
+  const root = repository();
+  assert.equal(run(root, "init", "--tool", "claude").status, 0);
+  const rel = ".claude/skills/product-engineer-pro/SKILL.md";
+  rmSync(join(root, rel));
+  const report = JSON.parse(run(root, "doctor", "--json").stdout);
+  assert.ok(report.results.some((item) => item.code === "missing" && item.path === rel));
+  assert.equal(run(root, "update").status, 0);
+  assert.ok(existsSync(join(root, rel)));
+});
+
 test("an inline Aider read value is preserved and reported", () => {
   const root = repository();
   const original = "model: sonnet\nread: [docs/architecture.md]\n";

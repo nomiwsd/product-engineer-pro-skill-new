@@ -1,5 +1,9 @@
 #!/usr/bin/env node
 import { runCli } from "../lib/cli.mjs";
 
-const exitCode = await runCli(process.argv.slice(2), process.cwd());
-process.exitCode = exitCode;
+try {
+  process.exitCode = await runCli(process.argv.slice(2), process.cwd());
+} catch (error) {
+  console.error(error.message);
+  process.exitCode = 1;
+}
