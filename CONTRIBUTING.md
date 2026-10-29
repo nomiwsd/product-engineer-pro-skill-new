@@ -24,6 +24,55 @@ fully before adding or editing any file.
    multi-step token, scaffold, or schema sequences (e.g., `design-system.md`,
    `database.md`) are explicitly permitted to exceed this range to maintain
    comprehensive step sequencing.
+6. **Cite rules by ID.** Universal rules live in
+   `skill/references/core/operating-rules.md` (C, D, ED, E, V, L). Cite them as
+   "rule C4"; never restate them or invent new IDs.
+
+## Workflow Recipe Template — `references/workflows/*`
+
+Every recipe uses these sections, in this order. `scripts/validate-structure.mjs`
+enforces the headings.
+
+```markdown
+# Workflow: <Name>
+
+## Goal
+One paragraph: the outcome this workflow delivers.
+
+## Detect first
+What to inspect before acting (versions, conventions, scope) — rules D1 and V1.
+
+## Lifecycle behavior
+- `plan`: what a decision-complete plan contains for this workflow.
+- `build`: what may change and how it is verified.
+- `review`: what is inspected and reported, without edits.
+
+## Process
+Numbered steps. Link to references for standards instead of restating them.
+
+## Version gates
+Version-specific idioms, each gated on a detected version (rule V4). This is the
+only section where framework version numbers may appear. Write "None beyond the
+loaded stack references" when the workflow has none.
+
+## Best-practice checklist
+`- [ ]` items the output must satisfy.
+
+## Evidence required
+What must be observed before claiming the work is done (rules E1–E5).
+
+## Stop conditions
+When to stop and report instead of continuing (rule L4).
+
+## Never
+Workflow-specific anti-patterns.
+
+## Output
+What the response leads with and contains, per lifecycle.
+
+## References
+Links only.
+```
 
 ## Refreshing the version snapshot
 
