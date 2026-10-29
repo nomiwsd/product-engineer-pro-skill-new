@@ -11,9 +11,11 @@ jobs:
     name: Validate Skill & Package
     runs-on: ubuntu-latest
 
+    # Node policy: COMPATIBILITY.md. 18 is the declared minimum (legacy compatibility);
+    # 22, 24, and 26 are the supported LTS lines.
     strategy:
       matrix:
-        node-version: [18.x, 20.x, 22.x, 24.x]
+        node-version: [18.x, 22.x, 24.x, 26.x]
 
     steps:
       - name: Checkout Code
