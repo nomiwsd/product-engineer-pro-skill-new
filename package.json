@@ -53,7 +53,7 @@
     "check-links": "node scripts/check-links.mjs",
     "check-freshness": "node scripts/check-freshness.mjs --offline",
     "sync-version": "node scripts/sync-version.mjs",
-    "test:integration": "node --test tests/*.test.mjs",
+    "test:integration": "node scripts/run-tests.mjs",
     "test": "npm run check-generated && node scripts/validate-structure.mjs && node scripts/check-links.mjs && node scripts/sync-version.mjs && npm run test:integration"
   },
   "engines": {
