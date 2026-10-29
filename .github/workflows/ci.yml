@@ -33,6 +33,13 @@ jobs:
       - name: Verify CLI Executable
         run: node bin/cli.js --help
 
+      - name: Fail if the checks changed tracked files
+        shell: bash
+        run: |
+          git status --porcelain
+          git diff --exit-code
+          test -z "$(git status --porcelain)"
+
   website:
     name: Clean offline-capable website build
     runs-on: ubuntu-latest
