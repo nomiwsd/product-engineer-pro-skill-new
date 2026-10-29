@@ -1,5 +1,22 @@
 # Changelog
 
+## [Unreleased]
+
+### Changed
+
+- Version snapshot schema 2: every entry records its value, meaning, official source,
+  check date, and status. All entries re-verified on 2026-10-29: NestJS 12, MongoDB 9.0,
+  Node.js 26 Active LTS, and newer minors for Next.js, React, shadcn, Express, Zod, Prisma
+  (7.10.1 stable; 8.0 release candidate noted as preview), and Mongoose.
+- `check-freshness` now fails an offline run when an entry is older than 90 days, reports
+  sources it cannot read as unverified instead of passing, ignores prerelease versions, and
+  can print a Markdown report.
+- The weekly freshness workflow posts readable Markdown reports to its drift issue and job
+  summary.
+- CI tests Node.js 18 (declared minimum), 22, 24, and 26; Node.js 20 left the matrix after
+  reaching end of life. The `engines` range is unchanged.
+- Added COMPATIBILITY.md and aligned the README version policy wording.
+
 ## [2.0.1] — 2026-08-10
 
 ### Changed
