@@ -12,7 +12,8 @@ Defers to: `data-modeling-decision-guide.md` for whether MongoDB is the right ch
 
 | Version Range | Support Tier | Key Differences |
 |---|---|---|
-| MongoDB 8.3.x | Snapshot current | Verify point-release query, indexing, and deployment behavior against installed-server documentation |
+| MongoDB 9.0.x | Snapshot current | All ingested BSON is validated by default; a per-operation memory limit (1 GB or 20% of server memory, whichever is greater) applies by default, so large sorts and aggregations can fail with `ExceededMemoryLimit`; open multi-document transactions are capped by `maxConcurrentMultiDocumentTransactions` (default 10000); time series collections are stored as a single namespace; `$accumulator`, `$function`, and `$where` are no longer deprecated. At FCV 9.0, Mongoose `syncIndexes()` can rebuild unchanged indexes; use Mongoose 9.10.4+ or 8.24.5+, or avoid `syncIndexes()` at startup. Read the official 9.0 compatibility changes before upgrading |
+| MongoDB 8.3.x | Supported | Verify point-release query, indexing, and deployment behavior against installed-server documentation |
 | MongoDB 8.0.x–8.2.x | Supported | MongoDB 8 release line; confirm feature availability by detected minor |
 | MongoDB 6.0.x–7.0.x | Supported | Queryable Encryption (7.0+), time-series collection improvements, `$lookup` performance enhancements |
 | MongoDB 5.0.x and earlier | Legacy | Missing modern aggregation operators and replication performance fixes — flag for upgrade in audits |

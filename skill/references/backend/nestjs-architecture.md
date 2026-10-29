@@ -12,7 +12,8 @@ Defers to: `nodejs-standards.md` for runtime-level conventions; `api-design.md` 
 
 | Version Range | Support Tier | Key Differences |
 |---|---|---|
-| NestJS 11.x | Snapshot current | Express 5 is used by the platform-express adapter; test runner, compiler, telemetry, and CommonJS/ESM remain project choices rather than universal defaults |
+| NestJS 12.x | Snapshot current | Core packages are ESM-only (CommonJS apps load them through `require(esm)`; `nest upgrade` keeps CommonJS projects CommonJS); requires Node.js 20.19+ or 22.12+; Jest loads v12 packages only on Node.js 24.9+ (or use Vitest); lifecycle hooks such as `onModuleInit` run by component hierarchy level; subclasses with their own constructor must re-declare `@Optional()`; `ConfigModule` `validationSchema` uses Standard Schema; `ConsoleLogger` structured params are on by default; legacy Terminus `HealthIndicator` removed; the Express adapter drains in-flight requests on shutdown. Follow the official migration guide for v11 → v12 |
+| NestJS 11.x | Supported | Express 5 is used by the platform-express adapter; test runner, compiler, telemetry, and CommonJS/ESM remain project choices rather than universal defaults |
 | NestJS 10.x | Supported | Standard decorators, stable module federation support, Node.js 16+ baseline, Express 4 / Fastify 4 adapters |
 | NestJS 9.x & earlier | Legacy | Missing modern decorator/telemetry APIs — flag for upgrade in audits |
 

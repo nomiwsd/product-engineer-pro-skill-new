@@ -12,8 +12,9 @@ Defers to: `express-architecture.md`/`nestjs-architecture.md` for framework-laye
 
 | Version Range | Support Tier | Key Differences |
 |---|---|---|
-| Node.js 24.x & 22.x | Current (Active LTS) | Stable native `fetch`, native test runner (`node:test`) stable, `--env-file` for `.env` loading without dependencies, native `WebSocket` client, `fs.glob` support, experimental `require()` of ESM modules |
-| Node.js 20.x | Supported (Maintenance LTS) | Native `fetch` stable, native test runner stable, `--env-file` available (20.6+) |
+| Node.js 26.x | Snapshot current (Active LTS since 2026-10-28) | Verify new runtime APIs against the official release notes before relying on them |
+| Node.js 24.x & 22.x | Supported (Maintenance LTS; 22 reaches end of life 2027-04-30) | Stable native `fetch`, native test runner (`node:test`) stable, `--env-file` for `.env` loading without dependencies, native `WebSocket` client, `fs.glob` support, experimental `require()` of ESM modules |
+| Node.js 20.x | Legacy (EOL 2026-04-30) | Native `fetch` stable, native test runner stable, `--env-file` available (20.6+) — flag for upgrade in audits |
 | Node.js 18.x | Legacy (EOL) | Native `fetch`/test runner experimental depending on minor version — flag for upgrade in audits |
 | Node.js 16.x and earlier | Legacy (EOL) | No native `fetch` — requires `node-fetch`/`axios`; flag for immediate upgrade |
 
