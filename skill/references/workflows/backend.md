@@ -2,47 +2,100 @@
 
 ## Goal
 
-Plan, build, diagnose, or review Node.js, Express, and NestJS services while
-matching the repository's module system, framework conventions, validation
-library, transport, persistence layer, and error contract.
+Plan, build, or review Node.js, Express, and NestJS services whose contracts are explicit,
+whose every trust boundary is validated and authorized, and whose failure behavior is
+predictable — while matching the repository's module system, framework, validation library,
+persistence layer, and error contract.
+
+## Detect first
+
+- Node.js version, ESM or CommonJS, framework and major (Express or NestJS), HTTP adapter,
+  validation library, auth mechanism, persistence layer, logger, test runner, config loading.
+- The existing request/response and error shape that clients already depend on (D2).
+
+## Lifecycle behavior
+
+- `plan`: the contract (method, path, schemas, status codes, errors), files to change, auth
+  rules, data access, and exact checks. No edits (L1).
+- `build`: implement the contract with tests for the success and failure paths.
+- `review`: findings on contracts, validation, authorization, errors, and resilience with
+  `file:line` evidence. No edits.
 
 ## Process
 
-1. Detect Node/framework versions, ESM or CommonJS, HTTP adapter, validation
-   convention, auth boundary, persistence layer, and test runner.
-2. Define the request/response contract and failure behavior before editing.
-3. Validate body, path, query, headers, and environment input at their boundary
-   using the repository's established convention. Zod, Joi, express-validator,
-   Nest DTO pipes, or another existing validator are all acceptable.
-4. Authenticate and authorize independently. Derive ownership from trusted
-   server-side identity and scope every resource read/write accordingly.
-5. Keep transport/controller code thin and business behavior testable.
-6. Preserve the repository's module format. Do not introduce ESM, CommonJS,
-   Zod, an ORM, or a framework migration as an incidental change.
-7. Verify with available type checks, focused tests, lint, and a representative
-   request when the host permits execution. In read-only mode, name the exact
-   checks the builder should run.
+1. Run `references/core/repo-analysis.md`; state the detected versions (V2).
+2. Define the contract before editing (`references/backend/api-design.md`) and keep it
+   compatible with existing clients.
+3. Parse and validate body, params, query, headers, and environment variables at their
+   boundary with the repository's existing validator (Zod, Joi, express-validator, Nest pipes).
+   Validate configuration at startup and fail fast.
+4. Authenticate, then authorize each resource with ownership derived from trusted server-side
+   identity (`references/backend/auth-authz.md`). Never trust client-supplied IDs or roles.
+5. Keep controllers and route handlers thin: parse, call a service, map the result. Business
+   logic lives in testable services (`references/backend/express-architecture.md` or
+   `references/backend/nestjs-architecture.md`).
+6. Return the repository's error shape (RFC 9457 Problem Details for greenfield) without stack
+   traces or internals; handle async errors as the detected framework requires.
+7. Add resilience where the change needs it: timeouts on outbound calls, idempotency for
+   retried mutations, pagination for collections, payload limits, rate limits on auth and
+   expensive endpoints.
+8. Log with structure and a request ID, never secrets or personal data; keep health checks and
+   graceful shutdown intact (`references/core/observability-deployment.md`).
+9. Use parameterized queries, deliberate transactions, and no N+1 access in list endpoints
+   (load only the detected database reference).
 
-## References
+## Version gates
 
-- Node runtime: `references/backend/nodejs-standards.md`
-- Express: `references/backend/express-architecture.md`
-- NestJS: `references/backend/nestjs-architecture.md`
-- API contracts: `references/backend/api-design.md`
-- Authentication/authorization: `references/backend/auth-authz.md`
-- Security: `references/core/security-owasp.md`
-- PostgreSQL/MongoDB: load only the detected database reference
+| Detected | Then |
+|---|---|
+| Express 5 | Rejected promises reach error middleware automatically; route syntax changed (`*splat`, `/:id{?}`) |
+| Express 4 | Wrap async handlers or forward errors with `next(err)`; unhandled rejections hang requests |
+| NestJS 12 | Core packages are ESM-only; Jest needs Node.js 24.9+ (or use Vitest); follow the official 11→12 migration guide |
+| NestJS 11 or earlier | Keep the project's existing module format and test runner |
+| Zod 3 vs 4 | Use the installed major's API for errors and top-level helpers; do not mix |
+| ESM vs CommonJS | Follow `"type"` in `package.json` and existing file extensions |
 
-## Checklist
+## Best-practice checklist
 
-- [ ] Installed versions, module system, and established conventions detected
-- [ ] Every untrusted boundary is parsed and validated
-- [ ] Authentication and resource-level authorization are both enforced
-- [ ] Error responses match the existing public contract
-- [ ] Persistence calls are parameterized/scoped and transactions are deliberate
-- [ ] Relevant checks ran, or a read-only verification plan is provided
+- [ ] Contract defined and backward compatible, or the break is flagged for confirmation.
+- [ ] Every untrusted input, including environment variables, is parsed and validated.
+- [ ] Authentication and resource-level authorization are both enforced server-side.
+- [ ] Errors follow the existing public shape and leak no internals.
+- [ ] Outbound calls have timeouts; retried mutations are idempotent; collections paginate.
+- [ ] Logs are structured and contain no secrets, tokens, or personal data.
+- [ ] Queries are parameterized and scoped; transactions are deliberate; no N+1 in lists.
+- [ ] Tests cover success, invalid input (400/422), unauthenticated (401), and forbidden (403).
+
+## Evidence required
+
+Type check, unit tests for services, and an integration test (Supertest or the Nest testing
+module) for the endpoint contract including the failure paths; a representative request when
+the host allows it. Report each check as passed, failed, or not run (E2).
+
+## Stop conditions
+
+Stop and report if the change breaks an existing client contract, needs a new auth model, a
+database migration (switch to `database`), or a module-system, validator, or framework change.
+
+## Never
+
+- Authorize from `req.body.userId` or any other client-supplied identity.
+- Change the module system, validator, ORM, or public error shape as a side effect (ED4).
+- Swallow errors or return `200` for failures.
 
 ## Output
 
-Lead with the implemented contract/change in build lifecycle, a decision-complete
-file-level plan in plan lifecycle, or evidence-backed findings in review lifecycle.
+`build`: the implemented contract and changed files first, then the verification ledger and
+residual risks. `plan`: decision-complete file-level plan. `review`: findings by severity.
+
+## References
+
+- `references/core/operating-rules.md`
+- `references/backend/nodejs-standards.md`
+- `references/backend/express-architecture.md`
+- `references/backend/nestjs-architecture.md`
+- `references/backend/api-design.md`
+- `references/backend/auth-authz.md`
+- `references/core/security-owasp.md`
+- `references/core/observability-deployment.md`
+- PostgreSQL/MongoDB: load only the detected database reference
