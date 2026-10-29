@@ -1,5 +1,6 @@
 import fs from 'node:fs';
 import path from 'node:path';
+import { spawnSync } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
 
 const __filename = fileURLToPath(import.meta.url);
@@ -24,7 +25,14 @@ function getAllMarkdownFiles(dir) {
   }
 }
 
-getAllMarkdownFiles(ROOT);
+// Prefer the files git would commit (tracked plus new, not ignored), so local-only
+// folders such as private notes or local skill installs do not change the result.
+const listed = spawnSync('git', ['ls-files', '-z', '--cached', '--others', '--exclude-standard', '--', '*.md'], { cwd: ROOT, encoding: 'utf8' });
+if (listed.status === 0) {
+  markdownFiles.push(...listed.stdout.split('\0').filter(Boolean).map((rel) => path.join(ROOT, rel)).filter((file) => fs.existsSync(file)));
+} else {
+  getAllMarkdownFiles(ROOT);
+}
 
 function slugify(heading) {
   return heading
