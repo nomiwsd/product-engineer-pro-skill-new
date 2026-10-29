@@ -2,57 +2,85 @@
 
 ## Goal
 
-Threat-model, harden, or fix vulnerabilities — with every finding
-mapped to a concrete OWASP category and a concrete fix.
+Threat-model, audit, harden, or repair supported applications so that every finding maps to
+an OWASP category with a concrete exploit scenario and fix, the same class of flaw is closed
+everywhere in scope, and fixes are proven by tests.
+
+## Detect first
+
+- Stack and versions, auth mechanism, session or token storage, trust boundaries, data
+  sensitivity (money, personal data, permissions), dependency manifest and lockfile.
+- The OWASP Top 10 edition recorded in `references/version-snapshot.json`.
+
+## Lifecycle behavior
+
+- `plan`: threat model or remediation plan with categories, locations, fixes, and tests. No
+  edits (L1).
+- `build`: apply scoped fixes with regression tests; auth, session, and crypto changes need
+  explicit confirmation first.
+- `review`: findings grouped by category and severity with locations. No edits.
 
 ## Process
 
-1. Run `references/core/repo-analysis.md` to detect stack, auth
-   mechanism in use, and database engine.
-2. Determine mode: proactive threat-model (new feature touching money/
-   PII/permissions), reactive vulnerability fix (specific issue
-   reported), or defensive audit (general hardening pass).
-3. Walk `core/security-owasp.md`'s Top 10 categories systematically for
-   audit/threat-model; for a specific reported issue, map it to its
-   OWASP category first, then check for the same class of issue
-   elsewhere in the affected area (a single injection point often
-   indicates a pattern, not an isolated bug).
-4. For auth-specific concerns → `backend/auth-authz.md`.
-5. For injection/query-specific concerns → `database/postgresql-design.md`
-   or `database/mongodb-design.md` for engine-specific parameterization.
-6. Every finding must state: the OWASP category, the specific
-   vulnerable code/pattern, exploit scenario in one sentence (what an
-   attacker could actually do), and the concrete fix.
-7. Never present a fix for a vulnerability without also checking for the
-   same pattern elsewhere in the codebase within reasonable scope.
-8. Any fix touching authentication/session handling must be treated as
-   high-risk — flag for explicit confirmation before applying (C2-adjacent
-   caution, even if not strictly "destructive").
-9. Do not disclose exploit details in a way that would be usable as a
-   ready-made attack outside the immediate fix context.
+1. Run `references/core/repo-analysis.md`; state the detected stack (V2).
+2. Classify the request: threat-model a new feature, fix a reported issue, or run a defensive
+   audit.
+3. For audits and threat models, walk `references/core/security-owasp.md` systematically. For a
+   reported issue, map it to its category first.
+4. For each finding state: category, vulnerable code or pattern with location (E4), a
+   one-sentence exploit scenario, and the concrete fix (D5).
+5. Search the affected scope for the same pattern; one injection point usually indicates more.
+6. Fix server-side risks server-side: authorization, validation, output encoding,
+   parameterization (`references/backend/auth-authz.md`, the detected database reference).
+7. Apply secure defaults the framework supports: `Secure`, `HttpOnly`, and `SameSite` cookies;
+   CSRF protection where cookies authenticate; security headers and CSP; secrets from the
+   environment or a secret manager.
+8. Audit dependencies with the repository's own tooling (`npm audit` or equivalent) and report
+   advisories with severity and fix availability.
+9. Add a regression test that proves each fixed exploit path is closed.
 
-## Checklist
+## Version gates
 
-- [ ] Every finding mapped to an OWASP category (per D5).
-- [ ] Exploit scenario stated concretely, not just "this is insecure."
-- [ ] Same vulnerable pattern checked elsewhere in affected scope.
-- [ ] Fix uses parameterized queries / validated input / server-side
-      authorization — never a partial client-side-only fix for a
-      server-side risk.
-- [ ] Auth/session-touching fixes flagged for explicit confirmation.
-- [ ] No secrets exposed or introduced during the fix (C4).
+None beyond the loaded stack references. Use the OWASP edition in the snapshot and say if the
+project targets a different one (V3).
 
-## Output Format
+## Best-practice checklist
 
-Group findings by OWASP category and severity (per
-`code-review-checklist.md` taxonomy). Each finding: location → category
-→ exploit scenario → fix (as diff). Use `templates/process/audit-report.md`
-structure if this is a broader security audit rather than a single fix.
+- [ ] Every finding has a category, location, exploit scenario, and fix.
+- [ ] The same pattern was searched across the affected scope.
+- [ ] Fixes are server-side for server-side risks; no client-only fix.
+- [ ] Auth, session, and crypto changes were confirmed before being applied.
+- [ ] Cookies, CSRF, headers, and secret handling follow the framework's secure defaults.
+- [ ] Each fixed path has a regression test, or the reason it has none is stated.
+- [ ] No secrets were exposed or introduced (C4).
 
-## Related References
+## Evidence required
 
+Regression test results for fixed paths, dependency-audit output when run, and the list of
+locations searched for the same pattern. Report each check as passed, failed, or not run (E2).
+
+## Stop conditions
+
+Stop and ask before changing authentication, sessions, or cryptography, before rotating or
+deleting credentials, and when a fix would break a public contract.
+
+## Never
+
+- Publish ready-to-use exploit payloads beyond what the fix requires.
+- Claim compliance, certification, or "secure" without stating what was checked (E3).
+- Treat a client-side check as a fix for a server-side vulnerability.
+
+## Output
+
+Group findings by category and severity: location → category → exploit scenario → fix. Use
+`templates/process/audit-report.md` for broad audits; lead with the fix diff for a single issue.
+
+## References
+
+- `references/core/operating-rules.md`
 - `references/core/security-owasp.md`
 - `references/backend/auth-authz.md`
 - `references/database/postgresql-design.md`
 - `references/database/mongodb-design.md`
 - `references/core/code-review-checklist.md`
+- `templates/process/audit-report.md`
