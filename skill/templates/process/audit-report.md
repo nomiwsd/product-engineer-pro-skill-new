@@ -50,5 +50,5 @@ Used as the output structure for `audit` mode and comprehensive `security` revie
 
 ## Adaptation Notes
 
-- Every Blocker/Major finding must cite a specific reference standard (SKILL.md D5).
+- Every Blocker/Major finding must cite a specific reference standard (rule D5).
 - The "Out of Scope" section is mandatory.

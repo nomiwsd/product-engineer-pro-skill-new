@@ -23,7 +23,7 @@ new ones:
 | **Nit** | Style preference with no functional impact | Optional, non-blocking |
 
 Every finding in `review`/`audit` output must be labeled with one of
-these four levels (SKILL.md D5 — cite the standard alongside).
+these four levels (rule D5 — cite the standard alongside).
 
 ## Review Categories
 
@@ -50,10 +50,10 @@ these four levels (SKILL.md D5 — cite the standard alongside).
 - Keyboard and screen-reader paths preserved?
 
 ### 5. Maintainability
-- Matches existing repo conventions? (`repo-analysis.md`, SKILL.md D2)
+- Matches existing repo conventions? (`repo-analysis.md`, rule D2)
 - Naming, abstraction discipline per `engineering-principles.md`?
 - Is the diff minimal and focused, or does it include unrelated changes?
-  (SKILL.md Editing Discipline)
+  (rule ED1)
 
 ### 6. Tests
 - Does the change include tests appropriate to its risk?

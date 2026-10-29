@@ -16,7 +16,7 @@ of the code under test.
 3. If writing tests for existing, previously-untested code, write
    characterization tests capturing current behavior first — do not
    silently "fix" a bug discovered mid-task; flag it separately
-   (SKILL.md Editing Discipline).
+   (rule ED2).
 4. Mock only at the true system boundary (network, DB, external
    services) — per `core/testing-strategy.md` mocking discipline. Don't
    mock the unit under test itself.

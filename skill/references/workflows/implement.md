@@ -10,10 +10,10 @@ if greenfield).
 
 1. Run `references/core/repo-analysis.md`. Branch:
    - **Existing repo**: extract conventions (naming, structure, state
-     management, API pattern) — new code must match them (SKILL.md D2).
+     management, API pattern) — new code must match them (rule D2).
    - **Greenfield**: propose current-stable stack defaults, state as an
      assumption, confirm before scaffolding broadly.
-2. Clarify ambiguity per SKILL.md D4/D6: technical gaps → state
+2. Clarify ambiguity per rules D4 and D6: technical gaps → state
    assumption and proceed; product/business logic gaps → ask.
 3. Identify which layers are touched and load only the matching stack
    files:
@@ -34,7 +34,7 @@ if greenfield).
    data mutations; optional for pure presentational UI.
 7. Self-review the diff against `core/code-review-checklist.md` before
    presenting it.
-8. Keep the diff scoped to the request (SKILL.md Editing Discipline) —
+8. Keep the diff scoped to the request (rule ED1) —
    flag any adjacent improvement as a separate suggestion, don't fold it
    into the same diff silently.
 

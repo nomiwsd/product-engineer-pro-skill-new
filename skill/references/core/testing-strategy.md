@@ -73,7 +73,7 @@ tool syntax (Jest, Vitest, Playwright, Supertest, etc.).
 1. Cover the current observed behavior first (characterization tests)
    before refactoring, especially if no tests exist yet.
 2. Don't "fix" a bug silently while writing a test for unrelated
-   behavior — flag it separately (SKILL.md Editing Discipline).
+   behavior — flag it separately (rule ED2).
 
 ## Anti-Patterns
 

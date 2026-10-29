@@ -41,8 +41,7 @@ making changes.
 - [ ] Every finding has: location, severity, standard cited, fix
       recommendation.
 - [ ] Systemic issues deduplicated, not listed per-occurrence.
-- [ ] No code changes made — audit is diagnostic only (SKILL.md
-      diagnostic-before-build rule).
+- [ ] No code changes made — audit is diagnostic only (rule L2).
 - [ ] Report distinguishes must-fix (Blocker/Major) from optional
       (Minor/Nit).
 

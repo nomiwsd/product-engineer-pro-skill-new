@@ -69,7 +69,7 @@ file's Version Matrix.
 - New code must match existing conventions (naming, file structure,
   error handling style) even if a "better" pattern exists elsewhere in
   this skill — consistency within a codebase outranks abstract best
-  practice (SKILL.md D2).
+  practice (rule D2).
 - If existing conventions conflict with a hard constraint (C1–C4) or a
   security standard, flag the conflict explicitly rather than silently
   following the bad convention.
@@ -78,7 +78,7 @@ file's Version Matrix.
 - No conventions to match yet — propose sensible current-stable defaults
   from this skill's supported stack.
 - State the proposed stack/versions as an explicit assumption and confirm
-  before scaffolding broadly (SKILL.md D4, Project Context Handling).
+  before scaffolding broadly (rule D4).
 - Prefer the most recent stable major version of each framework unless
   the user specifies otherwise.
 

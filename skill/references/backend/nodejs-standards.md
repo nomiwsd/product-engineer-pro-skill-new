@@ -41,7 +41,7 @@ Per `references/core/repo-analysis.md`: check `.nvmrc`, `package.json` `engines.
 - Use native `fs.glob` / `fs.promises.glob` (Node 22+) for glob file searching.
 
 ### Configuration & Environment
-- All environment-specific values (API keys, DB URLs, feature flags) must come from environment variables (C4 constraint).
+- All environment-specific values (API keys, DB URLs, feature flags) must come from environment variables (rule C4).
 - Validate required environment variables at process startup (fail fast with a clear error) rather than failing deep in the request lifecycle when accessed.
 - Provide a `.env.example` file (with placeholder values, never real secrets) documenting required variables.
 

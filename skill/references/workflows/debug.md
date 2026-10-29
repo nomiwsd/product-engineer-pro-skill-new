@@ -30,13 +30,13 @@ first, patch second.
    - Auth bugs → `backend/auth-authz.md`
 7. Apply the minimal fix that addresses the root cause — don't refactor
    surrounding code while debugging (that's `refactor` mode, run
-   separately if warranted, per SKILL.md Editing Discipline).
+   separately if warranted, per rule ED2).
 8. Add a regression test reproducing the original bug when practical
    (`core/testing-strategy.md`).
 9. If root cause can't be conclusively determined from available
    context, state the leading hypothesis, what would confirm it, and
    what additional information/logging would help — don't guess-fix
-   silently (SKILL.md D4).
+   silently (rule D4).
 
 ## Checklist
 

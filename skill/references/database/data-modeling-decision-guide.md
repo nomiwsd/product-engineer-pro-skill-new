@@ -21,7 +21,7 @@ Per `references/core/repo-analysis.md`: identify existing database dependencies 
 Evaluate these 5 decision criteria in sequence. The first criterion that clearly resolves your architectural requirement dominates:
 
 ### 1. Does an engine already exist in this codebase?
-If the project already uses PostgreSQL or MongoDB for related domain data, default to that existing engine (SKILL.md D2). Introducing a second database engine carries significant operational overhead (connection pools, backups, migration tooling) and requires explicit justification.
+If the project already uses PostgreSQL or MongoDB for related domain data, default to that existing engine (rule D2). Introducing a second database engine carries significant operational overhead (connection pools, backups, migration tooling) and requires explicit justification.
 
 ### 2. Are relationships and multi-entity consistency central to the domain?
 - **Favor PostgreSQL** when the domain consists of many interrelated entities requiring complex joins, or when operations require multi-table ACID transactions (e.g., financial transactions, order processing, inventory billing).
@@ -40,7 +40,7 @@ If the project already uses PostgreSQL or MongoDB for related domain data, defau
 
 ## Polyglot Persistence
 
-Using both engines in one project is justified only when distinct bounded contexts have fundamentally different access patterns (e.g., PostgreSQL for core billing/orders + MongoDB for high-volume activity logging). Always confirm with the user before introducing a second database engine to a single-engine project (SKILL.md D4).
+Using both engines in one project is justified only when distinct bounded contexts have fundamentally different access patterns (e.g., PostgreSQL for core billing/orders + MongoDB for high-volume activity logging). Always confirm with the user before introducing a second database engine to a single-engine project (rule D4).
 
 ## Common Misconceptions to Avoid
 
