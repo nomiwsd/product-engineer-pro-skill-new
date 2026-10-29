@@ -1,6 +1,7 @@
-import { existsSync, readFileSync } from "node:fs";
+import { existsSync, readFileSync, readdirSync } from "node:fs";
 import { resolve } from "node:path";
 import { renderHostArtifacts } from "../lib/renderers.mjs";
+import { definedRuleIds, recipeErrors, undefinedRuleIds } from "./recipe-rules.mjs";
 import { validateSnapshot } from "./snapshot.mjs";
 
 const at = (path) => resolve(process.cwd(), path);
@@ -18,11 +19,15 @@ for (const workflow of manifest.workflows) {
     errors.push(`Missing ${path}`);
     continue;
   }
-  const content = readFileSync(at(path), "utf8");
-  for (const section of ["## Goal", "## Process"]) if (!content.includes(section)) errors.push(`${path}: missing ${section}`);
-  if (!/^## (Best-practice c|C)hecklist$/m.test(content)) errors.push(`${path}: missing checklist section`);
-  if (!content.includes("## Output")) errors.push(`${path}: missing output section`);
+  errors.push(...recipeErrors(path, readFileSync(at(path), "utf8")));
 }
+
+const ruleIds = definedRuleIds(readFileSync(at("skill/references/core/operating-rules.md"), "utf8"));
+const markdownUnder = (dir) => readdirSync(at(dir), { withFileTypes: true }).flatMap((entry) => {
+  const rel = `${dir}/${entry.name}`;
+  return entry.isDirectory() ? markdownUnder(rel) : rel.endsWith(".md") ? [rel] : [];
+});
+for (const path of markdownUnder("skill")) errors.push(...undefinedRuleIds(path, readFileSync(at(path), "utf8"), ruleIds));
 
 const skill = readFileSync(at("skill/SKILL.md"), "utf8").replace(/\r\n/g, "\n");
 const frontmatter = skill.match(/^---\n([\s\S]*?)\n---/);
