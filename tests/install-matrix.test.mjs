@@ -164,6 +164,25 @@ test("doctor reports a deleted package file and update restores it", () => {
   assert.ok(existsSync(join(root, rel)));
 });
 
+test("an unknown tool lists supported tools and writes nothing", () => {
+  const manifest = JSON.parse(readFileSync(resolve("skill/manifest.json"), "utf8"));
+  for (const args of [["init", "--tool", "notarealtool"], ["init", "--tool", "notarealtool", "--dry-run"], ["doctor", "--tool", "notarealtool"]]) {
+    const root = repository();
+    const result = run(root, ...args);
+    assert.equal(result.status, 1, args.join(" "));
+    for (const host of manifest.hosts) assert.match(result.stderr, new RegExp(`\\b${host.id}\\b`));
+    assert.deepEqual(readdirSync(root), []);
+  }
+});
+
+test("an unknown command says so and exits non-zero", () => {
+  const result = run(repository(), "frobnicate");
+  assert.equal(result.status, 1);
+  assert.match(result.stderr, /Unknown command: frobnicate/);
+  assert.match(result.stdout, /Commands:/);
+  assert.equal(run(repository(), "--help").status, 0);
+});
+
 test("an inline Aider read value is preserved and reported", () => {
   const root = repository();
   const original = "model: sonnet\nread: [docs/architecture.md]\n";
