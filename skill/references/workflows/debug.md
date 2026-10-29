@@ -2,58 +2,78 @@
 
 ## Goal
 
-Diagnose and fix a specific bug or unexpected behavior — root cause
-first, patch second.
+Diagnose and fix a specific defect at its root cause — reproduce it, prove the cause, apply
+the smallest fix at the source, and prove the fix with a regression test.
+
+## Detect first
+
+- Expected vs actual behavior and the smallest input or condition that triggers it.
+- The affected subsystem and its versions; recent changes in that area (`git log`, `git blame`).
+- Only the repository context the bug needs; skip a full repository scan for a narrow bug.
+
+## Lifecycle behavior
+
+- `plan` (or read-only host): the reproduction, the leading hypothesis with evidence, the
+  proposed fix, and the regression test. No edits (L1).
+- `build`: reproduce, fix, and verify. "Find and fix" authorizes scoped, non-destructive
+  repair (L2).
+- `review`: assess a proposed fix for root cause vs symptom, scope, and test quality.
 
 ## Process
 
-1. Reproduce the problem conceptually before proposing a fix: what is
-   the expected behavior, what is the actual behavior, what's the
-   minimal input/condition that triggers it?
-2. Run `references/core/repo-analysis.md` only as needed to understand
-   the relevant subsystem's stack/version (don't do a full repo scan for
-   a narrow bug).
-3. Form a hypothesis about root cause before editing code. State it
-   explicitly. Avoid speculative multi-file changes based on a guess.
-4. Trace the actual data/control flow: read the relevant function calls,
-   don't assume behavior from naming alone.
-5. Distinguish symptom from cause — if the visible error is a downstream
-   effect (e.g., a null-reference three layers past the actual bad
-   input), fix at the source, not just at the crash site.
-6. Check for common category-specific causes before deep-diving:
-   - Async/timing → race condition, missing `await`, stale closure
-   - State bugs (React) → see `frontend/react-patterns.md` (stale state,
-     effect dependency issues)
-   - API/data bugs → see `backend/api-design.md`,
-     `database/postgresql-design.md`/`mongodb-design.md` (query logic,
-     type coercion)
-   - Auth bugs → `backend/auth-authz.md`
-7. Apply the minimal fix that addresses the root cause — don't refactor
-   surrounding code while debugging (that's `refactor` mode, run
-   separately if warranted, per rule ED2).
-8. Add a regression test reproducing the original bug when practical
-   (`core/testing-strategy.md`).
-9. If root cause can't be conclusively determined from available
-   context, state the leading hypothesis, what would confirm it, and
-   what additional information/logging would help — don't guess-fix
-   silently (rule D4).
+1. Reproduce the problem, or describe the exact reproduction when execution is not allowed.
+2. State a hypothesis about the root cause before editing; avoid speculative multi-file edits.
+3. Trace the actual data and control flow through the code; do not infer behavior from names.
+4. Change one variable at a time while narrowing the cause.
+5. Separate symptom from cause; fix at the source, not only at the crash site.
+6. Check common causes for the category:
+   - Async and timing → missing `await`, races, stale closures.
+   - React state → `references/frontend/react-patterns.md`.
+   - API and data → `references/backend/api-design.md` and the detected database reference.
+   - Auth → `references/backend/auth-authz.md`.
+7. Apply the minimal fix; do not refactor surrounding code (rule ED2).
+8. Add a regression test that fails without the fix (`references/core/testing-strategy.md`).
+9. If the cause cannot be proven, state the leading hypothesis, what would confirm it, and the
+   next diagnostic step instead of guessing (rule D4).
 
-## Checklist
+## Version gates
 
-- [ ] Root cause identified and stated, not just the symptom patched.
-- [ ] Fix is minimal and scoped to the bug — no drive-by refactoring.
-- [ ] Regression test added where practical.
-- [ ] If unresolved, hypothesis and next diagnostic step stated clearly.
+None beyond the loaded stack references; check the detected version before blaming or using a
+version-specific API (V4).
 
-## Output Format
+## Best-practice checklist
 
-State the root cause first (one or two sentences), then the fix as a
-diff, then the regression test if added. If unresolved, output the
-hypothesis and a concrete next diagnostic step instead of a speculative fix.
+- [ ] The defect is reproduced (or the reproduction is stated).
+- [ ] Root cause stated in one or two sentences, with evidence.
+- [ ] Fix is minimal and at the source; no drive-by refactoring.
+- [ ] Regression test fails without the fix and passes with it.
+- [ ] If unresolved, hypothesis and next diagnostic step are given.
 
-## Related References
+## Evidence required
 
+The reproduction before the fix, the same reproduction passing after it, and the regression
+test result (E2). Label the root cause observed or inferred (E1).
+
+## Stop conditions
+
+Stop and report when the bug cannot be reproduced and the evidence does not support a single
+cause, or when the fix needs a contract change, migration, or destructive action (C2).
+
+## Never
+
+- Shotgun-edit several files on a guess.
+- Suppress the error, widen a type, or add a broad `try/catch` instead of fixing the cause.
+- Bundle unrelated cleanup into the fix.
+
+## Output
+
+Root cause first (one or two sentences), then the fix as a diff, then the regression test and
+verification results. If unresolved, the hypothesis and next step instead of a speculative fix.
+
+## References
+
+- `references/core/operating-rules.md`
 - `references/core/engineering-principles.md`
 - `references/core/testing-strategy.md`
-- Relevant stack file matching the bug's subsystem
+- Relevant stack reference for the bug's subsystem
 - `references/workflows/refactor.md` (if cleanup is warranted separately)
