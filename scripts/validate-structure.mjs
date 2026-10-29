@@ -23,7 +23,7 @@ for (const workflow of manifest.workflows) {
   if (!content.includes("## Output")) errors.push(`${path}: missing output section`);
 }
 
-const skill = readFileSync(at("skill/SKILL.md"), "utf8");
+const skill = readFileSync(at("skill/SKILL.md"), "utf8").replace(/\r\n/g, "\n");
 const frontmatter = skill.match(/^---\n([\s\S]*?)\n---/);
 if (!frontmatter) errors.push("SKILL.md frontmatter is invalid.");
 else {

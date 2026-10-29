@@ -10,9 +10,12 @@ manifest.skill.version = pkg.version;
 const check = process.argv.includes("--check");
 let drift = false;
 
+// Compare with LF line endings so Windows CRLF checkouts are not reported as drift.
+const readText = (absolute) => readFileSync(absolute, "utf8").replace(/\r\n/g, "\n");
+
 function updateFile(path, content) {
   const absolute = resolve(root, path);
-  const current = existsSync(absolute) ? readFileSync(absolute, "utf8") : null;
+  const current = existsSync(absolute) ? readText(absolute) : null;
   if (current === content) return;
   if (check) {
     console.error(`Generated artifact drift: ${path}`);
@@ -26,7 +29,7 @@ function updateFile(path, content) {
 
 function replaceBlock(path, startMarker, endMarker, body) {
   const absolute = resolve(root, path);
-  const current = readFileSync(absolute, "utf8");
+  const current = readText(absolute);
   const start = current.indexOf(startMarker);
   const end = current.indexOf(endMarker);
   if (start < 0 || end < start) throw new Error(`Missing generated markers in ${path}`);
