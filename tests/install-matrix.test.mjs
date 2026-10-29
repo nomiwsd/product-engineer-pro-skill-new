@@ -250,3 +250,15 @@ test("an inline Aider read value is preserved and reported", () => {
   assert.match(result.stdout, /inline value/);
   assert.equal(readFileSync(join(root, ".aider.conf.yml"), "utf8"), original);
 });
+
+test("portable and Aider guidance carry the non-negotiable rules", () => {
+  const rules = [/Plan, Ask, or read-only mode never edit/, /never weaken host safeguards/, /Confirm immediately before destructive work/, /never hardcode secrets/, /Never fabricate APIs/, /not run with a reason/];
+  const root = repository();
+  assert.equal(run(root, "init", "--tool", "aider").status, 0);
+  assert.equal(run(root, "init", "--tool", "portable").status, 0);
+  for (const rel of ["CONVENTIONS.md", "AGENTS.md"]) {
+    const text = readFileSync(join(root, rel), "utf8");
+    for (const rule of rules) assert.match(text, rule, `${rel} lacks ${rule}`);
+  }
+  assert.match(readFileSync(join(root, "AGENTS.md"), "utf8"), /references\/core\/operating-rules\.md/);
+});

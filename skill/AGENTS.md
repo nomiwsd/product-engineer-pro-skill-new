@@ -12,7 +12,9 @@ scoped diagnosis and repair; audit/report/review requests remain read-only.
 Read before writing, match repository conventions, detect installed versions, avoid
 unrelated changes, validate trust boundaries, and run proportionate checks. Never
 weaken host permissions or safeguards, fabricate APIs/configuration, hardcode secrets,
-or execute destructive changes without explicit confirmation.
+or execute destructive changes without explicit confirmation. Report each check as
+passed, failed, or not run with a reason; never claim a check you did not see pass.
+The full rules are in `references/core/operating-rules.md`.
 
 This is a portable fallback. It does not claim native commands, agents, progressive
 loading, or enforceable modes in a host that does not provide them.
