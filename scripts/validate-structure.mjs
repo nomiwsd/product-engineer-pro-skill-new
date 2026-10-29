@@ -59,6 +59,16 @@ if (/^\s*ALTER TABLE .* DROP /m.test(templateFiles[3][1])) errors.push("PostgreS
 if (!templateFiles[4][1].includes("PAYMENT_ENVIRONMENT")) errors.push("Payment E2E template lacks sandbox guard.");
 if (templateFiles[2][1].includes("oklch(var(")) errors.push("Tailwind template nests complete color values.");
 
+const matrix = readFileSync(at("AGENT-CAPABILITY-MATRIX.md"), "utf8");
+const matrixRows = [...matrix.matchAll(/^\| `([^`]+)` \| [^|]+ \| ([^|]+?) \| [^|]+ \| ([^|]+?) \|/gm)];
+const matrixIds = matrixRows.map((match) => match[1]);
+if (JSON.stringify(matrixIds) !== JSON.stringify(manifest.hosts.map((host) => host.id))) errors.push(`AGENT-CAPABILITY-MATRIX.md hosts differ from the manifest: ${matrixIds.join(", ")}`);
+for (const [, id, tier, behaviour] of matrixRows) {
+  const host = manifest.hosts.find((item) => item.id === id);
+  if (host && host.tier !== tier.trim()) errors.push(`AGENT-CAPABILITY-MATRIX.md: ${id} tier is ${tier.trim()}, manifest says ${host.tier}.`);
+  if (!/^(\*\*Behaviour tested\*\*.*|Not tested)$/.test(behaviour.trim())) errors.push(`AGENT-CAPABILITY-MATRIX.md: ${id} behaviour status must be "Behaviour tested" or "Not tested".`);
+}
+
 const websiteText = ["website/components/Features.tsx", "website/components/Hero.tsx", "website/components/ModesShowcase.tsx"].map((path) => readFileSync(at(path), "utf8")).join("\n");
 for (const claim of ["~0.8s", "≤ 150", "100% Enforced", "CLS = 0", "LCP < 1.2"]) if (websiteText.includes(claim)) errors.push(`Website contains unsupported claim: ${claim}`);
 

@@ -52,6 +52,9 @@ npx @nomiwsd/product-engineer-pro init --tool codex
 Portable fallback hosts receive honest condensed guidance; they are not described
 as supporting native skills, package-defined agents, or enforceable modes.
 
+Which hosts have been tested end to end, and when, is recorded in the
+[agent capability matrix](AGENT-CAPABILITY-MATRIX.md).
+
 ## Workflows
 
 <!-- pep:readme-workflows:start -->
