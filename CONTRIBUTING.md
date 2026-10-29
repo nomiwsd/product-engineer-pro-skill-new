@@ -25,6 +25,30 @@ fully before adding or editing any file.
    `database.md`) are explicitly permitted to exceed this range to maintain
    comprehensive step sequencing.
 
+## Refreshing the version snapshot
+
+`skill/references/version-snapshot.json` is the only place verified versions live (see
+[COMPATIBILITY.md](COMPATIBILITY.md)). Refresh it when `npm run check-freshness` warns, when the
+weekly freshness issue reports drift, and before every release.
+
+1. Run `node scripts/check-freshness.mjs --markdown` for the live report.
+2. Check each entry against its own `source`, not a third-party summary:
+   - npm packages: the highest **stable** version (`npm view <package> versions`). Ignore the
+     `latest` dist-tag if it points at a prerelease.
+   - Node.js: the official schedule (`nodejs/Release` `schedule.json`) for LTS phases, and
+     `nodejs.org/dist/index.json` for the newest line.
+   - PostgreSQL, MongoDB, OWASP: their official release or project pages.
+3. Update `value`, keep `meaning` accurate, and set `checkedAt` to the day you checked. Put a
+   prerelease only in `preview`.
+4. For a **new major**, read the official release notes or migration guide. Add compatibility
+   facts to `notes`, and update the affected reference files' version matrices in the same
+   change.
+5. If you cannot confirm a value, keep the old value and date and set `status` to
+   `unverified`. **Never change a date without checking its source.**
+6. Set `verifiedAt` to the oldest `checkedAt`, then run `npm test` (the validator enforces the
+   schema) and `npm run check-freshness`.
+7. Add a changelog entry that lists the changed versions.
+
 ## File Template — `references/core/*`, `references/frontend/*`,
 ## `references/backend/*`, `references/database/*`
 
