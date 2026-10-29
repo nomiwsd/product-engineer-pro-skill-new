@@ -1,6 +1,6 @@
 {
   "schemaVersion": 2,
-  "verifiedAt": "2026-08-10",
+  "verifiedAt": "2026-10-29",
   "maxAgeDays": 90,
   "policy": "Installed repository versions take precedence. If a detected major is newer than this snapshot, verify against an official source or report reduced confidence. Entries record what was verified on checkedAt; they are not a promise of support for later versions.",
   "meanings": {
@@ -13,43 +13,45 @@
   },
   "runtime": {
     "node": {
-      "value": "24",
+      "value": "26",
       "meaning": "active-lts",
       "source": "https://github.com/nodejs/Release/blob/main/schedule.json",
-      "checkedAt": "2026-08-10",
-      "status": "verified"
+      "checkedAt": "2026-10-29",
+      "status": "verified",
+      "notes": "26 entered Active LTS on 2026-10-28. Maintenance LTS: 24 (end of life 2028-04-30) and 22 (end of life 2027-04-30). 18 and 20 are end of life. 27 is scheduled for 2027-04-22."
     },
     "nodeCurrent": {
       "value": "26",
       "meaning": "current",
       "source": "https://nodejs.org/dist/index.json",
-      "checkedAt": "2026-08-10",
-      "status": "verified"
+      "checkedAt": "2026-10-29",
+      "status": "verified",
+      "notes": "Newest release 26.13.0 (2026-10-28)."
     },
     "typescript": {
       "value": "7.0.2",
       "meaning": "latest-stable",
       "package": "typescript",
       "source": "https://www.npmjs.com/package/typescript",
-      "checkedAt": "2026-08-10",
+      "checkedAt": "2026-10-29",
       "status": "verified"
     }
   },
   "frameworks": {
     "next": {
-      "value": "16.3.0",
+      "value": "16.4.3",
       "meaning": "latest-stable",
       "package": "next",
       "source": "https://www.npmjs.com/package/next",
-      "checkedAt": "2026-08-10",
+      "checkedAt": "2026-10-29",
       "status": "verified"
     },
     "react": {
-      "value": "19.2.8",
+      "value": "19.3.1",
       "meaning": "latest-stable",
       "package": "react",
       "source": "https://www.npmjs.com/package/react",
-      "checkedAt": "2026-08-10",
+      "checkedAt": "2026-10-29",
       "status": "verified"
     },
     "tailwindcss": {
@@ -57,55 +59,58 @@
       "meaning": "latest-stable",
       "package": "tailwindcss",
       "source": "https://www.npmjs.com/package/tailwindcss",
-      "checkedAt": "2026-08-10",
+      "checkedAt": "2026-10-29",
       "status": "verified"
     },
     "shadcn": {
-      "value": "4.16.2",
+      "value": "4.23.0",
       "meaning": "latest-stable",
       "package": "shadcn",
       "source": "https://www.npmjs.com/package/shadcn",
-      "checkedAt": "2026-08-10",
+      "checkedAt": "2026-10-29",
       "status": "verified"
     },
     "express": {
-      "value": "5.2.1",
+      "value": "5.3.0",
       "meaning": "latest-stable",
       "package": "express",
       "source": "https://www.npmjs.com/package/express",
-      "checkedAt": "2026-08-10",
+      "checkedAt": "2026-10-29",
       "status": "verified"
     },
     "nestjs": {
-      "value": "11.1.28",
+      "value": "12.3.2",
       "meaning": "latest-stable",
       "package": "@nestjs/core",
       "source": "https://www.npmjs.com/package/@nestjs/core",
-      "checkedAt": "2026-08-10",
-      "status": "verified"
+      "checkedAt": "2026-10-29",
+      "status": "verified",
+      "notes": "New major since the 2026-08-10 snapshot (12.0.0 released 2026-08-27). ESM-only core packages; Node.js 20.19+ or 22.12+; see https://docs.nestjs.com/migration-guide."
     },
     "zod": {
-      "value": "4.4.3",
+      "value": "4.6.7",
       "meaning": "latest-stable",
       "package": "zod",
       "source": "https://www.npmjs.com/package/zod",
-      "checkedAt": "2026-08-10",
+      "checkedAt": "2026-10-29",
       "status": "verified"
     },
     "prisma": {
-      "value": "7.9.1",
+      "value": "7.10.1",
       "meaning": "latest-stable",
       "package": "prisma",
       "source": "https://www.npmjs.com/package/prisma",
-      "checkedAt": "2026-08-10",
-      "status": "verified"
+      "checkedAt": "2026-10-29",
+      "status": "verified",
+      "preview": "8.0.0-rc.28",
+      "notes": "The npm 'latest' dist-tag points at the 8.0.0 release candidate; 7.10.1 is the highest stable release."
     },
     "mongoose": {
-      "value": "9.9.1",
+      "value": "9.11.4",
       "meaning": "latest-stable",
       "package": "mongoose",
       "source": "https://www.npmjs.com/package/mongoose",
-      "checkedAt": "2026-08-10",
+      "checkedAt": "2026-10-29",
       "status": "verified"
     }
   },
@@ -114,16 +119,18 @@
       "value": "18",
       "meaning": "latest-stable",
       "source": "https://www.postgresql.org/docs/release/",
-      "checkedAt": "2026-08-10",
+      "checkedAt": "2026-10-29",
       "status": "verified",
-      "preview": "19 beta"
+      "preview": "19 RC 1 (2026-10-15)",
+      "notes": "Latest minor 18.6."
     },
     "mongodb": {
-      "value": "8.3",
+      "value": "9.0",
       "meaning": "latest-stable",
       "source": "https://www.mongodb.com/docs/manual/release-notes/",
-      "checkedAt": "2026-08-10",
-      "status": "verified"
+      "checkedAt": "2026-10-29",
+      "status": "verified",
+      "notes": "New major since the 2026-08-10 snapshot (9.0.0 released 2026-09-28; 9.0.4 on 2026-10-13). Previous stable 8.3. Default per-operation memory limit; Mongoose syncIndexes() index-rebuild issue at FCV 9.0 (SERVER-89953) fixed by Mongoose 9.10.4 or 8.24.5."
     }
   },
   "standards": {
@@ -131,7 +138,7 @@
       "value": "2025",
       "meaning": "latest-stable",
       "source": "https://owasp.org/www-project-top-ten/",
-      "checkedAt": "2026-08-10",
+      "checkedAt": "2026-10-29",
       "status": "verified"
     }
   }
