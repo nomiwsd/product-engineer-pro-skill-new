@@ -1,33 +1,138 @@
 {
+  "schemaVersion": 2,
   "verifiedAt": "2026-08-10",
-  "policy": "Installed repository versions take precedence. If a detected major is newer than this snapshot, verify against an official source or report reduced confidence.",
+  "maxAgeDays": 90,
+  "policy": "Installed repository versions take precedence. If a detected major is newer than this snapshot, verify against an official source or report reduced confidence. Entries record what was verified on checkedAt; they are not a promise of support for later versions.",
+  "meanings": {
+    "latest-stable": "Highest non-prerelease version published by the official source on checkedAt.",
+    "active-lts": "Release line in Active LTS on checkedAt, per the official schedule.",
+    "maintenance-lts": "Release line in Maintenance LTS on checkedAt.",
+    "current": "Newest release line on checkedAt, whether or not it is LTS yet.",
+    "preview": "Beta, release candidate or prerelease; never treated as stable guidance.",
+    "last-tested": "Version the skill was last exercised against, not necessarily the newest."
+  },
   "runtime": {
-    "node": { "lts": "24", "current": "26", "source": "https://nodejs.org/en/about/previous-releases" },
-    "typescript": { "current": "7.0.2", "source": "https://www.npmjs.com/package/typescript" }
+    "node": {
+      "value": "24",
+      "meaning": "active-lts",
+      "source": "https://github.com/nodejs/Release/blob/main/schedule.json",
+      "checkedAt": "2026-08-10",
+      "status": "verified"
+    },
+    "nodeCurrent": {
+      "value": "26",
+      "meaning": "current",
+      "source": "https://nodejs.org/dist/index.json",
+      "checkedAt": "2026-08-10",
+      "status": "verified"
+    },
+    "typescript": {
+      "value": "7.0.2",
+      "meaning": "latest-stable",
+      "package": "typescript",
+      "source": "https://www.npmjs.com/package/typescript",
+      "checkedAt": "2026-08-10",
+      "status": "verified"
+    }
   },
   "frameworks": {
-    "next": "16.3.0",
-    "react": "19.2.8",
-    "tailwindcss": "4.3.3",
-    "shadcn": "4.16.2",
-    "express": "5.2.1",
-    "nestjs": "11.1.28",
-    "zod": "4.4.3",
-    "prisma": "7.9.1",
-    "mongoose": "9.9.1"
+    "next": {
+      "value": "16.3.0",
+      "meaning": "latest-stable",
+      "package": "next",
+      "source": "https://www.npmjs.com/package/next",
+      "checkedAt": "2026-08-10",
+      "status": "verified"
+    },
+    "react": {
+      "value": "19.2.8",
+      "meaning": "latest-stable",
+      "package": "react",
+      "source": "https://www.npmjs.com/package/react",
+      "checkedAt": "2026-08-10",
+      "status": "verified"
+    },
+    "tailwindcss": {
+      "value": "4.3.3",
+      "meaning": "latest-stable",
+      "package": "tailwindcss",
+      "source": "https://www.npmjs.com/package/tailwindcss",
+      "checkedAt": "2026-08-10",
+      "status": "verified"
+    },
+    "shadcn": {
+      "value": "4.16.2",
+      "meaning": "latest-stable",
+      "package": "shadcn",
+      "source": "https://www.npmjs.com/package/shadcn",
+      "checkedAt": "2026-08-10",
+      "status": "verified"
+    },
+    "express": {
+      "value": "5.2.1",
+      "meaning": "latest-stable",
+      "package": "express",
+      "source": "https://www.npmjs.com/package/express",
+      "checkedAt": "2026-08-10",
+      "status": "verified"
+    },
+    "nestjs": {
+      "value": "11.1.28",
+      "meaning": "latest-stable",
+      "package": "@nestjs/core",
+      "source": "https://www.npmjs.com/package/@nestjs/core",
+      "checkedAt": "2026-08-10",
+      "status": "verified"
+    },
+    "zod": {
+      "value": "4.4.3",
+      "meaning": "latest-stable",
+      "package": "zod",
+      "source": "https://www.npmjs.com/package/zod",
+      "checkedAt": "2026-08-10",
+      "status": "verified"
+    },
+    "prisma": {
+      "value": "7.9.1",
+      "meaning": "latest-stable",
+      "package": "prisma",
+      "source": "https://www.npmjs.com/package/prisma",
+      "checkedAt": "2026-08-10",
+      "status": "verified"
+    },
+    "mongoose": {
+      "value": "9.9.1",
+      "meaning": "latest-stable",
+      "package": "mongoose",
+      "source": "https://www.npmjs.com/package/mongoose",
+      "checkedAt": "2026-08-10",
+      "status": "verified"
+    }
   },
   "databases": {
-    "postgresql": { "current": "18", "preview": "19 beta", "source": "https://www.postgresql.org/docs/current/release.html" },
-    "mongodb": { "current": "8.3", "source": "https://www.mongodb.com/docs/manual/release-notes/" }
+    "postgresql": {
+      "value": "18",
+      "meaning": "latest-stable",
+      "source": "https://www.postgresql.org/docs/release/",
+      "checkedAt": "2026-08-10",
+      "status": "verified",
+      "preview": "19 beta"
+    },
+    "mongodb": {
+      "value": "8.3",
+      "meaning": "latest-stable",
+      "source": "https://www.mongodb.com/docs/manual/release-notes/",
+      "checkedAt": "2026-08-10",
+      "status": "verified"
+    }
   },
   "standards": {
-    "owaspTop10": { "current": "2025", "source": "https://owasp.org/Top10/2025/" }
-  },
-  "sources": [
-    { "subject": "Node.js releases", "url": "https://nodejs.org/en/about/previous-releases", "checkedAt": "2026-08-10" },
-    { "subject": "PostgreSQL releases", "url": "https://www.postgresql.org/docs/current/release.html", "checkedAt": "2026-08-10" },
-    { "subject": "MongoDB releases", "url": "https://www.mongodb.com/docs/manual/release-notes/", "checkedAt": "2026-08-10" },
-    { "subject": "OWASP Top 10", "url": "https://owasp.org/Top10/2025/", "checkedAt": "2026-08-10" },
-    { "subject": "npm package versions", "url": "https://registry.npmjs.org/", "checkedAt": "2026-08-10" }
-  ]
+    "owaspTop10": {
+      "value": "2025",
+      "meaning": "latest-stable",
+      "source": "https://owasp.org/www-project-top-ten/",
+      "checkedAt": "2026-08-10",
+      "status": "verified"
+    }
+  }
 }

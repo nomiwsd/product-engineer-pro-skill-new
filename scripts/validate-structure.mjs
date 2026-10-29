@@ -1,6 +1,7 @@
 import { existsSync, readFileSync } from "node:fs";
 import { resolve } from "node:path";
 import { renderHostArtifacts } from "../lib/renderers.mjs";
+import { validateSnapshot } from "./snapshot.mjs";
 
 const at = (path) => resolve(process.cwd(), path);
 const manifest = JSON.parse(readFileSync(at("skill/manifest.json"), "utf8"));
@@ -37,14 +38,7 @@ const openaiYaml = readFileSync(at("skill/agents/openai.yaml"), "utf8");
 for (const token of ["interface:", "display_name:", "short_description:", "$product-engineer-pro", "allow_implicit_invocation:"]) if (!openaiYaml.includes(token)) errors.push(`agents/openai.yaml missing ${token}`);
 
 const snapshot = JSON.parse(readFileSync(at("skill/references/version-snapshot.json"), "utf8"));
-const snapshotChecks = [
-  [snapshot.runtime.typescript.current.startsWith("7."), "TypeScript 7"],
-  [snapshot.databases.postgresql.current === "18", "PostgreSQL 18"],
-  [snapshot.databases.mongodb.current === "8.3", "MongoDB 8.3"],
-  [snapshot.standards.owaspTop10.current === "2025", "OWASP 2025"],
-  [snapshot.runtime.node.lts === "24" && snapshot.runtime.node.current === "26", "Node 24/26"]
-];
-for (const [passed, label] of snapshotChecks) if (!passed) errors.push(`Version snapshot missing ${label}.`);
+for (const error of validateSnapshot(snapshot)) errors.push(`Version snapshot: ${error}`);
 
 for (const host of manifest.hosts) {
   const artifacts = renderHostArtifacts(manifest, host);
