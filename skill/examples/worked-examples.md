@@ -123,6 +123,8 @@ One realistic example per mode demonstrating input, reasoning, and output struct
 
 **Reasoning:** Security check finds missing authorization on export route (Blocker, OWASP A01) and password hash included in CSV payload (Blocker, OWASP A04). Performance check finds no pagination or row cap (Major). Maintainability matches router conventions.
 
+**Output:** PR review formatted per `templates/process/pr-description.md` with 2 Blockers, 1 Major, positive feedback, and "Changes Requested" verdict.
+
 ---
 
 ## 12. `frontend` workflow
@@ -158,5 +160,8 @@ do not add Zod or change module format unless the repository already uses it.
   and verify it without pausing for a second authorization request.
 - **Review + security:** report findings with file/line evidence and OWASP Top 10:2025
   mappings; do not edit unless the user separately asks for remediation.
-
-**Output:** PR review formatted per `templates/process/pr-description.md` with 2 Blockers, 1 Major, positive feedback, and "Changes Requested" verdict.
+- **Portable fallback (Aider or a plain AGENTS.md host):** the host has no enforceable
+  modes, so state the lifecycle and workflow in the reply, apply the condensed operating
+  rules, and treat "review" or "plan" wording as read-only even though nothing enforces it.
+- **Build + any workflow, check not available:** report the check as `not run` with the
+  reason (rule E2) instead of describing it as passed.
