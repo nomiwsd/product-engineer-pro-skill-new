@@ -16,6 +16,22 @@
 - CI tests Node.js 18 (declared minimum), 22, 24, and 26; Node.js 20 left the matrix after
   reaching end of life. The `engines` range is unchanged.
 - Added COMPATIBILITY.md and aligned the README version policy wording.
+- CI uses `actions/checkout` and `actions/setup-node` v7, fails if the checks modify the
+  repository, runs a packed-tarball smoke test, and tests Windows CRLF checkouts on
+  Node.js 18 and 24.
+- Unknown tools now list the supported tool IDs, and unknown commands are named in the error.
+- Added AGENT-CAPABILITY-MATRIX.md, recording which hosts have been tested end to end.
+
+### Fixed
+
+- Repeat `init` or `update` for Aider no longer breaks `.aider.conf.yml`; an inline `read:`
+  value is preserved and reported instead of edited.
+- Files checked out with CRLF line endings are no longer reported as edited, and `migrate`
+  recognises CRLF copies of known legacy files.
+- An unreadable install state is reported by `doctor`, refused by `update`, and backed up
+  before `init` rebuilds it. A state written by a newer CLI is never overwritten.
+- `npm test` passes on Windows checkouts, including Node.js 18, and the link check ignores
+  local-only folders.
 
 ## [2.0.1] — 2026-08-10
 
