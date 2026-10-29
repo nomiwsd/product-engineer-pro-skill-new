@@ -45,8 +45,45 @@ export function Card({
 }
 ```
 
+## Template — Data-Driven Component With Every State
+
+```tsx
+interface Order {
+  id: string;
+  label: string;
+}
+
+interface OrderListProps {
+  status: "loading" | "error" | "success";
+  orders: Order[];
+  onRetry: () => void;
+}
+
+export function OrderList({ status, orders, onRetry }: OrderListProps) {
+  if (status === "loading") return <p role="status">Loading orders…</p>;
+  if (status === "error") {
+    return (
+      <div role="alert">
+        <p>Orders could not be loaded.</p>
+        <button type="button" onClick={onRetry}>Try again</button>
+      </div>
+    );
+  }
+  if (orders.length === 0) return <p>No orders yet.</p>;
+  return (
+    <ul>
+      {orders.map((order) => (
+        <li key={order.id}>{order.label}</li>
+      ))}
+    </ul>
+  );
+}
+```
+
 ## Adaptation Notes
 
+- Every data-driven view needs loading, empty, error (with a recovery action), and success
+  states; use the framework's loading and error boundaries where they exist.
 - In React 19, pass `ref` as a normal prop (`function Button({ ref, ...props })`) — do not wrap new components in `forwardRef` (`react-patterns.md`).
 - Add `"use client"` directive only if the component genuinely requires client interactivity.
 - Verify focus rings and accessible ARIA attributes (`accessibility-a11y.md`).

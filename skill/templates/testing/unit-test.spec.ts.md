@@ -15,11 +15,15 @@ import { OrderService } from "./OrderService";
 
 describe("calculateOrderTotal", () => {
   it("returns the sum of item prices times quantities", () => {
+    // Arrange
     const items = [
       { price: 10, quantity: 2 },
       { price: 5, quantity: 3 },
     ];
-    expect(calculateOrderTotal(items)).toBe(35);
+    // Act
+    const total = calculateOrderTotal(items);
+    // Assert
+    expect(total).toBe(35);
   });
 
   it("returns 0 for an empty items array", () => {
@@ -66,3 +70,5 @@ describe("OrderService.createOrder", () => {
 - Test names describe expected behavior ("returns 0 for an empty items array"), not implementation details.
 - Mock only at true external system boundaries (database, network APIs) — do not mock the logic under test.
 - Use `beforeEach` to reset mocks explicitly between tests.
+- Control time and randomness instead of depending on them: `vi.useFakeTimers()` with `vi.setSystemTime(new Date("2026-01-01"))` (Jest: `jest.useFakeTimers()`), and inject random or ID generators.
+- For a regression test, run it against the unfixed code first and confirm it fails.

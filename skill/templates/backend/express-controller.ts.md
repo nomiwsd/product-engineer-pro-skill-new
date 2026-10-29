@@ -41,6 +41,15 @@ router.post("/orders", requireAuth, async (req: AuthenticatedRequest, res: Respo
   res.status(201).json(order);
 });
 
+router.get("/orders/:id", requireAuth, async (req: AuthenticatedRequest, res: Response) => {
+  // Scope the lookup to the authenticated owner; never trust an ID alone (prevents IDOR).
+  const order = await findOrderForOwner(req.params.id, req.user.id);
+  if (!order) {
+    return res.status(404).json({ error: { code: "NOT_FOUND", message: "Order not found." } });
+  }
+  res.json(order);
+});
+
 export default router;
 ```
 
@@ -67,4 +76,7 @@ router.post(
 ```
 
 - Register centralized error middleware `(err, req, res, next)` once at the app root level (`express-architecture.md`).
-- Replace `requireAuth` and `createOrder` with the project's actual auth middleware and service modules.
+- Replace `requireAuth`, `createOrder`, and `findOrderForOwner` with the project's actual auth middleware and service modules.
+- Return 404 rather than 403 for another user's record when existence itself is sensitive.
+- Match the project's existing error shape; use RFC 9457 Problem Details for greenfield APIs.
+- Zod 4 also offers top-level format schemas such as `z.uuid()`; use the API of the installed Zod major.
