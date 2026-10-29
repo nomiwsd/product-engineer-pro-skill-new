@@ -183,6 +183,64 @@ test("an unknown command says so and exits non-zero", () => {
   assert.equal(run(repository(), "--help").status, 0);
 });
 
+function snapshotTree(root) {
+  return Object.fromEntries(files(root)
+    .filter((rel) => rel !== STATE)
+    .map((rel) => [rel, readFileSync(join(root, rel), "utf8")]));
+}
+
+test("repeat installs and updates are idempotent for every host", () => {
+  const manifest = JSON.parse(readFileSync(resolve("skill/manifest.json"), "utf8"));
+  for (const host of manifest.hosts) {
+    const root = repository();
+    assert.equal(run(root, "init", "--tool", host.id).status, 0, host.id);
+    const first = snapshotTree(root);
+    const stateFiles = JSON.parse(readFileSync(join(root, STATE), "utf8")).files;
+    for (const args of [["init", "--tool", host.id], ["update"]]) {
+      const result = run(root, ...args);
+      assert.equal(result.status, 0, `${host.id} ${args.join(" ")}: ${result.stdout}`);
+      assert.doesNotMatch(result.stdout, /COLLISION/, host.id);
+      assert.deepEqual(snapshotTree(root), first, `${host.id} changed after ${args.join(" ")}`);
+      assert.deepEqual(JSON.parse(readFileSync(join(root, STATE), "utf8")).files, stateFiles, host.id);
+    }
+  }
+});
+
+test("update and migrate dry runs change nothing", () => {
+  const root = repository();
+  assert.equal(run(root, "init", "--tool", "codex").status, 0);
+  write(root, ".codex/instructions.md", readFileSync(resolve("tests/fixtures/legacy-codex-instructions.md"), "utf8"));
+  const before = files(root).map((rel) => [rel, readFileSync(join(root, rel), "utf8")]);
+  for (const args of [["update", "--dry-run"], ["update", "--dry-run", "--force"], ["migrate", "--dry-run"]]) {
+    assert.equal(run(root, ...args).status, 0, args.join(" "));
+    assert.deepEqual(files(root).map((rel) => [rel, readFileSync(join(root, rel), "utf8")]), before, args.join(" "));
+  }
+});
+
+test("doctor and list-tools JSON keep a stable shape", () => {
+  const root = repository();
+  assert.equal(run(root, "init", "--tool", "claude").status, 0);
+  const doctor = JSON.parse(run(root, "doctor", "--json").stdout);
+  assert.deepEqual(Object.keys(doctor).sort(), ["results", "summary", "tools", "version"]);
+  assert.equal(typeof doctor.version, "string");
+  assert.ok(Array.isArray(doctor.tools));
+  for (const item of doctor.results) assert.deepEqual(Object.keys(item).sort(), ["code", "message", "path", "status"]);
+  for (const [status, count] of Object.entries(doctor.summary)) assert.ok(typeof status === "string" && Number.isInteger(count));
+
+  const list = JSON.parse(run(root, "list-tools", "--json").stdout);
+  assert.deepEqual(Object.keys(list).sort(), ["aliases", "tools", "version"]);
+  for (const tool of list.tools) assert.deepEqual(Object.keys(tool).sort(), ["agents", "commands", "id", "label", "skillRoot", "tier"]);
+});
+
+test("project paths with spaces and non-ASCII characters work", () => {
+  const root = repository("pep matrix ünïcødé ");
+  for (const tool of ["claude", "portable", "aider"]) assert.equal(run(root, "init", "--tool", tool).status, 0, tool);
+  const doctor = run(root, "doctor", "--json");
+  assert.equal(doctor.status, 0);
+  assert.equal(JSON.parse(doctor.stdout).summary.collision, undefined);
+  assert.equal(run(root, "update").status, 0);
+});
+
 test("an inline Aider read value is preserved and reported", () => {
   const root = repository();
   const original = "model: sonnet\nread: [docs/architecture.md]\n";
