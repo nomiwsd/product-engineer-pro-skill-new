@@ -2,7 +2,25 @@
 
 ## [Unreleased]
 
+### Added
+
+- `references/core/operating-rules.md`: the universal rules every workflow applies —
+  constraints (C), engineering defaults (D), editing discipline (ED), evidence (E),
+  versions (V), and lifecycle (L). All rule citations in the skill now resolve to it, and
+  portable and Aider hosts receive the non-negotiable rules directly.
+- Every workflow recipe follows one template: goal, detection, lifecycle behavior, process,
+  version gates, best-practice checklist, evidence required, stop conditions, anti-patterns,
+  output, and references. The validator enforces the template, rule IDs, and that framework
+  versions appear only in version gates.
+
 ### Changed
+
+- The `frontend` recipe no longer assumes Next.js 16, React 19, or Tailwind 4; version-specific
+  APIs are gated on the detected version. Recipes add state coverage, form and client-security
+  checks (frontend), contracts, resilience and logging (backend), rollback and lock safety
+  (database), secure defaults and regression tests (security), and named-metric evidence
+  (performance).
+- Templates show component states, owner-scoped reads, batched backfills, and AAA tests.
 
 - Version snapshot schema 2: every entry records its value, meaning, official source,
   check date, and status. All entries re-verified on 2026-10-29: NestJS 12, MongoDB 9.0,
