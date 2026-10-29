@@ -2,58 +2,79 @@
 
 ## Goal
 
-Assess overall codebase health — quality, security, performance,
-accessibility, SEO — and produce a prioritized findings report without
-making changes.
+Assess codebase health — correctness, security, performance, accessibility, SEO, and data —
+within the scope the user set, and produce a prioritized findings report without making
+changes.
+
+## Detect first
+
+- Stack and versions; state them at the top of the report (V2).
+- The audit surface: the whole repository or the area the user named. Do not expand scope
+  silently.
+
+## Lifecycle behavior
+
+- `plan`: an audit plan (dimensions, scope, method). No edits (L1).
+- `build`: still diagnostic. Audits never edit (rule L2); offer the matching build workflow
+  for chosen findings instead.
+- `review`: the default. A findings report.
 
 ## Process
 
-1. Run `references/core/repo-analysis.md` to detect stack, versions,
-   and conventions. State detected stack explicitly at the top of output.
-2. Determine audit surface: full repo, or a specific area if the user
-   scoped it (e.g., "audit the checkout flow"). Don't silently expand
-   scope beyond what was asked.
-3. Walk each applicable dimension, loading only the relevant reference
-   file per dimension:
-   - Correctness/maintainability → `core/engineering-principles.md`,
-     `core/code-review-checklist.md`
-   - Security → `core/security-owasp.md`, `backend/auth-authz.md` (if
-     auth code present)
-   - Performance → `core/performance-web-vitals.md` + detected frontend
-     stack file (e.g., `frontend/nextjs-architecture.md`)
-   - Accessibility → `core/accessibility-a11y.md` (if UI present)
-   - SEO → `core/seo-technical.md` (if public-facing pages present)
-   - Database → `database/postgresql-design.md` or
-     `database/mongodb-design.md` (if applicable)
-4. For each finding, capture: file/location, severity (per
-   `code-review-checklist.md` taxonomy), standard violated, and a
-   concrete recommended fix — do not implement fixes in this mode.
-5. Deduplicate systemic issues (e.g., "no input validation" appearing in
-   12 route handlers) into one finding with all locations listed, rather
-   than 12 separate findings.
-6. Rank findings by severity, then by blast radius (how many
-   users/paths affected).
+1. Run `references/core/repo-analysis.md`.
+2. Confirm the audit surface.
+3. Walk each applicable dimension, loading only its reference:
+   - Correctness and maintainability → `references/core/engineering-principles.md`,
+     `references/core/code-review-checklist.md`
+   - Security → `references/core/security-owasp.md`, `references/backend/auth-authz.md` (if auth
+     code exists)
+   - Performance → `references/core/performance-web-vitals.md` and the detected frontend
+     reference
+   - Accessibility → `references/core/accessibility-a11y.md` (if UI exists)
+   - SEO → `references/core/seo-technical.md` (if public pages exist)
+   - Data → the detected database reference
+4. For each finding capture location, severity, the standard violated, and a concrete fix (D5).
+5. Merge systemic issues into one finding that lists every location.
+6. Rank by severity, then by blast radius (how many users or paths are affected).
 
-## Checklist
+## Version gates
 
-- [ ] Detected stack and versions stated explicitly.
-- [ ] Scope matches what was actually requested.
-- [ ] Every finding has: location, severity, standard cited, fix
-      recommendation.
-- [ ] Systemic issues deduplicated, not listed per-occurrence.
-- [ ] No code changes made — audit is diagnostic only (rule L2).
-- [ ] Report distinguishes must-fix (Blocker/Major) from optional
-      (Minor/Nit).
+None beyond the loaded stack references; assess code against its detected versions (V4).
 
-## Output Format
+## Best-practice checklist
 
-Use `templates/process/audit-report.md` structure: executive summary,
-findings grouped by severity, appendix with full location list per
-systemic issue. Offer to proceed to `implement`/`refactor`/`security` for
-specific findings — don't auto-continue into fixes.
+- [ ] Detected stack and versions stated.
+- [ ] Scope matches the request.
+- [ ] Every finding has location, severity, standard, and recommended fix.
+- [ ] Systemic issues merged, not repeated per occurrence.
+- [ ] No code changes made.
+- [ ] Must-fix (Blocker, Major) separated from optional (Minor, Nit).
 
-## Related References
+## Evidence required
 
+Locations for every finding (E4). Any tool run (linters, `npm audit`, tests) reported as
+passed, failed, or not run (E2). Measurements only where actually taken (E3).
+
+## Stop conditions
+
+Stop and ask when the requested scope is unclear or too large to audit meaningfully; propose a
+narrower first pass.
+
+## Never
+
+- Fix findings during the audit.
+- List one systemic issue many times.
+- Present unmeasured performance or accessibility scores.
+
+## Output
+
+Use `templates/process/audit-report.md`: executive summary, findings by severity, and an
+appendix of locations per systemic issue. Offer `implement`, `refactor`, or `security` for
+chosen findings without starting them.
+
+## References
+
+- `references/core/operating-rules.md`
 - `references/core/repo-analysis.md`
 - `references/core/code-review-checklist.md`
 - `references/core/security-owasp.md`
