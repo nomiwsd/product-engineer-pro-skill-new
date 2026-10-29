@@ -19,7 +19,8 @@ for (const workflow of manifest.workflows) {
     continue;
   }
   const content = readFileSync(at(path), "utf8");
-  for (const section of ["## Goal", "## Process", "## Checklist"]) if (!content.includes(section)) errors.push(`${path}: missing ${section}`);
+  for (const section of ["## Goal", "## Process"]) if (!content.includes(section)) errors.push(`${path}: missing ${section}`);
+  if (!/^## (Best-practice c|C)hecklist$/m.test(content)) errors.push(`${path}: missing checklist section`);
   if (!content.includes("## Output")) errors.push(`${path}: missing output section`);
 }
 
