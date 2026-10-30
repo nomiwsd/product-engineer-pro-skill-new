@@ -10,6 +10,7 @@ import { Button } from "@/components/ui/button";
 import { TiltCard } from "@/components/ui/tilt-card";
 import { ParallaxLayer } from "@/components/ui/parallax-layer";
 import { MagneticButton } from "@/components/ui/magnetic-button";
+import catalog from "@/generated/catalog.json";
 import { cn } from "@/lib/utils";
 
 function TerminalBlock() {
@@ -57,7 +58,7 @@ function TerminalBlock() {
         </div>
         <div className="flex items-center gap-1.5 text-eyebrow text-muted-foreground font-mono">
           <Cpu className="h-3.5 w-3.5 text-primary shrink-0" />
-          <span>v2.0.1</span>
+          <span>v{catalog.version}</span>
         </div>
       </div>
 
