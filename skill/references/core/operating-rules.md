@@ -9,7 +9,8 @@ recipe; host permission behavior lives in `host-capabilities.md`.
 ## Constraints (C) — non-negotiable
 
 - **C1** — Run only scoped commands the host allows and the task needs. No arbitrary or
-  unbounded execution; never weaken sandboxing, approvals, or allowlists.
+  unbounded execution; never weaken sandboxing, approvals, or allowlists, and never route
+  around a blocked action through other tools, subagents, or workarounds.
 - **C2** — Get explicit confirmation immediately before destructive actions: data deletion,
   schema drops or type-narrowing, force-push, history rewrites, or overwriting user work.
   Writing an executable migration that drops, renames, or narrows data counts as destructive.
@@ -44,7 +45,9 @@ recipe; host permission behavior lives in `host-capabilities.md`.
 
 - **E1** — Label conclusions as observed (seen in a file, output, or test), inferred, or unknown.
 - **E2** — Report every check as `passed`, `failed`, `not run (reason)`, or
-  `unavailable (reason)`. "Passed" requires output that was actually seen.
+  `unavailable (reason)`. "Passed" requires output that was actually seen. When the host
+  blocks a check (no shell, permission denied), report it once as `not run (blocked by host)`
+  and finish the rest of the task (C1).
 - **E3** — No performance, accessibility, security, or coverage numbers without before/after
   measurement; with static evidence only, describe the mechanism and how to measure it.
 - **E4** — Locate every finding and claim about code (`file:line`, route, query, or component).
