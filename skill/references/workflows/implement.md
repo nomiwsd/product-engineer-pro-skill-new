@@ -26,7 +26,9 @@ of every layer it touches, and is verified before it is called done.
    for greenfield, propose current-stable defaults as an assumption and confirm before
    scaffolding broadly (rule D4).
 2. Write the acceptance criteria. Technical gaps → state an assumption and proceed; product or
-   business gaps → ask (rules D4 and D6).
+   business gaps → ask (rules D4 and D6). If the request leaves business rules open (which
+   values, limits, who may use it, how it combines with existing rules), reply with the open
+   questions and proposed defaults the user can accept, and write no code until they answer.
 3. Slice the work vertically so each slice is usable and testable.
 4. Apply the workflow recipe of every layer touched, loading only those:
    - UI → `references/workflows/frontend.md`
@@ -62,8 +64,9 @@ for type check, lint, tests, and build (E2). Residual risks listed (E5).
 
 ## Stop conditions
 
-Stop and ask when acceptance criteria depend on an unresolved product decision, or when the
-feature needs a destructive migration, a new dependency, or a contract break.
+Stop and ask — before writing any code — when acceptance criteria depend on an unresolved
+product decision (for example "add discount codes" with no codes, amounts, or limits given).
+Also stop when the feature needs a destructive migration, a new dependency, or a contract break.
 
 ## Never
 
