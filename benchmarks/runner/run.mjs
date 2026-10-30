@@ -44,7 +44,8 @@ function prepareSkills(work, conditions) {
       const archive = join(work, "v2.0.1.tar");
       const packed = spawnSync("git", ["archive", "--format=tar", "-o", archive, "v2.0.1"], { cwd: REPO, encoding: "utf8" });
       if (packed.status !== 0) throw new Error(`git archive v2.0.1 failed: ${packed.stderr}`);
-      const unpacked = spawnSync("tar", ["-xf", archive, "-C", target], { encoding: "utf8" });
+      // Relative path: GNU tar on Windows reads "E:\..." as a remote host.
+      const unpacked = spawnSync("tar", ["-xf", "../v2.0.1.tar"], { cwd: target, encoding: "utf8" });
       if (unpacked.status !== 0) throw new Error(`tar failed: ${unpacked.stderr}`);
     }
     sources["v2.0.1"] = target;
