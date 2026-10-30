@@ -46,8 +46,8 @@ accessible to keyboard and assistive technology, secure at the client boundary, 
 
 | Detected | Then |
 |---|---|
-| Next.js 15+ | `params`, `searchParams`, `cookies()`, and `headers()` are async; `await` them |
-| Next.js 13–14 App Router | Those APIs are synchronous; do not add `await` |
+| Next.js 13–14 App Router | `params`, `searchParams`, `cookies()`, and `headers()` are synchronous: `cookies().get("region")` — never `await cookies()` or `await params` |
+| Next.js 15+ | The same APIs are async; await them: `(await cookies()).get("region")`, `const { id } = await params` |
 | Pages Router (any version) | `getServerSideProps`/`getStaticProps` and `next/head`; no Server Components |
 | React 19+ | `use`, `useActionState`, `useFormStatus`, `useOptimistic`, and `ref` as a prop are available |
 | React 18 | Use `forwardRef` and `useTransition`; React 19 hooks are unavailable |
