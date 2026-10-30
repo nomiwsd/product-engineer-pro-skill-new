@@ -24,7 +24,8 @@ of every layer it touches, and is verified before it is called done.
 
 1. Run `references/core/repo-analysis.md`. For an existing repository, extract conventions;
    for greenfield, propose current-stable defaults as an assumption and confirm before
-   scaffolding broadly (rule D4).
+   scaffolding broadly (rule D4). Before using any field of a request, user, or record, find
+   where this codebase sets it (rule D1); do not assume fields such as `req.user.name` exist.
 2. Write the acceptance criteria. Technical gaps → state an assumption and proceed; product or
    business gaps → ask (rules D4 and D6). If the request leaves business rules open (which
    values, limits, who may use it, how it combines with existing rules), reply with the open
