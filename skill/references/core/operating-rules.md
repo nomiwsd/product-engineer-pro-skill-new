@@ -12,6 +12,7 @@ recipe; host permission behavior lives in `host-capabilities.md`.
   unbounded execution; never weaken sandboxing, approvals, or allowlists.
 - **C2** — Get explicit confirmation immediately before destructive actions: data deletion,
   schema drops or type-narrowing, force-push, history rewrites, or overwriting user work.
+  Writing an executable migration that drops, renames, or narrows data counts as destructive.
 - **C3** — No fabricated APIs, packages, flags, config keys, file paths, or repository facts.
   Verify against the repository or state the uncertainty.
 - **C4** — No hardcoded secrets or credentials in code, tests, fixtures, logs, or docs. Use the

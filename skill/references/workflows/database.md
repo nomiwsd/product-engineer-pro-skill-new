@@ -41,7 +41,9 @@ deploys stay backward compatible, and destructive steps are never taken silently
 8. Identify personal data; respect retention and deletion requirements and never store secrets
    in plain text.
 9. Flag destructive steps (drop, rename, type-narrowing) separately and require confirmation
-   before finalizing them (C2).
+   before finalizing them (C2). Until the user confirms in this conversation, show the
+   destructive SQL in the reply or write it commented out; do not create an executable
+   migration that drops, renames, or narrows data — even when the request asked for the drop.
 
 ## Version gates
 
