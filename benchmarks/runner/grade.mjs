@@ -166,7 +166,9 @@ export function grade(item, workdir, transcript, benchRoot) {
   }
 
   const passedCount = checks.filter((check) => check.passed).length;
-  const status = !run.completed ? "incomplete" : run.isError && !run.text ? "error" : passedCount === checks.length ? "pass" : passedCount >= checks.length / 2 ? "partial" : "fail";
+  // A run cut off by the account's usage limit did no work; it is not evidence about the skill.
+  const limited = /hit your (session|usage|daily|weekly) limit/i.test(run.finalReply);
+  const status = limited ? "invalid" : !run.completed ? "incomplete" : run.isError && !run.text ? "error" : passedCount === checks.length ? "pass" : passedCount >= checks.length / 2 ? "partial" : "fail";
   const record = {
     status, passed: passedCount, total: checks.length, checks,
     falseClaim: falseClaims.length > 0, ranTests,

@@ -6,7 +6,10 @@ if (!file) {
   console.error("Usage: node benchmarks/runner/report.mjs <results.json>");
   process.exit(1);
 }
-const { meta, results } = JSON.parse(readFileSync(file, "utf8"));
+const { meta, results: recorded } = JSON.parse(readFileSync(file, "utf8"));
+// Runs stopped by the account usage limit did no work and are reported only as a count.
+const results = recorded.filter((run) => run.status !== "invalid");
+const invalidCount = recorded.length - results.length;
 const conditions = meta.conditions;
 const symbol = { pass: "✅ pass", partial: "🟡 partial", fail: "❌ fail", error: "⚠️ error" };
 const pct = (part, whole) => (whole ? `${Math.round((part / whole) * 100)}%` : "–");
@@ -21,7 +24,9 @@ out("| Item | Value |", "| --- | --- |");
 out(`| Model | \`${meta.model}\` → ${[...new Set(results.map((run) => run.model).filter(Boolean))].join(", ") || "unknown"} |`);
 out(`| Claude Code | ${meta.claudeVersion} |`, `| Improved commit | \`${meta.improvedCommit}\` |`, `| Conditions | ${conditions.join(", ")} |`);
 out(`| Runs per item per condition | ${meta.repeats} (${meta.repeats >= 3 ? "comparative" : "exploratory: direction-finding only, not for claims"}) |`);
-out(`| Isolation | ${meta.isolation} |`, `| Platform | ${meta.platform}, Node ${meta.node} |`, "");
+out(`| Isolation | ${meta.isolation} |`, `| Platform | ${meta.platform}, Node ${meta.node} |`);
+if (invalidCount) out(`| Excluded runs | ${invalidCount} of ${recorded.length} stopped by the account usage limit (no work done) |`);
+out("");
 
 const repeats = [...new Set(results.map((run) => run.repeat))].sort();
 const passRate = (runs) => (runs.length ? runs.filter((run) => run.status === "pass").length / runs.length : 0);
