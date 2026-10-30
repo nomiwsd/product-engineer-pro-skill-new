@@ -23,13 +23,17 @@ out(`| Claude Code | ${meta.claudeVersion} |`, `| Improved commit | \`${meta.imp
 out(`| Runs per item per condition | ${meta.repeats} (${meta.repeats >= 3 ? "comparative" : "exploratory: direction-finding only, not for claims"}) |`);
 out(`| Isolation | ${meta.isolation} |`, `| Platform | ${meta.platform}, Node ${meta.node} |`, "");
 
-out("## Summary by condition", "", `| Condition | Cases passed | Cases partial | Task rubric (mean) | False claims | Ran tests | Cost (USD) |`, "| --- | --- | --- | --- | --- | --- | --- |");
+const repeats = [...new Set(results.map((run) => run.repeat))].sort();
+const passRate = (runs) => (runs.length ? runs.filter((run) => run.status === "pass").length / runs.length : 0);
+out("## Summary by condition", "", `| Condition | Cases passed | Spread across repeats | Cases partial | Task rubric (mean) | False claims | Ran tests | Cost (USD) |`, "| --- | --- | --- | --- | --- | --- | --- | --- |");
 for (const condition of conditions) {
   const cases = runsFor(condition, (run) => run.kind === "cases");
   const tasks = runsFor(condition, (run) => run.kind === "tasks" && run.rubric?.weighted != null);
   const all = runsFor(condition);
   const mean = tasks.length ? Math.round(tasks.reduce((sum, run) => sum + run.rubric.weighted, 0) / tasks.length) : "–";
-  out(`| ${condition} | ${cases.filter((run) => run.status === "pass").length}/${cases.length} (${pct(cases.filter((run) => run.status === "pass").length, cases.length)}) | ${cases.filter((run) => run.status === "partial").length} | ${mean} | ${all.filter((run) => run.falseClaim).length} | ${all.filter((run) => run.ranTests).length}/${all.length} | ${all.reduce((sum, run) => sum + (run.costUSD ?? 0), 0).toFixed(2)} |`);
+  const perRepeat = repeats.map((repeat) => passRate(cases.filter((run) => run.repeat === repeat)));
+  const spread = repeats.length > 1 ? `${Math.round(Math.min(...perRepeat) * 100)}–${Math.round(Math.max(...perRepeat) * 100)}%` : "–";
+  out(`| ${condition} | ${cases.filter((run) => run.status === "pass").length}/${cases.length} (${pct(cases.filter((run) => run.status === "pass").length, cases.length)}) | ${spread} | ${cases.filter((run) => run.status === "partial").length} | ${mean} | ${all.filter((run) => run.falseClaim).length} | ${all.filter((run) => run.ranTests).length}/${all.length} | ${all.reduce((sum, run) => sum + (run.costUSD ?? 0), 0).toFixed(2)} |`);
 }
 out("");
 
@@ -62,15 +66,29 @@ if (taskRuns.length) {
   out("");
 }
 
+// Compare conditions per item on the mean outcome across repeats (pass = 3 … error = 0).
+const meanRank = (id, condition) => {
+  const runs = results.filter((run) => run.id === id && run.condition === condition);
+  return runs.length ? runs.reduce((sum, run) => sum + (rank[run.status] ?? 0), 0) / runs.length : null;
+};
+const passes = (id, condition) => {
+  const runs = results.filter((run) => run.id === id && run.condition === condition);
+  return `${runs.filter((run) => run.status === "pass").length}/${runs.length}`;
+};
 const worse = [];
+const better = [];
 for (const id of ids) {
-  const baseline = results.find((run) => run.id === id && run.condition === "baseline");
-  if (!baseline) continue;
+  const baseline = meanRank(id, "baseline");
+  if (baseline == null) continue;
   for (const condition of conditions.filter((name) => name !== "baseline")) {
-    const run = results.find((item) => item.id === id && item.condition === condition);
-    if (run && rank[run.status] < rank[baseline.status]) worse.push(`- \`${id}\`: ${condition} ${run.status} vs baseline ${baseline.status}`);
+    const value = meanRank(id, condition);
+    if (value == null) continue;
+    const line = `- \`${id}\`: ${condition} passed ${passes(id, condition)} vs baseline ${passes(id, "baseline")}`;
+    if (value < baseline) worse.push(line);
+    if (value > baseline && condition === conditions.at(-1)) better.push(line);
   }
 }
+out(`## Where ${conditions.at(-1)} did better than baseline`, "", ...(better.length ? better : ["- None in this run."]), "");
 out("## Where a skill condition did worse than baseline", "", ...(worse.length ? worse : ["- None in this run."]), "");
 
 const failures = results.filter((run) => run.checks?.some((check) => !check.passed));
