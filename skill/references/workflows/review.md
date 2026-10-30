@@ -67,8 +67,22 @@ is incomplete.
 
 ## Output
 
-Summary → findings grouped by severity → verdict (approve or changes requested), following the
-`templates/process/pr-description.md` structure where useful.
+Use exactly this shape. The only severity headings are Blocker, Major, Minor, and Nit; write
+"Critical" or "High" findings under Blocker and "Medium" under Major.
+
+```markdown
+**Verdict:** Changes requested | Approved (changes requested whenever a Blocker exists)
+
+### Blocker
+- `file:line` — what is wrong — standard violated — minimal fix
+
+### Major
+### Minor
+### Nit
+(write "None" under an empty heading)
+
+### What works well
+```
 
 ## References
 

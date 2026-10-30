@@ -69,8 +69,9 @@ narrower first pass.
 ## Output
 
 Use `templates/process/audit-report.md`: executive summary, findings by severity, and an
-appendix of locations per systemic issue. Offer `implement`, `refactor`, or `security` for
-chosen findings without starting them.
+appendix of locations per systemic issue. Group findings under exactly four headings — Blocker,
+Major, Minor, Nit — and write "Critical" or "High" findings under Blocker and "Medium" under
+Major. Offer `implement`, `refactor`, or `security` for chosen findings without starting them.
 
 ## References
 

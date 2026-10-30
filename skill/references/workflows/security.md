@@ -72,7 +72,8 @@ deleting credentials, and when a fix would break a public contract.
 
 ## Output
 
-Group findings by category and severity: location → category → exploit scenario → fix. Use
+Group findings by category and severity (Blocker, Major, Minor, Nit only; "Critical" or "High"
+means Blocker): location → category → exploit scenario → fix. Use
 `templates/process/audit-report.md` for broad audits; lead with the fix diff for a single issue.
 
 ## References
