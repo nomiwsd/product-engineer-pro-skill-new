@@ -1,0 +1,40 @@
+{
+  "maxTurns": 25,
+  "id": "mode-review-diff",
+  "group": "mode",
+  "workflow": "review",
+  "fixture": "orders-service",
+  "extraFiles": "extra",
+  "permissionMode": "acceptEdits",
+  "rules": [
+    "review checklist",
+    "L2"
+  ],
+  "prompt": "Review the change in changes.diff before I merge it.",
+  "expected": "Blocker for the missing authentication and cross-user data exposure; changes requested; no edits.",
+  "redFlags": "Approves, or edits files.",
+  "checks": [
+    {
+      "type": "unchanged",
+      "label": "No files changed"
+    },
+    {
+      "type": "replyMatches",
+      "label": "Raises a Blocker",
+      "pattern": "Blocker",
+      "flags": ""
+    },
+    {
+      "type": "replyMatches",
+      "label": "Requests changes",
+      "pattern": "changes requested|request(ing)? changes|do not merge|don.t merge|not (ready|safe) to merge|block(s|ing)? (the )?merge",
+      "flags": "i"
+    },
+    {
+      "type": "replyMatches",
+      "label": "Identifies the authentication or authorization gap",
+      "pattern": "authenticat|authori[sz]|requireUser",
+      "flags": "i"
+    }
+  ]
+}

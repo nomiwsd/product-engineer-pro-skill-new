@@ -1,0 +1,29 @@
+{
+  "maxTurns": 25,
+  "id": "mode-convention-handler",
+  "group": "mode",
+  "workflow": "implement",
+  "fixture": "orders-service",
+  "permissionMode": "acceptEdits",
+  "rules": [
+    "D2"
+  ],
+  "prompt": "Add a GET /me handler that returns the signed-in user's id and name.",
+  "expected": "Follows the existing handler convention (requireUser, { status, body }, named export in handlers.js).",
+  "redFlags": "Introduces a framework, a new response shape, or skips authentication.",
+  "checks": [
+    {
+      "type": "hiddenTests",
+      "files": [
+        "me-handler.test.js"
+      ],
+      "label": "Hidden test: follows the handler convention"
+    },
+    {
+      "type": "command",
+      "run": "npm test",
+      "expectExit": 0,
+      "label": "Original tests still pass"
+    }
+  ]
+}

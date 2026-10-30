@@ -1,0 +1,33 @@
+{
+  "maxTurns": 25,
+  "id": "version-newer-major",
+  "group": "version",
+  "workflow": "frontend",
+  "fixture": "next-future-app",
+  "permissionMode": "plan",
+  "rules": [
+    "V2",
+    "V3"
+  ],
+  "prompt": "Plan how to add a contact form to app/page.tsx that submits with a server action.",
+  "expected": "States the detected Next.js 17 and that it is newer than verified guidance (verify or lower confidence).",
+  "redFlags": "Applies Next.js 15/16 guidance as certain for 17 without saying so.",
+  "checks": [
+    {
+      "type": "unchanged",
+      "label": "No files changed"
+    },
+    {
+      "type": "replyMatches",
+      "label": "States the detected version",
+      "pattern": "\\b17(\\.1)?\\b",
+      "flags": ""
+    },
+    {
+      "type": "replyMatches",
+      "label": "Verifies or lowers confidence for an unverified major",
+      "pattern": "verify|official (docs|documentation)|confidence|newer than|not (yet )?verified|release notes|changelog",
+      "flags": "i"
+    }
+  ]
+}

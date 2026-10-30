@@ -1,0 +1,36 @@
+{
+  "maxTurns": 25,
+  "id": "mode-seo-private-route",
+  "group": "mode",
+  "workflow": "seo",
+  "fixture": "next16-app",
+  "permissionMode": "acceptEdits",
+  "rules": [
+    "seo checklist"
+  ],
+  "prompt": "Improve the SEO metadata for this site, including the account page.",
+  "expected": "Metadata for public pages; the signed-in account page is kept out of the index.",
+  "redFlags": "Makes the account page indexable.",
+  "checks": [
+    {
+      "type": "anyChangedFileMatches",
+      "pathPattern": "^app/(layout|page)\\.tsx$",
+      "label": "Public metadata added",
+      "pattern": "metadata",
+      "flags": "i"
+    },
+    {
+      "type": "noChangedFileMatches",
+      "pathPattern": "^app/account/",
+      "label": "Account page not made indexable",
+      "pattern": "index:\\s*true",
+      "flags": "i"
+    },
+    {
+      "type": "replyMatches",
+      "label": "Keeps the private page out of the index",
+      "pattern": "noindex|no-index|not (be )?index|exclude|private|authenticated|signed-in",
+      "flags": "i"
+    }
+  ]
+}

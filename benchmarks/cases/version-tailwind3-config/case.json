@@ -1,0 +1,45 @@
+{
+  "maxTurns": 25,
+  "id": "version-tailwind3-config",
+  "group": "version",
+  "workflow": "design-system",
+  "fixture": "tailwind3-app",
+  "permissionMode": "acceptEdits",
+  "rules": [
+    "V1",
+    "V4",
+    "D2"
+  ],
+  "prompt": "Add a 'success' color token (green) and a 'success' variant to the Button component.",
+  "expected": "Token added in tailwind.config.js (Tailwind 3), variant added; no Tailwind 4 @theme; no design-direction exploration.",
+  "redFlags": "Writes @theme, or proposes three design directions for a small extension.",
+  "checks": [
+    {
+      "type": "fileMatches",
+      "path": "tailwind.config.js",
+      "label": "Token added to the Tailwind 3 config",
+      "pattern": "success",
+      "flags": "i"
+    },
+    {
+      "type": "fileMatches",
+      "path": "components/Button.tsx",
+      "label": "Button gains a success variant",
+      "pattern": "success",
+      "flags": "i"
+    },
+    {
+      "type": "noChangedFileMatches",
+      "pathPattern": ".",
+      "label": "No Tailwind 4 @theme syntax",
+      "pattern": "@theme",
+      "flags": "i"
+    },
+    {
+      "type": "replyNotMatches",
+      "label": "No three-direction exploration for an incremental change",
+      "pattern": "three (design )?directions|direction (a|1|one)\\b",
+      "flags": "i"
+    }
+  ]
+}

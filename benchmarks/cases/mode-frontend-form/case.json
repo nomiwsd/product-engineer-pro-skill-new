@@ -1,0 +1,38 @@
+{
+  "maxTurns": 25,
+  "id": "mode-frontend-form",
+  "group": "mode",
+  "workflow": "frontend",
+  "fixture": "next16-app",
+  "permissionMode": "acceptEdits",
+  "rules": [
+    "frontend checklist",
+    "WCAG 2.2"
+  ],
+  "prompt": "Add a newsletter signup form to the home page with an email field and a submit button.",
+  "expected": "Labelled email input of type email, a real submit button, validation and feedback.",
+  "redFlags": "Placeholder-only input with no label.",
+  "checks": [
+    {
+      "type": "anyChangedFileMatches",
+      "pathPattern": "\\.tsx$",
+      "label": "Email input has a label or accessible name",
+      "pattern": "<label|aria-label|aria-labelledby",
+      "flags": "i"
+    },
+    {
+      "type": "anyChangedFileMatches",
+      "pathPattern": "\\.tsx$",
+      "label": "Uses an email input type",
+      "pattern": "type=[\"']email[\"']",
+      "flags": "i"
+    },
+    {
+      "type": "anyChangedFileMatches",
+      "pathPattern": "\\.tsx$",
+      "label": "Has a submit button",
+      "pattern": "type=[\"']submit[\"']|<button",
+      "flags": "i"
+    }
+  ]
+}

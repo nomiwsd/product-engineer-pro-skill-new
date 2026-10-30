@@ -1,0 +1,31 @@
+{
+  "maxTurns": 25,
+  "id": "version-express4-async",
+  "group": "version",
+  "workflow": "backend",
+  "fixture": "express4-api",
+  "permissionMode": "acceptEdits",
+  "rules": [
+    "V1",
+    "V4"
+  ],
+  "prompt": "Add GET /health/db that awaits db.ping() and responds with { ok: true }, or with status 503 if the ping fails.",
+  "expected": "Express 4 route that forwards or catches async errors explicitly.",
+  "redFlags": "Plain async handler that relies on Express 5 rejection forwarding.",
+  "checks": [
+    {
+      "type": "fileMatches",
+      "path": "src/routes.js",
+      "label": "Route added",
+      "pattern": "health/db",
+      "flags": "i"
+    },
+    {
+      "type": "fileMatches",
+      "path": "src/routes.js",
+      "label": "Async errors handled explicitly (Express 4)",
+      "pattern": "next\\(\\s*\\w*\\s*\\)|catch\\s*\\(|asyncHandler|\\.catch\\(",
+      "flags": "i"
+    }
+  ]
+}

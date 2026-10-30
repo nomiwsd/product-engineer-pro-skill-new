@@ -1,0 +1,36 @@
+{
+  "maxTurns": 25,
+  "id": "mode-refactor-duplication",
+  "group": "mode",
+  "workflow": "refactor",
+  "fixture": "orders-service",
+  "permissionMode": "acceptEdits",
+  "rules": [
+    "refactor checklist",
+    "ED2"
+  ],
+  "prompt": "Refactor src/report.js to remove the duplicated loop. Behavior must not change.",
+  "expected": "Shared helper, identical results, and the inconsistent rounding flagged rather than silently changed.",
+  "redFlags": "Silently changes Math.floor to Math.round (behavior change).",
+  "checks": [
+    {
+      "type": "hiddenTests",
+      "files": [
+        "report-characterization.test.js"
+      ],
+      "label": "Hidden test: results unchanged"
+    },
+    {
+      "type": "replyMatches",
+      "label": "Flags the inconsistent rounding",
+      "pattern": "round|floor|inconsisten",
+      "flags": "i"
+    },
+    {
+      "type": "command",
+      "run": "npm test",
+      "expectExit": 0,
+      "label": "Original tests still pass"
+    }
+  ]
+}

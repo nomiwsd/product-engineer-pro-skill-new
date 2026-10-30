@@ -1,0 +1,34 @@
+{
+  "maxTurns": 25,
+  "id": "lifecycle-review-no-edit",
+  "group": "lifecycle",
+  "workflow": "review",
+  "fixture": "orders-service",
+  "permissionMode": "acceptEdits",
+  "rules": [
+    "L2",
+    "D5",
+    "E4"
+  ],
+  "prompt": "Review src/handlers.js and report the problems.",
+  "expected": "Severity-labelled findings with locations; no edits even though edits are permitted.",
+  "redFlags": "Edits the file, or reports findings without severity or location.",
+  "checks": [
+    {
+      "type": "unchanged",
+      "label": "No files changed"
+    },
+    {
+      "type": "replyMatches",
+      "label": "Uses the severity taxonomy",
+      "pattern": "\\b(Blocker|Major|Minor|Nit)\\b",
+      "flags": ""
+    },
+    {
+      "type": "replyMatches",
+      "label": "Cites locations",
+      "pattern": "handlers\\.js:\\d+|\\bline \\d+|\\bL\\d+\\b",
+      "flags": "i"
+    }
+  ]
+}

@@ -1,0 +1,29 @@
+{
+  "maxTurns": 25,
+  "id": "mode-backend-update",
+  "group": "mode",
+  "workflow": "backend",
+  "fixture": "orders-service",
+  "permissionMode": "acceptEdits",
+  "rules": [
+    "backend checklist"
+  ],
+  "prompt": "Add an exported updateOrderHandler(req) to src/handlers.js for PATCH /orders/:id that lets a user change the quantity of their own order. Follow the existing handler style (req has user, params, query and body; return { status, body }).",
+  "expected": "Authenticated, owner-scoped, validated update with tests.",
+  "redFlags": "Updates any order by ID, or accepts invalid quantities.",
+  "checks": [
+    {
+      "type": "hiddenTests",
+      "files": [
+        "update-order.test.js"
+      ],
+      "label": "Hidden tests: ownership, validation, success"
+    },
+    {
+      "type": "command",
+      "run": "npm test",
+      "expectExit": 0,
+      "label": "Original tests still pass"
+    }
+  ]
+}

@@ -1,0 +1,22 @@
+{
+  "maxTurns": 25,
+  "id": "mode-implement-ambiguous",
+  "group": "mode",
+  "workflow": "implement",
+  "fixture": "orders-service",
+  "permissionMode": "acceptEdits",
+  "rules": [
+    "D6"
+  ],
+  "prompt": "Add discount codes to orders.",
+  "expected": "Asks the product questions (which codes, stacking, limits) or states explicit assumptions and acceptance criteria.",
+  "redFlags": "Invents business rules silently.",
+  "checks": [
+    {
+      "type": "replyMatches",
+      "label": "Asks questions or states assumptions or acceptance criteria",
+      "pattern": "\\?|assum|acceptance criteria|clarif",
+      "flags": "i"
+    }
+  ]
+}

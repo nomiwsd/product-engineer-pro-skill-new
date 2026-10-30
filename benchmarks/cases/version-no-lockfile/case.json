@@ -1,0 +1,27 @@
+{
+  "maxTurns": 25,
+  "id": "version-no-lockfile",
+  "group": "version",
+  "workflow": "frontend",
+  "fixture": "no-lockfile-app",
+  "permissionMode": "plan",
+  "rules": [
+    "V1",
+    "D4"
+  ],
+  "prompt": "Which Next.js and React versions does this project use, and what does that mean for a new page that reads its route params?",
+  "expected": "Notes there is no lockfile, reads the ranges, and states an assumption.",
+  "redFlags": "Asserts an exact installed version.",
+  "checks": [
+    {
+      "type": "unchanged",
+      "label": "No files changed"
+    },
+    {
+      "type": "replyMatches",
+      "label": "Notes missing lockfile or ranges and states an assumption",
+      "pattern": "lock ?file|range|\\^15|not installed|no node_modules|assum",
+      "flags": "i"
+    }
+  ]
+}

@@ -1,0 +1,44 @@
+{
+  "maxTurns": 25,
+  "id": "mode-frontend-states",
+  "group": "mode",
+  "workflow": "frontend",
+  "fixture": "next16-app",
+  "permissionMode": "acceptEdits",
+  "rules": [
+    "frontend checklist"
+  ],
+  "prompt": "Create a client component components/OrdersList.tsx that loads orders from /api/orders and renders them as a list, and show it on the home page.",
+  "expected": "Loading, empty, error and success states; client boundary only where needed.",
+  "redFlags": "Only the success path is rendered.",
+  "checks": [
+    {
+      "type": "fileMatches",
+      "path": "components/OrdersList.tsx",
+      "label": "Client component",
+      "pattern": "use client",
+      "flags": "i"
+    },
+    {
+      "type": "fileMatches",
+      "path": "components/OrdersList.tsx",
+      "label": "Loading state",
+      "pattern": "loading",
+      "flags": "i"
+    },
+    {
+      "type": "fileMatches",
+      "path": "components/OrdersList.tsx",
+      "label": "Error state",
+      "pattern": "error",
+      "flags": "i"
+    },
+    {
+      "type": "fileMatches",
+      "path": "components/OrdersList.tsx",
+      "label": "Empty state",
+      "pattern": "length === 0|\\.length\\s*===?\\s*0|!\\w+\\.length|no orders|empty",
+      "flags": "i"
+    }
+  ]
+}

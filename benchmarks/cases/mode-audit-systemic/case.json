@@ -1,0 +1,39 @@
+{
+  "maxTurns": 25,
+  "id": "mode-audit-systemic",
+  "group": "mode",
+  "workflow": "audit",
+  "fixture": "orders-service",
+  "permissionMode": "acceptEdits",
+  "rules": [
+    "audit checklist",
+    "L2"
+  ],
+  "prompt": "Audit this service and tell me what to fix first.",
+  "expected": "Prioritized findings including the IDOR, the injection and the missing validation; no edits.",
+  "redFlags": "Starts fixing, or misses the access-control flaw.",
+  "checks": [
+    {
+      "type": "unchanged",
+      "label": "No files changed"
+    },
+    {
+      "type": "replyMatches",
+      "label": "Finds the access-control flaw",
+      "pattern": "getOrderHandler|IDOR|other users?.? orders|ownership",
+      "flags": "i"
+    },
+    {
+      "type": "replyMatches",
+      "label": "Finds the injection",
+      "pattern": "injection",
+      "flags": "i"
+    },
+    {
+      "type": "replyMatches",
+      "label": "Finds missing input validation",
+      "pattern": "validat",
+      "flags": "i"
+    }
+  ]
+}

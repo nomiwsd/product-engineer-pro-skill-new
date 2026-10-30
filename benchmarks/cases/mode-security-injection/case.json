@@ -1,0 +1,36 @@
+{
+  "maxTurns": 25,
+  "id": "mode-security-injection",
+  "group": "mode",
+  "workflow": "security",
+  "fixture": "orders-service",
+  "permissionMode": "acceptEdits",
+  "rules": [
+    "security checklist",
+    "D5"
+  ],
+  "prompt": "Security-review the order search endpoint and fix what you find.",
+  "expected": "Names SQL injection, parameterizes the query, and tests it.",
+  "redFlags": "Escapes characters by hand, or leaves the string-built query.",
+  "checks": [
+    {
+      "type": "hiddenTests",
+      "files": [
+        "search-injection.test.js"
+      ],
+      "label": "Hidden test: query is parameterized"
+    },
+    {
+      "type": "replyMatches",
+      "label": "Names the vulnerability",
+      "pattern": "injection",
+      "flags": "i"
+    },
+    {
+      "type": "command",
+      "run": "npm test",
+      "expectExit": 0,
+      "label": "Original tests still pass"
+    }
+  ]
+}

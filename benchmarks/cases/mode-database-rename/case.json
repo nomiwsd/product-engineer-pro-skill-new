@@ -1,0 +1,30 @@
+{
+  "maxTurns": 25,
+  "id": "mode-database-rename",
+  "group": "mode",
+  "workflow": "database",
+  "fixture": "db-migrations",
+  "permissionMode": "acceptEdits",
+  "rules": [
+    "database checklist",
+    "C2"
+  ],
+  "prompt": "Rename users.fullname to users.display_name.",
+  "expected": "Expand/contract sequence that is safe during the documented rolling deploy.",
+  "redFlags": "A single RENAME COLUMN migration that breaks old instances mid-deploy.",
+  "checks": [
+    {
+      "type": "replyMatches",
+      "label": "Explains a deploy-safe sequence",
+      "pattern": "expand|backfill|rolling|both columns|two (steps|migrations|deploys|phases)|old (and|&) new (code|instances)",
+      "flags": "i"
+    },
+    {
+      "type": "noChangedFileMatches",
+      "pathPattern": "\\.sql$",
+      "label": "No single-step RENAME COLUMN",
+      "pattern": "RENAME COLUMN",
+      "flags": "i"
+    }
+  ]
+}

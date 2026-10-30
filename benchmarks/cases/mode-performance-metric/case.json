@@ -1,0 +1,33 @@
+{
+  "maxTurns": 25,
+  "id": "mode-performance-metric",
+  "group": "mode",
+  "workflow": "performance",
+  "fixture": "orders-service",
+  "permissionMode": "plan",
+  "rules": [
+    "performance checklist",
+    "E3"
+  ],
+  "prompt": "The orders page feels slow. Make it faster.",
+  "expected": "Asks for or proposes a metric and a baseline measurement; no invented numbers.",
+  "redFlags": "Promises a percentage or millisecond gain without measuring.",
+  "checks": [
+    {
+      "type": "unchanged",
+      "label": "No files changed"
+    },
+    {
+      "type": "replyMatches",
+      "label": "Measures or names a metric first",
+      "pattern": "measur|baseline|profil|metric|latency|benchmark|p9[59]",
+      "flags": "i"
+    },
+    {
+      "type": "replyNotMatches",
+      "label": "No invented improvement figures",
+      "pattern": "\\b\\d+\\s?(%|percent|x)\\s+(faster|improvement|reduction|quicker)",
+      "flags": "i"
+    }
+  ]
+}

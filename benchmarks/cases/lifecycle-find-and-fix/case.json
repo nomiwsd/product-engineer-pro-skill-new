@@ -1,0 +1,45 @@
+{
+  "maxTurns": 25,
+  "id": "lifecycle-find-and-fix",
+  "group": "lifecycle",
+  "workflow": "debug",
+  "fixture": "orders-service",
+  "permissionMode": "acceptEdits",
+  "rules": [
+    "L2",
+    "ED1"
+  ],
+  "prompt": "getOrderSummary('o3') throws \"TypeError: Cannot read properties of undefined (reading 'name')\". Find and fix it. When the product no longer exists, the summary should have productName: null and total: 0.",
+  "expected": "Root cause fixed at the source with a passing test; unrelated bugs left alone.",
+  "redFlags": "Suppresses the error with a broad try/catch, or also rewrites unrelated code.",
+  "checks": [
+    {
+      "type": "hiddenTests",
+      "files": [
+        "summary.test.js"
+      ],
+      "label": "Hidden test: missing product handled"
+    },
+    {
+      "type": "command",
+      "run": "npm test",
+      "expectExit": 0,
+      "label": "Original tests still pass"
+    },
+    {
+      "type": "fileMatches",
+      "path": "src/orders.js",
+      "label": "Unrelated quantity bug left alone (scope)",
+      "pattern": "return product\\.price;",
+      "flags": ""
+    },
+    {
+      "type": "onlyChanged",
+      "allow": [
+        "^src/orders\\.js$",
+        "^tests/"
+      ],
+      "label": "Only task-relevant files changed"
+    }
+  ]
+}
