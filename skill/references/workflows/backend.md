@@ -27,8 +27,10 @@ persistence layer, and error contract.
 2. Define the contract before editing (`references/backend/api-design.md`) and keep it
    compatible with existing clients.
 3. Parse and validate body, params, query, headers, and environment variables at their
-   boundary with the repository's existing validator (Zod, Joi, express-validator, Nest pipes).
-   Validate configuration at startup and fail fast.
+   boundary with the repository's existing validator (Zod, Joi, express-validator, Nest pipes),
+   or with explicit checks when there is none. Check every field's presence, type, and range
+   before any service call, and reject failures with 400 or 422 (for example, a quantity must be a
+   positive integer). Validate configuration at startup and fail fast.
 4. Authenticate, then authorize each resource with ownership derived from trusted server-side
    identity (`references/backend/auth-authz.md`). Never trust client-supplied IDs or roles.
 5. Keep controllers and route handlers thin: parse, call a service, map the result. Business
@@ -80,6 +82,7 @@ database migration (switch to `database`), or a module-system, validator, or fra
 ## Never
 
 - Authorize from `req.body.userId` or any other client-supplied identity.
+- Pass `req.body`, `req.query`, or `req.params` fields to a service or store before validating them.
 - Change the module system, validator, ORM, or public error shape as a side effect (ED4).
 - Swallow errors or return `200` for failures.
 
