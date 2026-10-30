@@ -66,11 +66,13 @@ analysis, or when the fix would change observable behavior.
 - Claim a percentage or millisecond gain from reasoning alone.
 - Add caching that can serve stale or another user's data without saying so.
 - Optimize code that is not on the measured hot path.
+- Rank impact as High, Medium, or Low without a measurement; describe the mechanism instead.
 
 ## Output
 
-Target metric and baseline first, then the fix (or plan), the after-measurement or
-verification method, and any trade-off.
+The first line names the target metric and its measured baseline, or says that no measurement
+exists yet and gives the exact command or tool to take one. Then the fix (or plan), the
+after-measurement or verification method, and any trade-off.
 
 ## References
 
