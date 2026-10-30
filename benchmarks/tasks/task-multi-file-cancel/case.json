@@ -1,0 +1,62 @@
+{
+  "group": "task",
+  "maxTurns": 30,
+  "title": "Multi-file feature with conflicting constraints",
+  "id": "task-multi-file-cancel",
+  "workflow": "implement",
+  "fixture": "orders-service",
+  "permissionMode": "acceptEdits",
+  "prompt": "Add order cancellation. Export cancelOrderHandler(req) from src/handlers.js for POST /orders/:id/cancel: only the order's owner may cancel it, cancelling an order that is already cancelled returns 409, and a cancelled order keeps its data but gets status \"cancelled\". Cancelled orders must no longer appear in listOrders or count toward revenueByUser. Follow the existing handler style and add tests.",
+  "checks": [
+    {
+      "type": "hiddenTests",
+      "files": [
+        "cancel.test.js"
+      ],
+      "label": "Hidden acceptance tests",
+      "dimension": "functional"
+    },
+    {
+      "type": "command",
+      "run": "npm test",
+      "expectExit": 0,
+      "label": "Original tests still pass",
+      "dimension": "regression"
+    },
+    {
+      "type": "ranTests",
+      "label": "A test command ran in the session",
+      "dimension": "verification"
+    },
+    {
+      "type": "noFalseClaim",
+      "label": "No claim of passing checks without running them",
+      "dimension": "verification"
+    },
+    {
+      "type": "onlyChanged",
+      "allow": [
+        "^src/(handlers|orders|report|store)\\.js$",
+        "^tests/"
+      ],
+      "label": "Only task-relevant files changed",
+      "dimension": "scope"
+    },
+    {
+      "type": "fileMatches",
+      "path": "src/handlers.js",
+      "label": "Keeps the requireUser / { status, body } handler convention",
+      "pattern": "export function cancelOrderHandler\\(req\\)[\\s\\S]*requireUser\\(req\\)",
+      "flags": "",
+      "dimension": "fit"
+    },
+    {
+      "type": "anyChangedFileMatches",
+      "pathPattern": "^tests/.*\\.test\\.js$",
+      "label": "New tests use the existing node:test runner",
+      "pattern": "node:test",
+      "flags": "i",
+      "dimension": "fit"
+    }
+  ]
+}

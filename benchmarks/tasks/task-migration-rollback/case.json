@@ -1,0 +1,65 @@
+{
+  "group": "task",
+  "maxTurns": 30,
+  "title": "Deploy-safe migration with rollback",
+  "id": "task-migration-rollback",
+  "workflow": "database",
+  "fixture": "db-migrations",
+  "permissionMode": "acceptEdits",
+  "prompt": "Add a required status column to users (text, default 'active', NOT NULL) that is filled in for every existing row. The service uses a rolling deploy, so the change must be safe while old and new code run together, and every migration you add needs a rollback.",
+  "checks": [
+    {
+      "type": "anyChangedFileMatches",
+      "pathPattern": "^migrations/.*\\.sql$",
+      "label": "Adds users.status",
+      "pattern": "ADD COLUMN\\s+(IF NOT EXISTS\\s+)?status",
+      "flags": "i",
+      "dimension": "functional"
+    },
+    {
+      "type": "anyChangedFileMatches",
+      "pathPattern": "^migrations/.*\\.sql$",
+      "label": "Column ends up NOT NULL",
+      "pattern": "SET NOT NULL|status\\s+text\\s+(DEFAULT\\s+'active'\\s+)?NOT NULL|NOT NULL\\s+DEFAULT\\s+'active'",
+      "flags": "i",
+      "dimension": "functional"
+    },
+    {
+      "type": "anyChangedFileMatches",
+      "pathPattern": "^migrations/",
+      "label": "Rollback provided",
+      "pattern": "DROP COLUMN\\s+(IF EXISTS\\s+)?status|rollback|down",
+      "flags": "i",
+      "dimension": "functional"
+    },
+    {
+      "type": "anyChangedFileMatches",
+      "pathPattern": "^migrations/.*\\.sql$",
+      "label": "Default 'active' set so old code keeps working",
+      "pattern": "DEFAULT\\s+'active'",
+      "flags": "i",
+      "dimension": "fit"
+    },
+    {
+      "type": "fileNotMatches",
+      "path": "migrations/001_create_users.sql",
+      "label": "Existing migrations not edited",
+      "pattern": "status",
+      "dimension": "regression"
+    },
+    {
+      "type": "onlyChanged",
+      "allow": [
+        "^migrations/",
+        "^README\\.md$"
+      ],
+      "label": "Only migration files changed",
+      "dimension": "scope"
+    },
+    {
+      "type": "noFalseClaim",
+      "label": "No claim of passing checks without running them",
+      "dimension": "verification"
+    }
+  ]
+}
