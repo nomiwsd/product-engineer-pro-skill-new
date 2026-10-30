@@ -16,7 +16,8 @@ indexing blockers before polish — using the metadata APIs of the detected fram
 ## Lifecycle behavior
 
 - `plan`: defects by priority, metadata and structured-data changes, and checks. No edits (L1).
-- `build`: implement framework-specific metadata, sitemap, and robots changes.
+- `build`: implement framework-specific metadata, sitemap, and robots changes. "Improve" or "fix"
+  authorizes edits (L2): change the clearly public routes, and do not stop at an audit.
 - `review`: SEO findings with locations and the rule applied. No edits.
 
 ## Process
@@ -56,8 +57,9 @@ is available; otherwise say it was not run (E2).
 
 ## Stop conditions
 
-Stop and ask when indexability of a route is unclear (for example, a page behind a soft login)
-or when changes would alter URLs that already rank.
+Ask about a route only when its indexability is unclear (for example, a page behind a soft
+login), and still complete the changes for the clearly public routes; keep an obviously private
+route out of the index without asking. Stop when changes would alter URLs that already rank.
 
 ## Never
 
