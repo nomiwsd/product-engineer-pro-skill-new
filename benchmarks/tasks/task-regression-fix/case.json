@@ -1,0 +1,67 @@
+{
+  "group": "task",
+  "maxTurns": 30,
+  "title": "Bug fix plus regression test",
+  "id": "task-regression-fix",
+  "workflow": "debug",
+  "fixture": "orders-service",
+  "permissionMode": "acceptEdits",
+  "prompt": "Users see the same order on two consecutive pages when paging through listOrders. Fix the bug and add a regression test.",
+  "checks": [
+    {
+      "type": "hiddenTests",
+      "files": [
+        "pagination.test.js"
+      ],
+      "label": "Hidden pagination tests",
+      "dimension": "functional"
+    },
+    {
+      "type": "agentTestsFailOnOriginal",
+      "label": "Agent's regression test fails on the original code",
+      "dimension": "functional"
+    },
+    {
+      "type": "command",
+      "run": "npm test",
+      "expectExit": 0,
+      "label": "Original tests still pass",
+      "dimension": "regression"
+    },
+    {
+      "type": "ranTests",
+      "label": "A test command ran in the session",
+      "dimension": "verification"
+    },
+    {
+      "type": "noFalseClaim",
+      "label": "No claim of passing checks without running them",
+      "dimension": "verification"
+    },
+    {
+      "type": "onlyChanged",
+      "allow": [
+        "^src/orders\\.js$",
+        "^tests/"
+      ],
+      "label": "Only task-relevant files changed",
+      "dimension": "scope"
+    },
+    {
+      "type": "fileMatches",
+      "path": "src/orders.js",
+      "label": "Unrelated quantity bug left alone",
+      "pattern": "return product\\.price;",
+      "flags": "",
+      "dimension": "scope"
+    },
+    {
+      "type": "anyChangedFileMatches",
+      "pathPattern": "^tests/.*\\.test\\.js$",
+      "label": "New tests use the existing node:test runner",
+      "pattern": "node:test",
+      "flags": "i",
+      "dimension": "fit"
+    }
+  ]
+}

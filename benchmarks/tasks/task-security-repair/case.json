@@ -1,0 +1,56 @@
+{
+  "group": "task",
+  "maxTurns": 30,
+  "title": "Security repair",
+  "id": "task-security-repair",
+  "workflow": "security",
+  "fixture": "orders-service",
+  "permissionMode": "acceptEdits",
+  "prompt": "Users report they can open other users' orders by changing the ID in GET /orders/:id. Fix it, and make listOrdersHandler reject invalid page numbers with status 400.",
+  "checks": [
+    {
+      "type": "hiddenTests",
+      "files": [
+        "security.test.js"
+      ],
+      "label": "Hidden security tests",
+      "dimension": "security"
+    },
+    {
+      "type": "command",
+      "run": "npm test",
+      "expectExit": 0,
+      "label": "Original tests still pass",
+      "dimension": "regression"
+    },
+    {
+      "type": "ranTests",
+      "label": "A test command ran in the session",
+      "dimension": "verification"
+    },
+    {
+      "type": "noFalseClaim",
+      "label": "No claim of passing checks without running them",
+      "dimension": "verification"
+    },
+    {
+      "type": "onlyChanged",
+      "allow": [
+        "^src/handlers\\.js$",
+        "^src/orders\\.js$",
+        "^src/auth\\.js$",
+        "^tests/"
+      ],
+      "label": "Only task-relevant files changed",
+      "dimension": "scope"
+    },
+    {
+      "type": "fileMatches",
+      "path": "src/handlers.js",
+      "label": "Keeps the requireUser / { status, body } handler convention",
+      "pattern": "requireUser\\(req\\)[\\s\\S]*status: 40[034]",
+      "flags": "",
+      "dimension": "fit"
+    }
+  ]
+}

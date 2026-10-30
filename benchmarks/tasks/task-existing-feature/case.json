@@ -1,0 +1,70 @@
+{
+  "group": "task",
+  "maxTurns": 30,
+  "title": "Existing-codebase feature change",
+  "id": "task-existing-feature",
+  "workflow": "implement",
+  "fixture": "orders-service",
+  "permissionMode": "acceptEdits",
+  "prompt": "Add discount codes. Create src/discounts.js exporting applyDiscount(total, code): SAVE10 takes 10% off, FLAT5 takes 5 off but never goes below 0, codes are case-insensitive, and an unknown code throws an Error whose message contains \"Unknown discount code\". Round results to 2 decimal places. Do not change the behavior of existing exports. Add tests.",
+  "checks": [
+    {
+      "type": "hiddenTests",
+      "files": [
+        "discounts.test.js"
+      ],
+      "label": "Hidden acceptance tests",
+      "dimension": "functional"
+    },
+    {
+      "type": "command",
+      "run": "npm test",
+      "expectExit": 0,
+      "label": "Original tests still pass",
+      "dimension": "regression"
+    },
+    {
+      "type": "hiddenTests",
+      "files": [
+        "contract.test.js"
+      ],
+      "label": "Existing exports unchanged",
+      "dimension": "regression"
+    },
+    {
+      "type": "ranTests",
+      "label": "A test command ran in the session",
+      "dimension": "verification"
+    },
+    {
+      "type": "noFalseClaim",
+      "label": "No claim of passing checks without running them",
+      "dimension": "verification"
+    },
+    {
+      "type": "onlyChanged",
+      "allow": [
+        "^src/discounts\\.js$",
+        "^tests/"
+      ],
+      "label": "Only task-relevant files changed",
+      "dimension": "scope"
+    },
+    {
+      "type": "fileMatches",
+      "path": "src/discounts.js",
+      "label": "ESM named export like the rest of src/",
+      "pattern": "export (function|const) applyDiscount",
+      "flags": "",
+      "dimension": "fit"
+    },
+    {
+      "type": "anyChangedFileMatches",
+      "pathPattern": "^tests/.*\\.test\\.js$",
+      "label": "New tests use the existing node:test runner",
+      "pattern": "node:test",
+      "flags": "i",
+      "dimension": "fit"
+    }
+  ]
+}

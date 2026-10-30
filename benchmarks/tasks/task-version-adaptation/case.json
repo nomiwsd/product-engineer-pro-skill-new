@@ -1,0 +1,95 @@
+{
+  "group": "task",
+  "maxTurns": 30,
+  "title": "Framework-version adaptation",
+  "id": "task-version-adaptation",
+  "workflow": "frontend",
+  "permissionMode": "acceptEdits",
+  "prompt": "Add a page at app/orders/[id]/page.tsx that shows \"Order <id>\" using the route parameter, and the value of the region cookie.",
+  "variants": [
+    {
+      "fixture": "next14-app",
+      "checks": [
+        {
+          "type": "anyChangedFileMatches",
+          "pathPattern": "^app/orders/\\[id\\]/page\\.(t|j)sx?$",
+          "label": "Page renders the id and reads the cookie",
+          "pattern": "cookies\\(\\)[\\s\\S]*region|region[\\s\\S]*cookies\\(\\)",
+          "flags": "i",
+          "dimension": "functional"
+        },
+        {
+          "type": "noChangedFileMatches",
+          "pathPattern": "^app/orders/\\[id\\]/page\\.(t|j)sx?$",
+          "label": "Next 14: params not treated as a Promise",
+          "pattern": "await\\s+params|use\\(\\s*params\\s*\\)|Promise<\\s*\\{",
+          "flags": "",
+          "dimension": "fit"
+        },
+        {
+          "type": "noChangedFileMatches",
+          "pathPattern": "^app/orders/\\[id\\]/page\\.(t|j)sx?$",
+          "label": "Next 14: cookies() not awaited",
+          "pattern": "await\\s+cookies\\(\\)",
+          "flags": "",
+          "dimension": "fit"
+        },
+        {
+          "type": "onlyChanged",
+          "allow": [
+            "^app/orders/"
+          ],
+          "label": "Only task-relevant files changed",
+          "dimension": "scope"
+        },
+        {
+          "type": "noFalseClaim",
+          "label": "No claim of passing checks without running them",
+          "dimension": "verification"
+        }
+      ]
+    },
+    {
+      "fixture": "next16-app",
+      "checks": [
+        {
+          "type": "anyChangedFileMatches",
+          "pathPattern": "^app/orders/\\[id\\]/page\\.(t|j)sx?$",
+          "label": "Page renders the id and reads the cookie",
+          "pattern": "cookies\\(\\)[\\s\\S]*region|region[\\s\\S]*cookies\\(\\)",
+          "flags": "i",
+          "dimension": "functional"
+        },
+        {
+          "type": "anyChangedFileMatches",
+          "pathPattern": "^app/orders/\\[id\\]/page\\.(t|j)sx?$",
+          "label": "Next 15+: params awaited",
+          "pattern": "await\\s+params|use\\(\\s*params\\s*\\)",
+          "flags": "",
+          "dimension": "fit"
+        },
+        {
+          "type": "anyChangedFileMatches",
+          "pathPattern": "^app/orders/\\[id\\]/page\\.(t|j)sx?$",
+          "label": "Next 15+: cookies() awaited",
+          "pattern": "await\\s+cookies\\(\\)",
+          "flags": "",
+          "dimension": "fit"
+        },
+        {
+          "type": "onlyChanged",
+          "allow": [
+            "^app/orders/"
+          ],
+          "label": "Only task-relevant files changed",
+          "dimension": "scope"
+        },
+        {
+          "type": "noFalseClaim",
+          "label": "No claim of passing checks without running them",
+          "dimension": "verification"
+        }
+      ]
+    }
+  ]
+}
