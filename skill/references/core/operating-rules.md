@@ -56,8 +56,9 @@ recipe; host permission behavior lives in `host-capabilities.md`.
   `package.json` range, then `version-snapshot.json`. Never assume the newest version.
 - **V2** — State the detected versions of the stack you touch at the top of plan, audit, and
   review output.
-- **V3** — If a detected major is newer than the snapshot, consult official documentation when
-  the host allows it; otherwise state reduced confidence and why.
+- **V3** — If a detected major is newer than the snapshot, say so in the first lines of the
+  reply, consult official documentation when the host allows it, and otherwise state reduced
+  confidence and why.
 - **V4** — Apply a version-specific API or idiom only after confirming the installed version
   supports it; recipes keep these in their "Version gates" section.
 

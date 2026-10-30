@@ -10,6 +10,8 @@ accessible to keyboard and assistive technology, secure at the client boundary, 
 
 - Framework and router: Next.js App Router (`app/`) vs Pages Router (`pages/`), or another React
   setup. Read installed React, Next.js, TypeScript, and Tailwind versions from the lockfile (V1).
+- Compare each detected major with `references/version-snapshot.json`. If one is newer, say so in
+  the first lines of the reply and mark version-specific advice as unverified (V3).
 - Component library (`components.json` for shadcn/ui), token source, theme mechanism, data
   fetching and caching approach, form library, test runner, and i18n setup.
 - The convention already used for similar components; match it (D2).
@@ -48,6 +50,7 @@ accessible to keyboard and assistive technology, secure at the client boundary, 
 |---|---|
 | Next.js 13–14 App Router | `params`, `searchParams`, `cookies()`, and `headers()` are synchronous: `cookies().get("region")` — never `await cookies()` or `await params` |
 | Next.js 15+ | The same APIs are async; await them: `(await cookies()).get("region")`, `const { id } = await params` |
+| Any major newer than the snapshot | State the detected version first; verify with official docs or label the advice unverified |
 | Pages Router (any version) | `getServerSideProps`/`getStaticProps` and `next/head`; no Server Components |
 | React 19+ | `use`, `useActionState`, `useFormStatus`, `useOptimistic`, and `ref` as a prop are available |
 | React 18 | Use `forwardRef` and `useTransition`; React 19 hooks are unavailable |
