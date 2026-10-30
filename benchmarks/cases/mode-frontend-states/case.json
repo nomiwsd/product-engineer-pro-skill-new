@@ -15,27 +15,34 @@
     {
       "type": "fileMatches",
       "path": "components/OrdersList.tsx",
+      "label": "Created at the requested path",
+      "pattern": ".",
+      "flags": ""
+    },
+    {
+      "type": "anyChangedFileMatches",
+      "pathPattern": "OrdersList\\.tsx$",
       "label": "Client component",
       "pattern": "use client",
       "flags": "i"
     },
     {
-      "type": "fileMatches",
-      "path": "components/OrdersList.tsx",
+      "type": "anyChangedFileMatches",
+      "pathPattern": "OrdersList\\.tsx$",
       "label": "Loading state",
       "pattern": "loading",
       "flags": "i"
     },
     {
-      "type": "fileMatches",
-      "path": "components/OrdersList.tsx",
+      "type": "anyChangedFileMatches",
+      "pathPattern": "OrdersList\\.tsx$",
       "label": "Error state",
       "pattern": "error",
       "flags": "i"
     },
     {
-      "type": "fileMatches",
-      "path": "components/OrdersList.tsx",
+      "type": "anyChangedFileMatches",
+      "pathPattern": "OrdersList\\.tsx$",
       "label": "Empty state",
       "pattern": "length === 0|\\.length\\s*===?\\s*0|!\\w+\\.length|no orders|empty",
       "flags": "i"

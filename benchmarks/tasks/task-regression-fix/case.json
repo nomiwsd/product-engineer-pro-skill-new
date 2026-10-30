@@ -48,11 +48,11 @@
       "dimension": "scope"
     },
     {
-      "type": "fileMatches",
-      "path": "src/orders.js",
+      "type": "hiddenTests",
+      "files": [
+        "quantity-untouched.test.js"
+      ],
       "label": "Unrelated quantity bug left alone",
-      "pattern": "return product\\.price;",
-      "flags": "",
       "dimension": "scope"
     },
     {

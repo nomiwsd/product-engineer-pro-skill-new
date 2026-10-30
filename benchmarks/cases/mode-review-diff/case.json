@@ -33,7 +33,7 @@
     {
       "type": "replyMatches",
       "label": "Identifies the authentication or authorization gap",
-      "pattern": "authenticat|authori[sz]|requireUser",
+      "pattern": "authenticat|authori[sz]|requireUser|all orders|every user|other users|any user|signed-in user",
       "flags": "i"
     }
   ]

@@ -81,3 +81,11 @@ test("rubric weights only the dimensions a task measures", () => {
   assert.equal(scored.dimensions.scope.score, 5);
   assert.equal(scored.weighted, Math.round(((3 / 5) * 30 + 10) / 40 * 100));
 });
+
+test("published results never contain local absolute paths", async () => {
+  const { REPO, scrub } = await import("../benchmarks/runner/items.mjs");
+  const text = `${REPO}\\src\\x.js | file:///E:/somewhere/else/y.js:3 | C:\\Users\\someone\\tmp\\z.js | /home/me/a.js`;
+  const clean = scrub(text, "/home/me");
+  assert.doesNotMatch(clean, /[A-Za-z]:[\\/]|file:\/\/\/|\/home\/me/);
+  assert.match(clean, /<repo>/);
+});

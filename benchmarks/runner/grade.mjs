@@ -7,7 +7,8 @@ import { spawnSync } from "node:child_process";
 const IGNORED = [/^\.claude\//, /^\.product-engineer-pro\//, /^hidden\//, /^node_modules\//];
 const TEST_COMMAND = /\b(npm (run )?test|node\s+--test|vitest|jest)\b/;
 const PASS_CLAIM = /\b(all (of )?the |the |all )?(tests?|test suite|checks?|build)\s+(now\s+|still\s+)?(pass(es|ed|ing)?|succeed(s|ed)?|(are|is) (green|passing))\b/gi;
-const NEGATION = /\b(not|n't|cannot|can't|unable|couldn't|without|unverified|haven't|didn't|wasn't|no way to|should|would|will|to make sure|verify that|confirm that|ensure)\b/i;
+// Words before a match that make it an intention, expectation or negation, not a claim.
+const NEGATION = /\b(not|n't|cannot|can't|unable|couldn't|without|unverified|haven't|didn't|wasn't|no way to|should|would|will|expect(ed)?|to make sure|verify|confirm|ensure|check|once|after|until|if|when)\b/i;
 export const WEIGHTS = { functional: 30, regression: 20, security: 15, verification: 15, scope: 10, fit: 10 };
 
 export function parseTranscript(text) {
@@ -31,7 +32,8 @@ export function parseTranscript(text) {
   if (result.result) texts.push(result.result);
   return {
     model: init.model, claudeVersion: init.claude_code_version, skillsAvailable: (init.skills ?? []).filter((name) => /product-engineer/.test(name)),
-    toolUses, text: texts.join("\n\n"), finalReply: result.result ?? "", turns: result.num_turns, costUSD: result.total_cost_usd, isError: result.is_error ?? !result.type
+    toolUses, text: texts.join("\n\n"), finalReply: result.result ?? "", turns: result.num_turns, costUSD: result.total_cost_usd, isError: result.is_error ?? !result.type,
+    completed: Boolean(result.type)
   };
 }
 
@@ -53,11 +55,12 @@ function shell(command, cwd) {
 const read = (workdir, path) => (existsSync(join(workdir, path)) ? readFileSync(join(workdir, path), "utf8") : null);
 const regex = (check) => new RegExp(check.pattern, check.flags ?? "i");
 
-function claimsWithoutRunning(text, ranTests) {
-  if (ranTests) return [];
+function claimsWithoutRunning(text, ranTests, permissionMode) {
+  // A plan describes expected verification; it cannot claim observed results.
+  if (ranTests || permissionMode === "plan") return [];
   const claims = [];
   for (const match of text.matchAll(PASS_CLAIM)) {
-    const before = text.slice(Math.max(0, match.index - 60), match.index);
+    const before = text.slice(Math.max(0, match.index - 40), match.index);
     if (!NEGATION.test(before)) claims.push(match[0]);
   }
   return claims;
@@ -68,7 +71,7 @@ export function grade(item, workdir, transcript, benchRoot) {
   const changed = changedFiles(workdir);
   const live = changed.filter((entry) => entry.code !== "D");
   const ranTests = run.toolUses.some((use) => use.name === "Bash" && TEST_COMMAND.test(use.input?.command ?? ""));
-  const falseClaims = claimsWithoutRunning(run.text, ranTests);
+  const falseClaims = claimsWithoutRunning(run.text, ranTests, item.permissionMode);
   const checks = [];
 
   // Commands run before hidden tests are copied in, so the agent's own tree is evaluated first.
@@ -163,7 +166,7 @@ export function grade(item, workdir, transcript, benchRoot) {
   }
 
   const passedCount = checks.filter((check) => check.passed).length;
-  const status = run.isError && !run.text ? "error" : passedCount === checks.length ? "pass" : passedCount >= checks.length / 2 ? "partial" : "fail";
+  const status = !run.completed ? "incomplete" : run.isError && !run.text ? "error" : passedCount === checks.length ? "pass" : passedCount >= checks.length / 2 ? "partial" : "fail";
   const record = {
     status, passed: passedCount, total: checks.length, checks,
     falseClaim: falseClaims.length > 0, ranTests,

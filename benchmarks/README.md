@@ -65,7 +65,13 @@ node benchmarks/runner/run.mjs --list                          # show cases and 
 node benchmarks/runner/run.mjs --only lifecycle-plan-no-edit --conditions improved
 node benchmarks/runner/run.mjs --conditions baseline,v2.0.1,improved --concurrency 4
 node benchmarks/runner/report.mjs benchmarks/results/<date>-run.json
+node benchmarks/runner/regrade.mjs benchmarks/results/<date>-run.json "why checks changed"
 ```
+
+`regrade.mjs` re-applies the current checks to a finished run's saved transcripts and work
+folders without running the agent again. Use it only to correct a check that manual review
+proved wrong, record why in the note, and keep the original results file next to the
+re-graded one. Local absolute paths are removed from every published result file.
 
 Raw transcripts are written to `benchmarks/results/raw/` (git-ignored); the summarized JSON and
 Markdown reports are committed. Record each run with [run-log-template.md](run-log-template.md).

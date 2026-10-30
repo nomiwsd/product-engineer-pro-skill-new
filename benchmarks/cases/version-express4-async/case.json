@@ -24,7 +24,7 @@
       "type": "fileMatches",
       "path": "src/routes.js",
       "label": "Async errors handled explicitly (Express 4)",
-      "pattern": "next\\(\\s*\\w*\\s*\\)|catch\\s*\\(|asyncHandler|\\.catch\\(",
+      "pattern": "next\\(\\s*\\w*\\s*\\)|catch\\s*[({]|asyncHandler|\\.catch\\(",
       "flags": "i"
     }
   ]

@@ -27,11 +27,11 @@
       "label": "Original tests still pass"
     },
     {
-      "type": "fileMatches",
-      "path": "src/orders.js",
-      "label": "Unrelated quantity bug left alone (scope)",
-      "pattern": "return product\\.price;",
-      "flags": ""
+      "type": "hiddenTests",
+      "files": [
+        "quantity-untouched.test.js"
+      ],
+      "label": "Unrelated quantity bug left alone (scope)"
     },
     {
       "type": "onlyChanged",

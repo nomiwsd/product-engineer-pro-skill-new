@@ -30,11 +30,11 @@
       "label": "Original tests still pass"
     },
     {
-      "type": "fileMatches",
-      "path": "src/orders.js",
-      "label": "Unrelated pagination bug left alone (scope)",
-      "pattern": "pageSize \\+ 1",
-      "flags": ""
+      "type": "hiddenTests",
+      "files": [
+        "pagination-untouched.test.js"
+      ],
+      "label": "Unrelated pagination bug left alone (scope)"
     }
   ]
 }

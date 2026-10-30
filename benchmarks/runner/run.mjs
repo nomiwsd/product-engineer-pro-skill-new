@@ -1,13 +1,10 @@
 // Runs evaluation cases and benchmark tasks under baseline, v2.0.1 and improved conditions,
 // grades each run, and writes a JSON result file. See benchmarks/README.md.
-import { cpSync, existsSync, mkdirSync, readdirSync, readFileSync, rmSync, writeFileSync } from "node:fs";
+import { cpSync, existsSync, mkdirSync, rmSync, writeFileSync } from "node:fs";
 import { dirname, join, resolve } from "node:path";
 import { spawn, spawnSync } from "node:child_process";
-import { fileURLToPath } from "node:url";
 import { grade } from "./grade.mjs";
-
-const BENCH = resolve(dirname(fileURLToPath(import.meta.url)), "..");
-const REPO = resolve(BENCH, "..");
+import { BENCH, REPO, loadItems, scrub, workdirFor } from "./items.mjs";
 const args = process.argv.slice(2);
 const option = (name, fallback) => {
   const index = args.indexOf(name);
@@ -16,22 +13,6 @@ const option = (name, fallback) => {
 
 const ALLOWED_TOOLS = ["Bash(npm test:*)", "Bash(npm run test:*)", "Bash(node --test:*)", "Bash(node:*)", "Bash(git diff:*)", "Bash(git status:*)", "Bash(git log:*)", "Bash(ls:*)"];
 const RUN_TIMEOUT_MS = 8 * 60_000;
-
-function loadItems() {
-  const items = [];
-  for (const kind of ["cases", "tasks"]) {
-    for (const id of readdirSync(join(BENCH, kind)).sort()) {
-      const file = join(BENCH, kind, id, "case.json");
-      if (!existsSync(file)) continue;
-      const definition = JSON.parse(readFileSync(file, "utf8"));
-      const variants = definition.variants ?? [{ fixture: definition.fixture, checks: definition.checks }];
-      for (const variant of variants) {
-        items.push({ ...definition, ...variant, variants: undefined, id: definition.variants ? `${id}@${variant.fixture}` : id, dir: join(BENCH, kind, id), kind });
-      }
-    }
-  }
-  return items;
-}
 
 const git = (cwd, ...gitArgs) => spawnSync("git", ["-c", "user.name=bench", "-c", "user.email=bench@example.invalid", "-c", "core.autocrlf=false", ...gitArgs], { cwd, encoding: "utf8" });
 
@@ -150,7 +131,7 @@ async function main() {
   for (const item of selected) for (const condition of conditions) for (let repeat = 1; repeat <= repeats; repeat += 1) {
     jobs.push(async () => {
       const label = `${item.id} [${condition}${repeats > 1 ? ` #${repeat}` : ""}]`;
-      const workdir = join(work, stamp, item.id.replace("@", "__"), `${condition}-${repeat}`);
+      const workdir = workdirFor(stamp, item.id, condition, repeat);
       const transcriptPath = join(BENCH, "results", "raw", stamp, `${item.id.replace("@", "__")}--${condition}-${repeat}.jsonl`);
       let record;
       try {
