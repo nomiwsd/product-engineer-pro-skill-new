@@ -1,0 +1,9 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --primary: 222 47% 31%;
+  --primary-foreground: 0 0% 100%;
+  --danger: 0 72% 45%;
+}
