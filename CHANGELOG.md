@@ -50,6 +50,8 @@
   before `init` rebuilds it. A state written by a newer CLI is never overwritten.
 - `npm test` passes on Windows checkouts, including Node.js 18, and the link check ignores
   local-only folders.
+- Website: Next.js upgraded to 16.4.3, clearing a critical advisory and five high transitive
+  ones, and the hero version badge now reads from the generated catalog.
 
 ## [2.0.1] — 2026-08-10
 
